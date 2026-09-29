@@ -1,0 +1,24 @@
+name: Tests
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m unittest discover -s tests -v
+      - name: Synthetic CLI demo
+        run: |
+          python -m personal_context.cli --db /tmp/context-demo.sqlite import examples/synthetic.jsonl
+          python -m personal_context.cli --db /tmp/context-demo.sqlite search demo --owner owner@example.invalid --contact alex@example.invalid --before 2026-09-04T00:00:00Z

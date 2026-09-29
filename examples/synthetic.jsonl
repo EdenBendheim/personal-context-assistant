@@ -1,0 +1,5 @@
+{"id":"1","source":"gmail","thread":"planning-1","author":"owner@example.invalid","recipient":"alex@example.invalid","timestamp":"2026-09-01T10:00:00Z","body":"hey alex, I can bring the demo Thursday :D"}
+{"id":"2","source":"gmail","thread":"planning-1","author":"alex@example.invalid","recipient":"owner@example.invalid","timestamp":"2026-09-01T10:05:00Z","body":"Thursday works. Can you include the retrieval example?"}
+{"id":"3","source":"discord","thread":"review-1","author":"owner@example.invalid","recipient":"riley@example.invalid","timestamp":"2026-09-02T12:00:00Z","body":"I'll send the benchmark results after class, thanks!"}
+{"id":"4","source":"gmail","thread":"planning-2","author":"owner@example.invalid","recipient":"alex@example.invalid","timestamp":"2026-09-03T10:00:00Z","body":"got the demo running! next I'm fixing the import errors"}
+{"id":"5","source":"gmail","thread":"future-1","author":"owner@example.invalid","recipient":"alex@example.invalid","timestamp":"2026-10-02T10:00:00Z","body":"the demo has new results from October"}
