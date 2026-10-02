@@ -7,7 +7,7 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 - [x] Common message schema, local export importers, provenance, and quote cleanup.
 - [x] Atomic SQLite persistence and deduplication.
 - [x] Contact-specific lexical retrieval and outbound style examples with timestamp cutoffs.
-- [ ] Add importer error summaries and an explicit preview before committing an import.
+- [x] Add importer error summaries and an explicit preview before committing an import.
 - [ ] Add conversation-level train/evaluation manifests and a fixed synthetic reply benchmark.
 - [ ] Define a source-aware memory schema with correction/deletion history.
 
@@ -34,4 +34,4 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 
 ## Next session
 
-Implement import preview/error reporting and the fixed synthetic evaluation manifest. Keep a short explanation of the change and its checks in DEVLOG. Make a normal commit after useful work passes its relevant checks.
+Add conversation-level evaluation manifests and a fixed synthetic reply/retrieval benchmark, with explicit owner, contact, cutoff, expected sources, and forbidden future/cross-contact records. Then implement source-aware editable memory. Keep a short explanation of each actual change and its checks in DEVLOG. The daily development run implements, checks, commits, and pushes an update; small useful steps are sufficient.

@@ -20,5 +20,6 @@ jobs:
       - run: python -m unittest discover -s tests -v
       - name: Synthetic CLI demo
         run: |
+          python -m personal_context.cli --db /tmp/context-demo.sqlite import examples/synthetic.jsonl --preview
           python -m personal_context.cli --db /tmp/context-demo.sqlite import examples/synthetic.jsonl
           python -m personal_context.cli --db /tmp/context-demo.sqlite search demo --owner owner@example.invalid --contact alex@example.invalid --before 2026-09-04T00:00:00Z

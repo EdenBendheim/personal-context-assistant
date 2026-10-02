@@ -2,7 +2,7 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
-**Status — September 29, 2026:** working export-ingestion and retrieval foundation. Reply generation, embedding retrieval, editable memory, and the review UI are planned. No personalized language model has been trained.
+**Status — October 2, 2026:** working export ingestion, read-only import preview/error reporting, and contact-specific retrieval. Reply generation, embedding retrieval, editable memory, and the review UI are planned. No personalized language model has been trained.
 
 ## Working now
 
@@ -11,6 +11,7 @@ A communication assistant that retrieves relevant conversation history and the o
 - Lexical retrieval restricted to the selected pair of participants, with an exclusive timestamp cutoff to prevent future conversation leakage.
 - A separate view of the owner's outbound style examples, rather than treating another person's writing as the owner's style.
 - Source, message ID, thread, participants, and timestamp retained on every retrieved result.
+- Import preview counts valid, invalid, skipped, and duplicate records across JSONL, MBOX, and Discord CSV. Invalid files are rejected before any database writes.
 
 This first retrieval baseline deliberately needs no API key, model download, or external service. It provides a measurable comparison for the embedding-based version.
 
@@ -20,6 +21,7 @@ Python 3.11+; no runtime dependencies. All demo participants and messages are in
 
 ```sh
 export PYTHONPATH=src
+python3 -m personal_context.cli --db data/demo.sqlite import examples/synthetic.jsonl --preview
 python3 -m personal_context.cli --db data/demo.sqlite import examples/synthetic.jsonl
 python3 -m personal_context.cli --db data/demo.sqlite search demo \
   --owner owner@example.invalid --contact alex@example.invalid \
@@ -31,6 +33,12 @@ python3 -m unittest discover -s tests -v
 ```
 
 Reimporting the fixture inserts zero additional messages. The October message is excluded by the cutoff; Riley's conversation never enters Alex's context.
+
+## Preview before importing
+
+`import --preview` does not create the database or its parent directory. An existing SQLite database is opened read-only to check provider IDs and normalized fingerprints. Reports expose counts and record-level reasons, not message bodies. JSONL/CSV record numbers are physical lines; MBOX numbers identify mail items (one mail can produce multiple directed messages).
+
+If any record is invalid, both preview and regular import exit with status 2 and regular import inserts nothing. `would_insert` shows valid nonduplicate candidates, not a partial import that will be applied. Unsupported HTML-only MBOX items, blank JSONL lines, and empty outbound Discord messages are counted as skipped. A successful regular import reports its actual `inserted` count. Counts reflect an inspection snapshot; concurrent changes can affect the number finally inserted. This version materializes candidate messages in memory, so very large exports need a later streaming/staging implementation.
 
 ## Import contract
 

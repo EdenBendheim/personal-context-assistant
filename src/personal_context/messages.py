@@ -62,46 +62,102 @@ class Message:
         return hashlib.sha256(json.dumps(fields, sort_keys=True).encode()).hexdigest()
 
 
-def read_jsonl(path: str | Path) -> Iterator[Message]:
-    with Path(path).open(encoding="utf-8") as stream:
+@dataclass(frozen=True)
+class ImportRecord:
+    number: int
+    message: Message | None = None
+    error: str | None = None
+    skipped: str | None = None
+
+
+def _normalize(number: int, raw: dict) -> ImportRecord:
+    try:
+        return ImportRecord(number, message=Message.from_dict(raw))
+    except KeyError as exc:
+        return ImportRecord(number, error=f"Missing required field {exc}")
+    except (ValueError, TypeError):
+        # Reports never include raw message bodies or invalid field values.
+        return ImportRecord(number, error="Invalid fields, empty body, or timestamp")
+
+
+def scan_jsonl(path: str | Path) -> Iterator[ImportRecord]:
+    with Path(path).open(encoding="utf-8-sig") as stream:
         for number, line in enumerate(stream, 1):
             if not line.strip():
+                yield ImportRecord(number, skipped="Blank line")
                 continue
             try:
-                yield Message.from_dict(json.loads(line))
-            except (ValueError, KeyError, TypeError) as exc:
-                raise ValueError(f"Invalid message at line {number}: {exc}") from exc
+                raw = json.loads(line)
+            except ValueError:
+                yield ImportRecord(number, error="Malformed JSON")
+                continue
+            if not isinstance(raw, dict):
+                yield ImportRecord(number, error="Expected a JSON object")
+            else:
+                yield _normalize(number, raw)
 
 
-def read_mbox(path: str | Path) -> Iterator[Message]:
+def _strict(records: Iterator[ImportRecord]) -> Iterator[Message]:
+    for record in records:
+        if record.error:
+            raise ValueError(f"Invalid message at record {record.number}: {record.error}")
+        if record.message:
+            yield record.message
+
+
+def read_jsonl(path: str | Path) -> Iterator[Message]:
+    yield from _strict(scan_jsonl(path))
+
+
+def scan_mbox(path: str | Path) -> Iterator[ImportRecord]:
     """Read plain-text Gmail/standard MBOX messages; skip HTML-only mail."""
     box = mailbox.mbox(str(path), create=False)
     try:
-        for mail in box:
+        for number, mail in enumerate(box, 1):
             parts = mail.walk() if mail.is_multipart() else [mail]
             text = []
+            body_error = False
             for part in parts:
                 if part.get_content_type() == "text/plain" and part.get_content_disposition() != "attachment":
                     payload = part.get_payload(decode=True)
                     if payload:
-                        text.append(payload.decode(part.get_content_charset() or "utf-8", errors="replace"))
-            if not text:
+                        try:
+                            text.append(payload.decode(part.get_content_charset() or "utf-8", errors="replace"))
+                        except LookupError:
+                            body_error = True
+                            break
+            if body_error:
+                yield ImportRecord(number, error="Unsupported text character encoding")
                 continue
-            author = getaddresses(mail.get_all("From", []))[0][1]
+            if not text:
+                yield ImportRecord(number, skipped="No supported plain-text body")
+                continue
+            try:
+                author = getaddresses(mail.get_all("From", []))[0][1]
+                recipients = getaddresses(mail.get_all("To", []))
+                if not author or not recipients or any(not address for _, address in recipients):
+                    raise ValueError("Missing participants")
+                timestamp = parsedate_to_datetime(mail["Date"]).isoformat()
+            except (ValueError, TypeError, IndexError, AttributeError):
+                yield ImportRecord(number, error="Missing or invalid From, To, or Date header")
+                continue
             body = "\n".join(text)
             message_id = mail.get("Message-ID") or hashlib.sha256(mail.as_bytes()).hexdigest()
             thread = mail.get("X-GM-THRID") or mail.get("References", "").split()[:1]
             if isinstance(thread, list):
                 thread = thread[0] if thread else message_id
-            timestamp = parsedate_to_datetime(mail["Date"]).isoformat()
-            for _, recipient in getaddresses(mail.get_all("To", [])):
-                yield Message.from_dict(dict(id=f"{message_id}:{recipient}", source="gmail", thread=thread,
+            for _, recipient in recipients:
+                yield _normalize(number, dict(id=f"{message_id}:{recipient}", source="gmail", thread=thread,
                                              author=author, recipient=recipient, timestamp=timestamp, body=body))
     finally:
         box.close()
 
 
-def read_discord_csv(path: str | Path, *, author: str, recipient: str, thread: str) -> Iterator[Message]:
+def read_mbox(path: str | Path) -> Iterator[Message]:
+    yield from _strict(scan_mbox(path))
+
+
+def scan_discord_csv(path: str | Path, *, author: str, recipient: str, thread: str) -> Iterator[ImportRecord]:
     """Official Discord package CSVs contain the account owner's outbound messages.
 
     Channel/contact mapping is supplied explicitly; incoming messages are not inferred.
@@ -110,13 +166,27 @@ def read_discord_csv(path: str | Path, *, author: str, recipient: str, thread: s
     with Path(path).open(encoding="utf-8-sig", newline="") as stream:
         reader = csv.DictReader(stream)
         if not {"ID", "Timestamp", "Contents"}.issubset(reader.fieldnames or []):
-            raise ValueError("Expected Discord export columns ID, Timestamp, Contents")
+            yield ImportRecord(1, error="Expected Discord export columns ID, Timestamp, Contents")
+            return
         for row in reader:
-            if not row["Contents"].strip():
+            number = reader.line_num
+            if any(row.get(key) is None for key in ("ID", "Timestamp", "Contents")) or None in row:
+                yield ImportRecord(number, error="Malformed CSV row")
                 continue
-            timestamp = row["Timestamp"].strip()
-            if datetime.fromisoformat(timestamp.replace("Z", "+00:00")).tzinfo is None:
-                timestamp += "+00:00"
-            yield Message.from_dict(dict(id=row["ID"], source="discord", thread=thread,
+            if not row["Contents"].strip():
+                yield ImportRecord(number, skipped="Empty outbound message")
+                continue
+            try:
+                timestamp = row["Timestamp"].strip()
+                if datetime.fromisoformat(timestamp.replace("Z", "+00:00")).tzinfo is None:
+                    timestamp += "+00:00"
+            except ValueError:
+                yield ImportRecord(number, error="Invalid timestamp")
+                continue
+            yield _normalize(number, dict(id=row["ID"], source="discord", thread=thread,
                                          author=author, recipient=recipient, timestamp=timestamp,
                                          body=row["Contents"]))
+
+
+def read_discord_csv(path: str | Path, *, author: str, recipient: str, thread: str) -> Iterator[Message]:
+    yield from _strict(scan_discord_csv(path, author=author, recipient=recipient, thread=thread))
