@@ -11,6 +11,7 @@ dependencies = []
 
 [project.scripts]
 personal-context = "personal_context.cli:main"
+personal-context-eval = "personal_context.evaluation:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

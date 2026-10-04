@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "messages": "messages.jsonl",
+  "partitions": {
+    "development": [
+      "development-planning-1",
+      "development-planning-2"
+    ],
+    "evaluation": [
+      "evaluation-planning-3",
+      "evaluation-planning-4",
+      "evaluation-planning-5",
+      "evaluation-planning-6",
+      "evaluation-incoming-only"
+    ]
+  },
+  "cases": [
+    {
+      "id": "alex-projector",
+      "split": "development",
+      "thread": "development-planning-1",
+      "owner": "owner@example.invalid",
+      "contact": "alex@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "projector",
+      "limit": 3,
+      "relevant": [
+        {
+          "source": "gmail",
+          "id": "1-2"
+        },
+        {
+          "source": "discord",
+          "id": "1-3"
+        }
+      ],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "1-3"
+        },
+        {
+          "source": "gmail",
+          "id": "1-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "1-4"
+        },
+        {
+          "source": "discord",
+          "id": "1-5"
+        },
+        {
+          "source": "gmail",
+          "id": "2-1"
+        }
+      ]
+    },
+    {
+      "id": "alex-launch",
+      "split": "development",
+      "thread": "development-planning-1",
+      "owner": "owner@example.invalid",
+      "contact": "alex@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "launch",
+      "limit": 3,
+      "relevant": [
+        {
+          "source": "gmail",
+          "id": "1-1"
+        },
+        {
+          "source": "gmail",
+          "id": "1-2"
+        }
+      ],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "1-3"
+        },
+        {
+          "source": "gmail",
+          "id": "1-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "1-4"
+        },
+        {
+          "source": "discord",
+          "id": "1-5"
+        },
+        {
+          "source": "gmail",
+          "id": "2-1"
+        }
+      ]
+    },
+    {
+      "id": "alex-volcano",
+      "split": "development",
+      "thread": "development-planning-1",
+      "owner": "owner@example.invalid",
+      "contact": "alex@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "volcano",
+      "limit": 3,
+      "relevant": [],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "1-3"
+        },
+        {
+          "source": "gmail",
+          "id": "1-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "1-4"
+        },
+        {
+          "source": "discord",
+          "id": "1-5"
+        },
+        {
+          "source": "gmail",
+          "id": "2-1"
+        }
+      ]
+    },
+    {
+      "id": "riley-projector",
+      "split": "development",
+      "thread": "development-planning-2",
+      "owner": "owner@example.invalid",
+      "contact": "riley@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "projector",
+      "limit": 3,
+      "relevant": [
+        {
+          "source": "gmail",
+          "id": "2-2"
+        },
+        {
+          "source": "discord",
+          "id": "2-3"
+        }
+      ],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "2-3"
+        },
+        {
+          "source": "gmail",
+          "id": "2-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "2-4"
+        },
+        {
+          "source": "discord",
+          "id": "2-5"
+        },
+        {
+          "source": "gmail",
+          "id": "3-1"
+        }
+      ]
+    },
+    {
+      "id": "riley-launch",
+      "split": "development",
+      "thread": "development-planning-2",
+      "owner": "owner@example.invalid",
+      "contact": "riley@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "launch",
+      "limit": 3,
+      "relevant": [
+        {
+          "source": "gmail",
+          "id": "2-1"
+        },
+        {
+          "source": "gmail",
+          "id": "2-2"
+        }
+      ],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "2-3"
+        },
+        {
+          "source": "gmail",
+          "id": "2-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "2-4"
+        },
+        {
+          "source": "discord",
+          "id": "2-5"
+        },
+        {
+          "source": "gmail",
+          "id": "3-1"
+        }
+      ]
+    },
+    {
+      "id": "riley-volcano",
+      "split": "development",
+      "thread": "development-planning-2",
+      "owner": "owner@example.invalid",
+      "contact": "riley@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "volcano",
+      "limit": 3,
+      "relevant": [],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "2-3"
+        },
+        {
+          "source": "gmail",
+          "id": "2-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "2-4"
+        },
+        {
+          "source": "discord",
+          "id": "2-5"
+        },
+        {
+          "source": "gmail",
+          "id": "3-1"
+        }
+      ]
+    },
+    {
+      "id": "morgan-projector",
+      "split": "evaluation",
+      "thread": "evaluation-planning-3",
+      "owner": "owner@example.invalid",
+      "contact": "morgan@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "projector",
+      "limit": 3,
+      "relevant": [
+        {
+          "source": "gmail",
+          "id": "3-2"
+        },
+        {
+          "source": "discord",
+          "id": "3-3"
+        }
+      ],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "3-3"
+        },
+        {
+          "source": "gmail",
+          "id": "3-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "3-4"
+        },
+        {
+          "source": "discord",
+          "id": "3-5"
+        },
+        {
+          "source": "gmail",
+          "id": "4-1"
+        }
+      ]
+    },
+    {
+      "id": "morgan-launch",
+      "split": "evaluation",
+      "thread": "evaluation-planning-3",
+      "owner": "owner@example.invalid",
+      "contact": "morgan@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "launch",
+      "limit": 3,
+      "relevant": [
+        {
+          "source": "gmail",
+          "id": "3-1"
+        },
+        {
+          "source": "gmail",
+          "id": "3-2"
+        }
+      ],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "3-3"
+        },
+        {
+          "source": "gmail",
+          "id": "3-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "3-4"
+        },
+        {
+          "source": "discord",
+          "id": "3-5"
+        },
+        {
+          "source": "gmail",
+          "id": "4-1"
+        }
+      ]
+    },
+    {
+      "id": "morgan-volcano",
+      "split": "evaluation",
+      "thread": "evaluation-planning-3",
+      "owner": "owner@example.invalid",
+      "contact": "morgan@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "volcano",
+      "limit": 3,
+      "relevant": [],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "3-3"
+        },
+        {
+          "source": "gmail",
+          "id": "3-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "3-4"
+        },
+        {
+          "source": "discord",
+          "id": "3-5"
+        },
+        {
+          "source": "gmail",
+          "id": "4-1"
+        }
+      ]
+    },
+    {
+      "id": "casey-projector",
+      "split": "evaluation",
+      "thread": "evaluation-planning-4",
+      "owner": "owner@example.invalid",
+      "contact": "casey@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "projector",
+      "limit": 3,
+      "relevant": [
+        {
+          "source": "gmail",
+          "id": "4-2"
+        },
+        {
+          "source": "discord",
+          "id": "4-3"
+        }
+      ],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "4-3"
+        },
+        {
+          "source": "gmail",
+          "id": "4-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "4-4"
+        },
+        {
+          "source": "discord",
+          "id": "4-5"
+        },
+        {
+          "source": "gmail",
+          "id": "5-1"
+        }
+      ]
+    },
+    {
+      "id": "casey-launch",
+      "split": "evaluation",
+      "thread": "evaluation-planning-4",
+      "owner": "owner@example.invalid",
+      "contact": "casey@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "launch",
+      "limit": 3,
+      "relevant": [
+        {
+          "source": "gmail",
+          "id": "4-1"
+        },
+        {
+          "source": "gmail",
+          "id": "4-2"
+        }
+      ],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "4-3"
+        },
+        {
+          "source": "gmail",
+          "id": "4-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "4-4"
+        },
+        {
+          "source": "discord",
+          "id": "4-5"
+        },
+        {
+          "source": "gmail",
+          "id": "5-1"
+        }
+      ]
+    },
+    {
+      "id": "casey-volcano",
+      "split": "evaluation",
+      "thread": "evaluation-planning-4",
+      "owner": "owner@example.invalid",
+      "contact": "casey@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "volcano",
+      "limit": 3,
+      "relevant": [],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "4-3"
+        },
+        {
+          "source": "gmail",
+          "id": "4-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "4-4"
+        },
+        {
+          "source": "discord",
+          "id": "4-5"
+        },
+        {
+          "source": "gmail",
+          "id": "5-1"
+        }
+      ]
+    },
+    {
+      "id": "taylor-projector",
+      "split": "evaluation",
+      "thread": "evaluation-planning-5",
+      "owner": "owner@example.invalid",
+      "contact": "taylor@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "projector",
+      "limit": 3,
+      "relevant": [
+        {
+          "source": "gmail",
+          "id": "5-2"
+        },
+        {
+          "source": "discord",
+          "id": "5-3"
+        }
+      ],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "5-3"
+        },
+        {
+          "source": "gmail",
+          "id": "5-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "5-4"
+        },
+        {
+          "source": "discord",
+          "id": "5-5"
+        },
+        {
+          "source": "gmail",
+          "id": "6-1"
+        }
+      ]
+    },
+    {
+      "id": "taylor-launch",
+      "split": "evaluation",
+      "thread": "evaluation-planning-5",
+      "owner": "owner@example.invalid",
+      "contact": "taylor@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "launch",
+      "limit": 3,
+      "relevant": [
+        {
+          "source": "gmail",
+          "id": "5-1"
+        },
+        {
+          "source": "gmail",
+          "id": "5-2"
+        }
+      ],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "5-3"
+        },
+        {
+          "source": "gmail",
+          "id": "5-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "5-4"
+        },
+        {
+          "source": "discord",
+          "id": "5-5"
+        },
+        {
+          "source": "gmail",
+          "id": "6-1"
+        }
+      ]
+    },
+    {
+      "id": "taylor-volcano",
+      "split": "evaluation",
+      "thread": "evaluation-planning-5",
+      "owner": "owner@example.invalid",
+      "contact": "taylor@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "volcano",
+      "limit": 3,
+      "relevant": [],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "5-3"
+        },
+        {
+          "source": "gmail",
+          "id": "5-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "5-4"
+        },
+        {
+          "source": "discord",
+          "id": "5-5"
+        },
+        {
+          "source": "gmail",
+          "id": "6-1"
+        }
+      ]
+    },
+    {
+      "id": "jordan-projector",
+      "split": "evaluation",
+      "thread": "evaluation-planning-6",
+      "owner": "owner@example.invalid",
+      "contact": "jordan@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "projector",
+      "limit": 3,
+      "relevant": [
+        {
+          "source": "gmail",
+          "id": "6-2"
+        },
+        {
+          "source": "discord",
+          "id": "6-3"
+        }
+      ],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "6-3"
+        },
+        {
+          "source": "gmail",
+          "id": "6-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "6-4"
+        },
+        {
+          "source": "discord",
+          "id": "6-5"
+        },
+        {
+          "source": "gmail",
+          "id": "1-1"
+        }
+      ]
+    },
+    {
+      "id": "jordan-launch",
+      "split": "evaluation",
+      "thread": "evaluation-planning-6",
+      "owner": "owner@example.invalid",
+      "contact": "jordan@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "launch",
+      "limit": 3,
+      "relevant": [
+        {
+          "source": "gmail",
+          "id": "6-1"
+        },
+        {
+          "source": "gmail",
+          "id": "6-2"
+        }
+      ],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "6-3"
+        },
+        {
+          "source": "gmail",
+          "id": "6-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "6-4"
+        },
+        {
+          "source": "discord",
+          "id": "6-5"
+        },
+        {
+          "source": "gmail",
+          "id": "1-1"
+        }
+      ]
+    },
+    {
+      "id": "jordan-volcano",
+      "split": "evaluation",
+      "thread": "evaluation-planning-6",
+      "owner": "owner@example.invalid",
+      "contact": "jordan@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "volcano",
+      "limit": 3,
+      "relevant": [],
+      "style_relevant": [
+        {
+          "source": "discord",
+          "id": "6-3"
+        },
+        {
+          "source": "gmail",
+          "id": "6-1"
+        }
+      ],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "6-4"
+        },
+        {
+          "source": "discord",
+          "id": "6-5"
+        },
+        {
+          "source": "gmail",
+          "id": "1-1"
+        }
+      ]
+    },
+    {
+      "id": "morgan-no-prior-history",
+      "split": "evaluation",
+      "thread": "evaluation-planning-3",
+      "owner": "owner@example.invalid",
+      "contact": "morgan@example.invalid",
+      "before": "2026-09-20T00:00:00Z",
+      "query": "projector",
+      "limit": 3,
+      "relevant": [],
+      "style_relevant": [],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "3-4"
+        },
+        {
+          "source": "discord",
+          "id": "3-5"
+        },
+        {
+          "source": "gmail",
+          "id": "4-1"
+        }
+      ]
+    },
+    {
+      "id": "quinn-no-owner-examples",
+      "split": "evaluation",
+      "thread": "evaluation-incoming-only",
+      "owner": "owner@example.invalid",
+      "contact": "quinn@example.invalid",
+      "before": "2026-09-24T00:00:00Z",
+      "query": "rehearsal",
+      "limit": 3,
+      "relevant": [
+        {
+          "source": "gmail",
+          "id": "7-1"
+        }
+      ],
+      "style_relevant": [],
+      "forbidden": [
+        {
+          "source": "gmail",
+          "id": "1-1"
+        }
+      ]
+    }
+  ]
+}

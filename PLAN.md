@@ -8,7 +8,7 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 - [x] Atomic SQLite persistence and deduplication.
 - [x] Contact-specific lexical retrieval and outbound style examples with timestamp cutoffs.
 - [x] Add importer error summaries and an explicit preview before committing an import.
-- [ ] Add conversation-level train/evaluation manifests and a fixed synthetic reply benchmark.
+- [x] Add conversation-level development/evaluation manifests and a fixed synthetic reply-context retrieval benchmark.
 - [ ] Define a source-aware memory schema with correction/deletion history.
 
 ## Milestone 2 — drafting and retrieval comparisons
@@ -34,4 +34,4 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 
 ## Next session
 
-Add conversation-level evaluation manifests and a fixed synthetic reply/retrieval benchmark, with explicit owner, contact, cutoff, expected sources, and forbidden future/cross-contact records. Then implement source-aware editable memory. Keep a short explanation of each actual change and its checks in DEVLOG. The daily development run implements, checks, commits, and pushes an update; small useful steps are sufficient.
+Implement source-aware editable memory with explicit supporting source/message IDs, contact scope, correction/deletion history, and tests that revoked or wrong-contact memories cannot enter context. Keep the existing retrieval benchmark fixed while extending separate development cases. Draft generation, style quality, and a review UI are still pending. Keep a short explanation of each actual change and its checks in DEVLOG. The daily development run implements, checks, commits, and pushes an update; small useful steps are sufficient.

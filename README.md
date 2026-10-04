@@ -2,7 +2,7 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
-**Status — October 2, 2026:** working export ingestion, read-only import preview/error reporting, and contact-specific retrieval. Reply generation, embedding retrieval, editable memory, and the review UI are planned. No personalized language model has been trained.
+**Status — October 3, 2026:** working export ingestion, read-only import preview/error reporting, contact-specific retrieval, and a fixed synthetic retrieval benchmark. Reply generation, embedding retrieval, editable memory, and the review UI are planned. No personalized language model has been trained.
 
 ## Working now
 
@@ -12,6 +12,7 @@ A communication assistant that retrieves relevant conversation history and the o
 - A separate view of the owner's outbound style examples, rather than treating another person's writing as the owner's style.
 - Source, message ID, thread, participants, and timestamp retained on every retrieved result.
 - Import preview counts valid, invalid, skipped, and duplicate records across JSONL, MBOX, and Discord CSV. Invalid files are rejected before any database writes.
+- A versioned benchmark with disjoint development/evaluation conversations, source labels, exclusive cutoffs, and future/cross-contact distractors. CI fails on missing expected context or boundary violations.
 
 This first retrieval baseline deliberately needs no API key, model download, or external service. It provides a measurable comparison for the embedding-based version.
 
@@ -49,6 +50,20 @@ MBOX import skips HTML-only mail and attachments. It emits one record per `To` r
 Discord CSV import expects `ID`, `Timestamp`, and `Contents`, with explicit `--owner`, `--contact`, and `--thread`. The account's export contains its own messages; this importer does not invent missing incoming messages. Naive Discord export timestamps are treated as UTC. Prefer normalized JSONL if your export differs.
 
 Real exports belong in ignored `exports/` or `data/` directories. Only synthetic fixtures belong in the public repository. The CLI imports local files and displays context; it has no message-sending integration.
+
+## Run the fixed retrieval benchmark
+
+```sh
+export PYTHONPATH=src
+python3 -m personal_context.evaluation examples/benchmark/manifest.json
+python3 -m personal_context.evaluation examples/benchmark/manifest.json --split development
+```
+
+The fixture contains **31 invented messages in seven conversations**, with six development cases and 14 held-out evaluation cases. Cases specify the owner, contact, conversation, cutoff, query, expected source/message pairs, expected outbound examples, and forbidden records. The benchmark includes a contact with only incoming history and a case with no history before the cutoff. It uses an in-memory database and needs no private export, provider, or API key.
+
+Reports include per-case recall/precision, missing source IDs, outbound-example coverage, boundary violations, and a SHA-256 fingerprint of the manifest plus fixture. Empty relevant sets have undefined recall (`null`); returning nothing scores precision 1 only when nothing is relevant. Aggregate recall averages cases with positive labels. Reports omit message bodies. The command exits 1 for a retrieval regression; CI runs both partitions with `--split all`.
+
+The current lexical baseline retrieves all labeled context with no boundary violations on this small fixture. These are transparent regression cases, not a blind real-user study or evidence that generated replies sound like anyone. The conversation partitions are for future fitting/comparisons; this baseline performs no training. Growing a sufficiently diverse reply benchmark and evaluating drafting quality remain necessary.
 
 ## Evaluation direction
 
