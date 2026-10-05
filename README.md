@@ -2,7 +2,7 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
-**Status — October 3, 2026:** working export ingestion, read-only import preview/error reporting, contact-specific retrieval, and a fixed synthetic retrieval benchmark. Reply generation, embedding retrieval, editable memory, and the review UI are planned. No personalized language model has been trained.
+**Status — October 4, 2026:** working export ingestion, read-only import preview/error reporting, contact-specific retrieval, a fixed synthetic retrieval benchmark, and editable source-backed memory. Reply generation, embedding retrieval, and the review UI are planned. No personalized language model has been trained.
 
 ## Working now
 
@@ -13,6 +13,7 @@ A communication assistant that retrieves relevant conversation history and the o
 - Source, message ID, thread, participants, and timestamp retained on every retrieved result.
 - Import preview counts valid, invalid, skipped, and duplicate records across JSONL, MBOX, and Discord CSV. Invalid files are rejected before any database writes.
 - A versioned benchmark with disjoint development/evaluation conversations, source labels, exclusive cutoffs, and future/cross-contact distractors. CI fails on missing expected context or boundary violations.
+- Human-reviewed facts/preferences scoped to one contact, with cited immutable revisions, correction history, explicit withdrawal, and stale-editor protection.
 
 This first retrieval baseline deliberately needs no API key, model download, or external service. It provides a measurable comparison for the embedding-based version.
 
@@ -68,5 +69,34 @@ The current lexical baseline retrieves all labeled context with no boundary viol
 ## Evaluation direction
 
 Compare generic drafting, lexical context, embedding context, and contact-specific examples on the same held-out reply situations. Split by thread and time. Track source support, recipient/style preference in blinded comparisons, useful edits, latency, and cost. A low retrieval loss alone does not establish that drafts are better.
+
+## Review and edit cited memory
+
+Memory is an explicitly reviewed fact or preference, not an automatically extracted claim. Each active revision must cite at least one existing `(source, message_id)` in the exact owner/contact conversation. The store pins each source's content fingerprint; removed or changed messages invalidate the memory in context. Provenance records let a person inspect support; they do not automatically prove that a sentence follows from its citations.
+
+Run the complete synthetic correction/withdrawal walkthrough without writing a database:
+
+```sh
+export PYTHONPATH=src
+python3 -m personal_context.memory_demo
+```
+
+For a local database imported using the earlier demo commands:
+
+```sh
+python3 -m personal_context.memory_cli --db data/demo.sqlite add \
+  --owner owner@example.invalid --contact alex@example.invalid --kind fact \
+  --text 'The Thursday demo should include a retrieval example.' \
+  --source gmail 1 --source gmail 2 --reason 'Reviewed the demo discussion'
+python3 -m personal_context.memory_cli --db data/demo.sqlite list \
+  --owner owner@example.invalid --contact alex@example.invalid \
+  --before 2026-10-05T00:00:00Z
+```
+
+The add/list result contains `memory_id` and `revision`. Use that ID with `history ID`, `update ID --expected-revision N --text ... --source PROVIDER ID --reason ...`, or `revoke ID --expected-revision N --reason ...`. Update/revoke require the revision the editor reviewed; a concurrent newer revision is rejected. Edits are atomic and do not commit unrelated pending message changes. Scope and kind are immutable; a revoked item cannot be restored through update. Create a new reviewed item if necessary.
+
+Revisions default to the current UTC time; `--at` supplies an explicit timezone-aware effective time for imported history or controlled evaluations. Supporting messages cannot be later than their revision, and revision times must increase strictly. Context chooses the latest revision **strictly before** `--before`, so a later correction cannot leak backward. Withdrawal overrides historical retrieval too, preventing reuse of a memory the owner has explicitly withdrawn.
+
+Withdrawal is an exclusion tombstone, **not permanent erasure**: history retains previous text, reasons, and source IDs for review. Raw-export deletion and privacy erasure remain planned. Memory is local SQLite data; keep its database in ignored `data/`. There is no automatic extraction, draft generation, or message sending in this version.
 
 See [PLAN.md](PLAN.md) for milestones and [DEVLOG.md](DEVLOG.md) for actual completed work.

@@ -9,7 +9,8 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 - [x] Contact-specific lexical retrieval and outbound style examples with timestamp cutoffs.
 - [x] Add importer error summaries and an explicit preview before committing an import.
 - [x] Add conversation-level development/evaluation manifests and a fixed synthetic reply-context retrieval benchmark.
-- [ ] Define a source-aware memory schema with correction/deletion history.
+- [x] Define contact-scoped, source-aware memory with immutable correction/withdrawal history.
+- [x] Add explicit memory editing, provenance invalidation, and stale-editor protection.
 
 ## Milestone 2 — drafting and retrieval comparisons
 
@@ -34,4 +35,4 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 
 ## Next session
 
-Implement source-aware editable memory with explicit supporting source/message IDs, contact scope, correction/deletion history, and tests that revoked or wrong-contact memories cannot enter context. Keep the existing retrieval benchmark fixed while extending separate development cases. Draft generation, style quality, and a review UI are still pending. Keep a short explanation of each actual change and its checks in DEVLOG. The daily development run implements, checks, commits, and pushes an update; small useful steps are sufficient.
+Add a reviewable draft contract that combines retrieved messages, current cited memory, and outbound examples. Start with a deterministic synthetic provider so unsupported-fact and insufficient-history checks work without paid APIs; then add configurable providers and embedding retrieval behind the same contract. Keep the fixed retrieval benchmark unchanged and add separate drafting cases. The current memory API/CLI works, but automatic extraction, permanent privacy erasure, draft generation, style quality, and a review UI remain pending. Keep a short explanation of each actual change and its checks in DEVLOG. The daily development run implements, checks, commits, and pushes an update; small useful steps are sufficient.

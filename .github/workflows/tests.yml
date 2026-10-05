@@ -20,6 +20,8 @@ jobs:
       - run: python -m unittest discover -s tests -v
       - name: Fixed synthetic retrieval benchmark
         run: python -m personal_context.evaluation examples/benchmark/manifest.json --split all
+      - name: Synthetic memory correction and withdrawal
+        run: python -m personal_context.memory_demo
       - name: Synthetic CLI demo
         run: |
           python -m personal_context.cli --db /tmp/context-demo.sqlite import examples/synthetic.jsonl --preview
