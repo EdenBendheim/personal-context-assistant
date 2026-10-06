@@ -1,5 +1,11 @@
 # Development log
 
+## October 6, 2026
+
+- Added persistent review packets and immutable draft edits with owner-scoped access, contact filtering, optimistic revision checks, and current-context fingerprints. Cold starts are not saved as empty reviews; unchanged saves do not create revisions.
+- Verification for this step: four new tests passed, including reconnect persistence, two-connection stale edits, owner isolation, changed sources, and pending-transaction rollback boundaries.
+- Interview explanation: "I made draft reviews resumable while preserving the original evidence and every wording revision, so an outdated browser cannot silently overwrite another edit."
+
 ## October 5, 2026
 
 - Added generic/context/personalized draft review packets combining eligible past messages, cited memory, and outbound examples. Added a local extractive quote-provider interface, bounded literal-quote validation, provenance-bearing citations, a template reply, and explicit needs-history/needs-review outcomes.

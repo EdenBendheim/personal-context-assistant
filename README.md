@@ -2,7 +2,7 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
-**Status — October 5, 2026:** working export ingestion, import preview/error reporting, contact-specific retrieval, a fixed synthetic benchmark, editable memory, and a local extractive draft/review pipeline. Language-model drafting, embedding retrieval, and the review UI are planned. No personalized language model has been trained.
+**Status — October 6, 2026:** working export ingestion, import preview/error reporting, contact-specific retrieval, a fixed synthetic benchmark, editable memory, and a local extractive draft/review pipeline with persistent edits. Language-model drafting, embedding retrieval, and the review UI are planned. No personalized language model has been trained.
 
 ## Working now
 
@@ -123,3 +123,9 @@ The demo uses invented messages in memory. The CLI reads an existing imported st
 This is an **extractive template baseline**, not a generative reply model. Literal matching establishes where a quote came from; it does not prove that a truncated quote preserves meaning, that old information is still true, or that a reviewed memory is entailed by its sources. A language-model provider needs additional semantic support checks and reply-quality evaluation. There is no API request or paid service. Reports include message bodies and memory text, so real output belongs in ignored `drafts/`, `runs/`, or `data/`, never a public fixture.
 
 See [PLAN.md](PLAN.md) for milestones and [DEVLOG.md](DEVLOG.md) for actual completed work.
+
+## Save and revisit draft reviews
+
+`Reviews(store).create(DraftRequest(...))` saves a generated packet and its original citations in the local SQLite store. `get(id, owner=...)`, `edit(id, owner=..., expected_revision=N, text=...)`, `history(id, owner=...)`, and `list(owner=..., contact=...)` provide owner-scoped access. Edits preserve whitespace, the immutable original, and earlier wording. A stale editor is rejected; saving unchanged wording adds no revision. A cold-start result is returned without saving an empty review.
+
+Each loaded review reports `context_current`: the same contact/topic/cutoff packet is rebuilt and compared with the original fingerprint. Saved history remains inspectable when source content changes; it is not permanently erased. Private drafts remain in the ignored database, and saving is not sending. A browser interface and feedback recording follow this persistence layer.
