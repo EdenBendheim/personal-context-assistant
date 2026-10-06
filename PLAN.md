@@ -27,7 +27,7 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 
 - [ ] Build a small review interface: selected contact, source snippets, editable memory, draft editing, feedback.
 - [ ] Add explicit local export deletion and index rebuild.
-- [ ] Record useful/incorrect retrievals and changed wording without sending messages automatically.
+- [x] Record useful/incorrect retrievals and changed wording without sending messages automatically.
 - [ ] Publish a synthetic walkthrough and architecture explanation.
 
 ## Milestone 4 — measured results

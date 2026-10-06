@@ -83,3 +83,33 @@ class ReviewTests(unittest.TestCase):
                 self.assertEqual("edited elsewhere", Reviews(reopened).get(rid, owner=OWNER)["text"])
             finally:
                 reopened.close()
+
+    def test_feedback_is_revision_bound_and_repeated_ratings_do_not_inflate_summary(self):
+        review = self.reviews.create(request())
+        rid = review["review_id"]
+        for decision in ("needs_work", "usable"):
+            self.reviews.feedback(rid, owner=OWNER, expected_revision=1, decision=decision,
+                                  retrieval="useful", style="needs_edit", notes="synthetic review")
+        summary = self.reviews.summary(owner=OWNER, contact=CONTACT)
+        self.assertEqual(1, summary["rated_current_revisions"])
+        self.assertEqual({"usable": 1}, summary["decisions"])
+        self.assertEqual(1.0, summary["mean_word_overlap"])
+        self.reviews.edit(rid, owner=OWNER, expected_revision=1, text="Hey, Thursday works!")
+        summary = self.reviews.summary(owner=OWNER, contact=CONTACT)
+        self.assertEqual(0, summary["rated_current_revisions"])
+        self.assertEqual(1, summary["changed_drafts"])
+        self.assertEqual([1, 1], [x["revision"] for x in self.reviews.feedback_history(rid, owner=OWNER)])
+        self.assertEqual(0, self.reviews.summary(owner=OWNER, contact="other@example.invalid")["reviews"])
+
+    def test_feedback_rejects_stale_context_scope_revisions_and_invalid_ratings(self):
+        rid = self.reviews.create(request())["review_id"]
+        for changes in (dict(owner="other@example.invalid"), dict(expected_revision=2),
+                        dict(decision="sent"), dict(retrieval="excellent"), dict(style="bad"), dict(notes="x"*2001)):
+            with self.subTest(changes=changes), self.assertRaises(ValueError):
+                self.reviews.feedback(rid, **(dict(owner=OWNER, expected_revision=1, decision="usable") | changes))
+        with self.store.connection:
+            self.store.connection.execute("DELETE FROM messages")
+        with self.assertRaisesRegex(ValueError, "Context changed"):
+            self.reviews.feedback(rid, owner=OWNER, expected_revision=1, decision="usable")
+        self.reviews.feedback(rid, owner=OWNER, expected_revision=1, decision="rejected", retrieval="incorrect")
+        self.assertEqual(1, len(self.reviews.feedback_history(rid, owner=OWNER)))

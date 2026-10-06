@@ -1,6 +1,9 @@
 """Persistent, owner-scoped draft review and immutable edit history."""
 
+from __future__ import annotations
+
 from contextlib import contextmanager
+from collections import Counter
 from datetime import datetime, timezone
 import json
 import uuid
@@ -32,6 +35,11 @@ class Reviews:
                 review_id TEXT NOT NULL REFERENCES draft_reviews(id), revision INTEGER NOT NULL,
                 text TEXT NOT NULL, saved_at TEXT NOT NULL, PRIMARY KEY(review_id, revision))""")
             self.connection.execute("CREATE INDEX IF NOT EXISTS draft_scope ON draft_reviews(owner, contact)")
+            self.connection.execute("""CREATE TABLE IF NOT EXISTS draft_feedback (
+                id TEXT PRIMARY KEY, review_id TEXT NOT NULL, revision INTEGER NOT NULL,
+                decision TEXT NOT NULL, retrieval TEXT NOT NULL, style TEXT NOT NULL,
+                notes TEXT NOT NULL, recorded_at TEXT NOT NULL,
+                FOREIGN KEY(review_id, revision) REFERENCES draft_edits(review_id, revision))""")
 
     @contextmanager
     def _write(self):
@@ -100,3 +108,54 @@ class Reviews:
         rows = self.connection.execute("""SELECT id, created_at FROM draft_reviews WHERE owner = ? AND contact = ?
             ORDER BY created_at DESC, id LIMIT 100""", (request.owner, request.contact))
         return [dict(review_id=row["id"], created_at=row["created_at"]) for row in rows]
+
+    def feedback(self, review_id: str, *, owner: str, expected_revision: int, decision: str,
+                 retrieval: str = "not_rated", style: str = "not_rated", notes: str = "") -> dict:
+        revision_number(expected_revision)
+        for value, allowed, name in (
+                (decision, ("usable", "needs_work", "rejected"), "Decision"),
+                (retrieval, ("useful", "incorrect", "not_rated"), "Retrieval rating"),
+                (style, ("appropriate", "needs_edit", "not_rated"), "Style rating")):
+            if value not in allowed:
+                raise ValueError(f"{name} is invalid")
+        if not isinstance(notes, str) or len(notes) > 2000:
+            raise ValueError("Notes must be a string of at most 2,000 characters")
+        with self._write():
+            review = self.get(review_id, owner=owner)
+            if review["revision"] != expected_revision:
+                raise ValueError("Stale review revision; reload before rating")
+            if decision == "usable" and not review["context_current"]:
+                raise ValueError("Context changed; rebuild the draft before marking it usable")
+            item = dict(id=str(uuid.uuid4()), review_id=review_id, revision=expected_revision,
+                        decision=decision, retrieval=retrieval, style=style, notes=notes.strip(), recorded_at=now())
+            self.connection.execute("""INSERT INTO draft_feedback
+                VALUES (:id, :review_id, :revision, :decision, :retrieval, :style, :notes, :recorded_at)""", item)
+            return item
+
+    def feedback_history(self, review_id: str, *, owner: str) -> list[dict]:
+        self._row(review_id, owner)
+        return [dict(row) for row in self.connection.execute(
+            "SELECT * FROM draft_feedback WHERE review_id = ? ORDER BY recorded_at, id", (review_id,))]
+
+    def summary(self, *, owner: str, contact: str) -> dict:
+        request = DraftRequest(owner, contact, now(), "summary")
+        rows = self.connection.execute("""SELECT r.result_json, e.text, f.decision, f.retrieval, f.style
+            FROM draft_reviews r JOIN draft_edits e ON e.review_id = r.id
+            AND e.revision = (SELECT MAX(revision) FROM draft_edits WHERE review_id = r.id)
+            LEFT JOIN draft_feedback f ON f.id = (SELECT id FROM draft_feedback
+                WHERE review_id = r.id AND revision = e.revision ORDER BY recorded_at DESC, id DESC LIMIT 1)
+            WHERE r.owner = ? AND r.contact = ?""", (request.owner, request.contact)).fetchall()
+        rated = [row for row in rows if row["decision"] is not None]
+        overlaps = []
+        for row in rows:
+            original = json.loads(row["result_json"])["draft_text"]
+            a, b = Counter(original.split()), Counter(row["text"].split())
+            total = sum(a.values()) + sum(b.values())
+            overlaps.append(2*sum((a & b).values())/total if total else 1.0)
+        return dict(reviews=len(rows), rated_current_revisions=len(rated),
+                    decisions=dict(Counter(row["decision"] for row in rated)),
+                    retrieval=dict(Counter(row["retrieval"] for row in rated)),
+                    style=dict(Counter(row["style"] for row in rated)),
+                    changed_drafts=sum(row["text"] != json.loads(row["result_json"])["draft_text"] for row in rows),
+                    mean_word_overlap=sum(overlaps)/len(overlaps) if overlaps else None,
+                    metric_note="Word overlap ignores order; feedback is subjective, not a held-out quality score.")

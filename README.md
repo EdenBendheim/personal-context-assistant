@@ -128,4 +128,10 @@ See [PLAN.md](PLAN.md) for milestones and [DEVLOG.md](DEVLOG.md) for actual comp
 
 `Reviews(store).create(DraftRequest(...))` saves a generated packet and its original citations in the local SQLite store. `get(id, owner=...)`, `edit(id, owner=..., expected_revision=N, text=...)`, `history(id, owner=...)`, and `list(owner=..., contact=...)` provide owner-scoped access. Edits preserve whitespace, the immutable original, and earlier wording. A stale editor is rejected; saving unchanged wording adds no revision. A cold-start result is returned without saving an empty review.
 
-Each loaded review reports `context_current`: the same contact/topic/cutoff packet is rebuilt and compared with the original fingerprint. Saved history remains inspectable when source content changes; it is not permanently erased. Private drafts remain in the ignored database, and saving is not sending. A browser interface and feedback recording follow this persistence layer.
+Each loaded review reports `context_current`: the same contact/topic/cutoff packet is rebuilt and compared with the original fingerprint. Saved history remains inspectable when source content changes; it is not permanently erased. Private drafts remain in the ignored database, and saving is not sending. A browser interface follows this persistence layer.
+
+### Record feedback on the wording you reviewed
+
+`feedback(id, owner=..., expected_revision=N, decision="usable"|"needs_work"|"rejected", retrieval="useful"|"incorrect"|"not_rated", style="appropriate"|"needs_edit"|"not_rated", notes="...")` records a local assessment. Marking stale-context drafts usable is rejected; rejection/needs-work feedback still helps diagnose failures. This is a review label, not sending or automatic factual validation of edited prose.
+
+`feedback_history` preserves earlier assessments. `summary(owner=..., contact=...)` counts only the latest assessment of each current draft revision, so re-rating cannot inflate the sample and an edit needs a new rating. It also counts changed drafts and reports word multiset overlap against the original template. Overlap ignores word order; these subjective development measurements do not establish held-out reply quality. Empty samples report a null overlap.
