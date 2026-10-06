@@ -1,5 +1,14 @@
 # Development log
 
+## October 5, 2026
+
+- Added generic/context/personalized draft review packets combining eligible past messages, cited memory, and outbound examples. Added a local extractive quote-provider interface, bounded literal-quote validation, provenance-bearing citations, a template reply, and explicit needs-history/needs-review outcomes.
+- Providers receive an isolated copy of the packet. The engine checks stored source/contact/time boundaries and rebuilds the packet before returning: edits or revocations during provider work invalidate it. Unknown, fabricated, style-only, duplicate, or oversized quote proposals are rejected. Style examples alone cannot supply factual context.
+- Added a local CLI and an in-memory invented-message walkthrough to CI. Drafts/runs are ignored to keep future real review output private. There is no model/API call or message sending; the existing fixed retrieval benchmark is unchanged.
+- Verification: 35 unit tests passed; all 20 retrieval benchmark cases still passed with zero boundary violations. The synthetic walkthrough produced distinct generic/context/personalized packets with 0/2/3 citations, and an unknown contact returned an empty needs-history result. Tests also cover provider mutation isolation, source edits/memory revocation during drafting, and broken retrieval boundaries.
+- Interview explanation: "I connected retrieval and editable memory to a draft review pipeline, so users can inspect every quote and the system refuses stale or unsupported context before showing the draft."
+- Still pending: language-model drafting, semantic entailment checks, style imitation/quality evaluation, embedding retrieval, review UI, and permanent privacy erasure. Literal quote provenance is not factual truth or demonstrated reply quality.
+
 ## October 4, 2026
 
 - Implemented contact-scoped human-reviewed fact/preference memory with immutable revisions, required source/message citations, pinned source fingerprints, reasons, and timezone-normalized effective times.

@@ -2,7 +2,7 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
-**Status — October 4, 2026:** working export ingestion, read-only import preview/error reporting, contact-specific retrieval, a fixed synthetic retrieval benchmark, and editable source-backed memory. Reply generation, embedding retrieval, and the review UI are planned. No personalized language model has been trained.
+**Status — October 5, 2026:** working export ingestion, import preview/error reporting, contact-specific retrieval, a fixed synthetic benchmark, editable memory, and a local extractive draft/review pipeline. Language-model drafting, embedding retrieval, and the review UI are planned. No personalized language model has been trained.
 
 ## Working now
 
@@ -14,6 +14,7 @@ A communication assistant that retrieves relevant conversation history and the o
 - Import preview counts valid, invalid, skipped, and duplicate records across JSONL, MBOX, and Discord CSV. Invalid files are rejected before any database writes.
 - A versioned benchmark with disjoint development/evaluation conversations, source labels, exclusive cutoffs, and future/cross-contact distractors. CI fails on missing expected context or boundary violations.
 - Human-reviewed facts/preferences scoped to one contact, with cited immutable revisions, correction history, explicit withdrawal, and stale-editor protection.
+- Generic, context-only, and personalized review packets; a deterministic extractive provider, literal-quote citation checks, insufficient-history handling, and context-change detection before returning a draft.
 
 This first retrieval baseline deliberately needs no API key, model download, or external service. It provides a measurable comparison for the embedding-based version.
 
@@ -97,6 +98,28 @@ The add/list result contains `memory_id` and `revision`. Use that ID with `histo
 
 Revisions default to the current UTC time; `--at` supplies an explicit timezone-aware effective time for imported history or controlled evaluations. Supporting messages cannot be later than their revision, and revision times must increase strictly. Context chooses the latest revision **strictly before** `--before`, so a later correction cannot leak backward. Withdrawal overrides historical retrieval too, preventing reuse of a memory the owner has explicitly withdrawn.
 
-Withdrawal is an exclusion tombstone, **not permanent erasure**: history retains previous text, reasons, and source IDs for review. Raw-export deletion and privacy erasure remain planned. Memory is local SQLite data; keep its database in ignored `data/`. There is no automatic extraction, draft generation, or message sending in this version.
+Withdrawal is an exclusion tombstone, **not permanent erasure**: history retains previous text, reasons, and source IDs for review. Raw-export deletion and privacy erasure remain planned. Memory is local SQLite data; keep its database in ignored `data/`. There is no automatic memory extraction or message sending.
+
+## Build a draft for review
+
+```sh
+export PYTHONPATH=src
+python3 -m personal_context.draft_demo
+python3 -m personal_context.draft_cli --db data/demo.sqlite \
+  --owner owner@example.invalid --contact alex@example.invalid \
+  --before 2026-09-04T00:00:00Z --query demo --mode personalized
+```
+
+The demo uses invented messages in memory. The CLI reads an existing imported store; it does not create a missing database or send anything. Reports contain `draft_text`, `citations`, an inspectable `packet`, its fingerprint, review notes, and a status:
+
+- `generic`: a template using the supplied topic; no conversation or memory retrieval.
+- `context`: matching past messages from the selected participant pair.
+- `personalized`: matching messages plus reviewed, valid memory and the owner's outbound writing examples for that contact. These examples are available to the provider, but the current extractive provider does not imitate their style.
+- `needs_history`: contextual/personalized mode has no factual evidence, even if style-only examples exist. The provider is not called and the draft is empty.
+- `needs_review`: a template with at most three labeled historical quotes and a place for the person to add a response or next step. This status does not mean ready to send.
+
+`QuoteProvider` accepts an isolated copy of the review packet and returns `CitedQuote` selections. Unknown references, style-only citations, nonliteral quotes, duplicates, and oversized proposals are rejected. Each quote retains message provenance or a memory revision with its supporting source IDs. The engine rebuilds the packet after provider selection: source edits, withdrawals, or changed retrieval during that call require a new review. The fixed retrieval benchmark remains unchanged; drafting has separate synthetic development tests and a CI walkthrough.
+
+This is an **extractive template baseline**, not a generative reply model. Literal matching establishes where a quote came from; it does not prove that a truncated quote preserves meaning, that old information is still true, or that a reviewed memory is entailed by its sources. A language-model provider needs additional semantic support checks and reply-quality evaluation. There is no API request or paid service. Reports include message bodies and memory text, so real output belongs in ignored `drafts/`, `runs/`, or `data/`, never a public fixture.
 
 See [PLAN.md](PLAN.md) for milestones and [DEVLOG.md](DEVLOG.md) for actual completed work.

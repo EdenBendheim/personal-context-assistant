@@ -9,6 +9,8 @@ dist/
 !.env.example
 data/
 exports/
+drafts/
+runs/
 credentials/
 *.sqlite*
 *.db*

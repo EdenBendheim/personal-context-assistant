@@ -15,9 +15,11 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 ## Milestone 2 — drafting and retrieval comparisons
 
 - [ ] Add an embedding backend behind the same retrieval contract; retain lexical baseline.
-- [ ] Add a configurable draft provider using retrieved citations and recipient examples.
-- [ ] Separate generic, context-only, and personalized configurations.
-- [ ] Add unsupported-fact checks and graceful handling of insufficient history.
+- [x] Add an extractive quote-provider contract and an inspectable draft packet with citations.
+- [x] Separate generic, context-only, and personalized context configurations.
+- [x] Reject unavailable/nonliteral quotes and stale context; abstain when factual history is insufficient.
+- [ ] Add a language-model draft provider using retrieved citations and recipient examples.
+- [ ] Add semantic support checks for generated factual prose and evaluate style/reply quality.
 
 ## Milestone 3 — useful application
 
@@ -35,4 +37,4 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 
 ## Next session
 
-Add a reviewable draft contract that combines retrieved messages, current cited memory, and outbound examples. Start with a deterministic synthetic provider so unsupported-fact and insufficient-history checks work without paid APIs; then add configurable providers and embedding retrieval behind the same contract. Keep the fixed retrieval benchmark unchanged and add separate drafting cases. The current memory API/CLI works, but automatic extraction, permanent privacy erasure, draft generation, style quality, and a review UI remain pending. Keep a short explanation of each actual change and its checks in DEVLOG. The daily development run implements, checks, commits, and pushes an update; small useful steps are sufficient.
+Build a small local review UI over the existing draft packets: select a contact/topic/cutoff, inspect citations and memory, edit the reply, and record feedback without sending. Add a language-model provider with an explicit semantic-support contract after that review path works; the current literal-quote provider cannot validate free-form factual prose or imitate style. Keep the fixed retrieval benchmark unchanged and extend separate drafting development cases. Embedding retrieval, permanent privacy erasure, automatic memory extraction, and real-user reply-quality evaluation remain pending. Keep a short explanation of each actual change and its checks in DEVLOG. The daily development run implements, checks, commits, and pushes an update; small useful steps are sufficient.
