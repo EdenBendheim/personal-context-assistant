@@ -2,6 +2,9 @@
 
 ## October 6, 2026
 
+- Added a responsive local browser review screen with contact/topic/cutoff selection, inspectable evidence and writing examples, editable drafts, saved-review history, and revision-bound feedback. Unsaved wording disables ratings and prompts before discarding; the page never sends a message. Packaged HTML/JS/CSS as local assets.
+- Verification for this step: all 46 tests passed. In a real Chromium browser, created a review, edited/saved revision 2, recorded usable/useful feedback, and reloaded to see persistent counts. An HTML-shaped synthetic message rendered literally with zero injected images and an unchanged page title.
+
 - Added a dependency-free loopback HTTP API for contact selection, draft creation/reopening, edits, feedback, and summaries. It fixes the owner at launch and rejects invalid tokens, Host/Origin headers, malformed/oversized bodies, and conflicting edits. It omits traffic logs and prevents missing-database recreation.
 - Verification for this step: all 45 tests passed, including four real HTTP integration tests covering persisted edit/feedback round trips, owner isolation, source deletion, bad field types, and request boundaries.
 

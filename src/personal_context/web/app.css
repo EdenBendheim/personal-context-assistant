@@ -1,0 +1,32 @@
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #1e2b2b; background: #f4f6f3; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+header, main { max-width: 1200px; margin: auto; padding: 24px; }
+header { padding-top: 48px; padding-bottom: 12px; }
+h1 { font-size: clamp(28px, 4vw, 42px); letter-spacing: -.035em; margin: 8px 0; }
+h2 { font-size: 20px; margin-top: 0; }
+p, li { line-height: 1.5; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .1em; color: #397263; }
+.badge { display: inline-block; background: #e2eee8; border-radius: 20px; padding: 7px 12px; font-size: 13px; }
+.card { background: white; border: 1px solid #dce2de; border-radius: 12px; padding: 24px; margin-bottom: 20px; min-width: 0; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.workspace { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 20px; }
+label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+input, select, textarea { display: block; width: 100%; margin-top: 7px; border: 1px solid #b9c7bf; border-radius: 6px; padding: 10px; font: 14px/1.5 system-ui; color: inherit; background: white; }
+textarea { resize: vertical; }
+button { border: 0; border-radius: 6px; padding: 11px 16px; font: 600 14px system-ui; background: #24634e; color: white; cursor: pointer; margin: 4px 0 14px; }
+button:disabled { opacity: .5; cursor: default; }
+:focus-visible { outline: 3px solid #58a789; outline-offset: 3px; }
+details { margin: 14px 0; }
+summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+pre, .snippet { white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.5 ui-monospace, monospace; }
+.source { border-bottom: 1px solid #e4e8e4; padding: 14px 0; }
+.source:first-child { padding-top: 0; }
+.source h3 { font-size: 14px; margin: 0 0 8px; }
+.muted, #review-notes, #metrics { color: #53665e; font-size: 13px; }
+.saved { display: flex; gap: 14px; align-items: end; margin-top: 8px; }
+.saved label { flex: 1; }
+#notice { min-height: 24px; padding: 10px 0; }
+#notice[data-error="true"] { color: #a23424; }
+hr { border: 0; border-top: 1px solid #dce2de; margin: 24px 0; }
+@media (max-width: 760px) { .workspace, .grid { grid-template-columns: 1fr; } header, main { padding: 20px; } .card { padding: 18px; } .saved { align-items: stretch; flex-direction: column; gap: 0; } }

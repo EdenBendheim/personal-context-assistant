@@ -44,20 +44,24 @@ class Handler(BaseHTTPRequestHandler):
         # Request paths can contain contact identifiers; don't log private review traffic.
         pass
 
-    def reply(self, status, value):
-        body = json.dumps(value).encode("utf-8")
+    def reply(self, status, value, *, content_type="application/json; charset=utf-8", nonce=None):
+        body = json.dumps(value).encode("utf-8") if content_type.startswith("application/json") else value.encode("utf-8")
         self.send_response(status)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
         self.send_header("X-Content-Type-Options", "nosniff")
-        self.send_header("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'")
+        policy = "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
+        if nonce:
+            policy += f"; script-src 'self' 'nonce-{nonce}'; style-src 'self'; connect-src 'self'"
+        self.send_header("Content-Security-Policy", policy)
+        self.send_header("Cross-Origin-Opener-Policy", "same-origin")
         self.send_header("Connection", "close")
         self.end_headers()
         self.wfile.write(body)
         self.close_connection = True
 
-    def guard(self):
+    def guard(self, *, require_token=True):
         if self.headers.get("Host") != self.server.url.removeprefix("http://"):
             self.reply(403, {"error": "Unexpected Host"})
             return False
@@ -65,7 +69,10 @@ class Handler(BaseHTTPRequestHandler):
         if origin is not None and origin != self.server.url:
             self.reply(403, {"error": "Unexpected Origin"})
             return False
-        if not secrets.compare_digest(self.headers.get("Authorization", "").encode(), f"Bearer {self.server.token}".encode()):
+        if self.headers.get("Sec-Fetch-Site") == "cross-site":
+            self.reply(403, {"error": "Cross-site requests are unsupported"})
+            return False
+        if require_token and not secrets.compare_digest(self.headers.get("Authorization", "").encode(), f"Bearer {self.server.token}".encode()):
             self.reply(401, {"error": "Local review token required"})
             return False
         return True
@@ -87,7 +94,16 @@ class Handler(BaseHTTPRequestHandler):
             raise ValueError("Request body must be valid UTF-8 JSON") from None
 
     def dispatch(self, method):
-        if not self.guard():
+        assets = {"/":"index.html", "/app.js":"app.js", "/app.css":"app.css"}
+        public_asset = method == "GET" and self.path in assets
+        if not self.guard(require_token=not public_asset):
+            return
+        if public_asset:
+            nonce = secrets.token_urlsafe(24)
+            content = (Path(__file__).parent/"web"/assets[self.path]).read_text()
+            content = content.replace("__NONCE__", nonce).replace("__TOKEN__", self.server.token)
+            kind = {"/":"text/html", "/app.js":"text/javascript", "/app.css":"text/css"}[self.path]
+            self.reply(200, content, content_type=kind+"; charset=utf-8", nonce=nonce)
             return
         store = None
         try:
@@ -116,6 +132,9 @@ class Handler(BaseHTTPRequestHandler):
                 fields(query, ())
                 result = reviews.get(path[2], owner=owner)
                 result["feedback"] = reviews.feedback_history(path[2], owner=owner)
+            elif method == "GET" and len(path) == 4 and path[:2] == ["api", "reviews"] and path[3] == "history":
+                fields(query, ())
+                result = reviews.history(path[2], owner=owner)
             elif method == "POST" and path == ["api", "reviews"]:
                 fields(query, ())
                 payload = fields(self.body(), ("contact", "before", "query"), ("mode", "limit"))
@@ -155,7 +174,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Serve a private local draft review API")
+    parser = argparse.ArgumentParser(description="Serve a private local draft review interface")
     parser.add_argument("--db", type=Path, required=True)
     parser.add_argument("--owner", required=True)
     parser.add_argument("--port", type=int, default=8765, help="Loopback port; 0 chooses an available port")
@@ -164,7 +183,7 @@ def main():
         server = ReviewServer(args.db, owner=args.owner, port=args.port)
     except (ValueError, OSError, OverflowError) as exc:
         parser.error(str(exc))
-    print(f"Local review API: {server.url}\nBearer token: {server.token}", file=sys.stderr, flush=True)
+    print(f"Open local review: {server.url}\nAPI bearer token: {server.token}", file=sys.stderr, flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

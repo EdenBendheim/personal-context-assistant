@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Personal Context · Review</title>
+  <link rel="stylesheet" href="/app.css">
+  <script nonce="__NONCE__">globalThis.reviewToken = "__TOKEN__";</script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header><p class="eyebrow">PERSONAL CONTEXT · LOCAL WORKSPACE</p><h1>A reply you can review.</h1>
+    <p>Inspect the history, write your response, and record what helped.</p>
+    <p class="badge">Extractive baseline · drafts stay in your local database</p>
+  </header>
+  <main>
+    <p id="notice" role="status" aria-live="polite">Loading contacts…</p>
+    <form id="create-form" class="card">
+      <div class="grid"><label>Contact<select id="contact" required></select></label>
+        <label>Reply topic<input id="topic" required maxlength="1000" placeholder="e.g. Thursday demo"></label>
+        <label>Context before (exclusive, ISO time)<input id="cutoff" required></label>
+        <label>Draft mode<select id="mode"><option value="personalized">History + memory + writing examples</option>
+          <option value="context">History only</option><option value="generic">Generic template</option></select></label>
+      </div>
+      <button type="submit">Create review</button>
+      <div class="saved"><label>Saved reviews<select id="saved"><option value="">Choose a saved review</option></select></label>
+        <button type="button" id="load">Open saved review</button></div>
+    </form>
+    <section id="workspace" hidden>
+      <div class="workspace">
+        <aside class="card"><h2>Context and sources</h2><div id="evidence"></div>
+          <details><summary>Your writing examples</summary><div id="examples"></div></details></aside>
+        <div class="card"><h2>Review your reply</h2><p id="review-state"></p>
+          <ul id="review-notes"></ul>
+          <label>Draft wording<textarea id="draft" rows="15" maxlength="100000"></textarea></label>
+          <button id="save" type="button">Save wording</button>
+          <details><summary>Original template and edit history</summary><pre id="original"></pre><div id="history"></div></details>
+          <hr><h2>How useful was this?</h2>
+          <form id="feedback-form"><div class="grid">
+            <label>Decision<select id="decision"><option value="needs_work">Needs more work</option><option value="usable">Usable after my review</option><option value="rejected">Rejected</option></select></label>
+            <label>Retrieved context<select id="retrieval"><option value="not_rated">Not rated</option><option value="useful">Useful</option><option value="incorrect">Incorrect / irrelevant</option></select></label>
+            <label>Writing style<select id="style"><option value="not_rated">Not rated</option><option value="appropriate">Appropriate</option><option value="needs_edit">Needs editing</option></select></label>
+          </div><label>Review notes<textarea id="feedback-notes" rows="3" maxlength="2000"></textarea></label>
+          <button type="submit" id="record">Record feedback</button></form>
+          <p class="muted">Ratings refer to saved wording. Edited prose needs your factual review. This interface has no sending action.</p>
+          <div id="feedback-history"></div>
+        </div>
+      </div>
+    </section>
+    <section class="card"><h2>This contact’s review history</h2><p id="metrics">Choose a contact.</p></section>
+  </main>
+</body>
+</html>

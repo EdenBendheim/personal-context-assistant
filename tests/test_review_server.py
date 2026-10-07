@@ -41,7 +41,8 @@ class ServerTests(unittest.TestCase):
         body = json.dumps(payload) if payload is not None else raw
         connection.request("POST" if body is not None else "GET", path, body, auth)
         response = connection.getresponse()
-        status, result, response_headers = response.status, json.loads(response.read()), dict(response.getheaders())
+        status, data, response_headers = response.status, response.read(), dict(response.getheaders())
+        result = json.loads(data) if response_headers["Content-Type"].startswith("application/json") else data.decode()
         connection.close()
         return status, result, response_headers
 
@@ -95,3 +96,20 @@ class ServerTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             ReviewServer(missing, owner=OWNER)
         self.assertFalse(missing.exists())
+
+    def test_browser_bootstrap_assets_and_history_are_guarded_and_uncached(self):
+        status, html, headers = self.call("/", headers={"Authorization":""})
+        self.assertEqual(200, status)
+        self.assertIn(self.server.token, html)
+        self.assertIn("nonce-", headers["Content-Security-Policy"])
+        self.assertIn("frame-ancestors 'none'", headers["Content-Security-Policy"])
+        self.assertEqual("no-store", headers["Cache-Control"])
+        for path in ("/", "/app.js", "/app.css"):
+            self.assertEqual(403, self.call(path, headers={"Host":"attacker.invalid"})[0])
+            self.assertEqual(403, self.call(path, headers={"Sec-Fetch-Site":"cross-site"})[0])
+        js = self.call("/app.js", headers={"Authorization":""})[1]
+        self.assertNotIn(self.server.token, js)
+        self.assertNotIn("innerHTML", js)
+        self.assertIn("textContent", js)
+        rid = self.create()[1]["review_id"]
+        self.assertEqual([1], [item["revision"] for item in self.call("/api/reviews/"+rid+"/history")[1]])
