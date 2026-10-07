@@ -2,6 +2,9 @@
 
 ## October 6, 2026
 
+- Added a dependency-free loopback HTTP API for contact selection, draft creation/reopening, edits, feedback, and summaries. It fixes the owner at launch and rejects invalid tokens, Host/Origin headers, malformed/oversized bodies, and conflicting edits. It omits traffic logs and prevents missing-database recreation.
+- Verification for this step: all 45 tests passed, including four real HTTP integration tests covering persisted edit/feedback round trips, owner isolation, source deletion, bad field types, and request boundaries.
+
 - Added revision-bound usable/needs-work/rejected feedback, separate retrieval/style ratings, and contact-scoped summaries. Repeated assessments count once per current revision; edited drafts require re-rating. Stale-context drafts cannot be marked usable. Word overlap is explicitly an order-insensitive editing diagnostic.
 - Verification for this step: six review tests passed, including invalid ratings, withdrawn sources, stale revisions, repeat ratings, edited-rating exclusion, and empty contact summaries.
 

@@ -135,3 +135,15 @@ Each loaded review reports `context_current`: the same contact/topic/cutoff pack
 `feedback(id, owner=..., expected_revision=N, decision="usable"|"needs_work"|"rejected", retrieval="useful"|"incorrect"|"not_rated", style="appropriate"|"needs_edit"|"not_rated", notes="...")` records a local assessment. Marking stale-context drafts usable is rejected; rejection/needs-work feedback still helps diagnose failures. This is a review label, not sending or automatic factual validation of edited prose.
 
 `feedback_history` preserves earlier assessments. `summary(owner=..., contact=...)` counts only the latest assessment of each current draft revision, so re-rating cannot inflate the sample and an edit needs a new rating. It also counts changed drafts and reports word multiset overlap against the original template. Overlap ignores word order; these subjective development measurements do not establish held-out reply quality. Empty samples report a null overlap.
+
+## Local review API
+
+```sh
+export PYTHONPATH=src
+python3 -m personal_context.review_server --db data/demo.sqlite \
+  --owner owner@example.invalid --port 8765
+```
+
+The server requires an existing imported database, binds only to `127.0.0.1`, and prints its URL and a random per-launch bearer token to the local terminal. Requests use `Authorization: Bearer TOKEN`. Keep that token local. `GET /api/contacts` lists only this owner's conversations. `GET /api/reviews?contact=...`, `GET /api/reviews/ID`, and `GET /api/summary?contact=...` inspect saved work. `POST /api/reviews` takes contact/before/query and optional mode/limit; `/api/reviews/ID/edit` and `/feedback` use the fields described above. The owner is fixed at launch; a request cannot override it.
+
+Responses are uncached. Unexpected Host/Origin headers and unauthenticated API reads/writes are rejected; there is no cross-origin access. JSON bodies are bounded and each request uses its own SQLite connection. Conflicting edits/usable labels return HTTP 409. Traffic paths and message bodies are not logged. This local single-user server is not an internet deployment service. There is no sending endpoint.

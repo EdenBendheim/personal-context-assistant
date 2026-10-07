@@ -24,7 +24,7 @@ class DraftRequest:
         owner, contact = scope(self.owner, self.contact)
         object.__setattr__(self, "owner", owner)
         object.__setattr__(self, "contact", contact)
-        object.__setattr__(self, "before", utc_timestamp(self.before))
+        object.__setattr__(self, "before", utc_timestamp(nonempty(self.before, "Cutoff")))
         object.__setattr__(self, "query", nonempty(self.query, "Query"))
         if self.mode not in ("generic", "context", "personalized"):
             raise ValueError("Mode must be generic, context, or personalized")
