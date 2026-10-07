@@ -2,6 +2,11 @@
 
 ## October 6, 2026
 
+- Added browser and owner-scoped API memory creation, correction, withdrawal, and source/history inspection. Changed/missing citations are flagged; a source moved to another contact is never displayed. The panel reports the actual cutoff-eligible revision, and current-time edits require a rebuilt draft to enter its context. Lists are capped at 100 items; history pagination and permanent erasure remain pending.
+- Final verification: all 50 unit/HTTP tests passed; the fixed 20-case retrieval benchmark retained recall/precision 1.0 and zero boundary violations (unchanged fingerprint). Chromium create/edit/withdraw succeeded; withdrawal flagged the affected draft stale and disabled a usable rating. No browser console errors; a 390px mobile viewport had exactly 390px content width and zero injected images. The wheel includes all local UI assets.
+- Today's random selection was this repository, with a target of five useful commits. Work remains an extractive local baseline; language-model drafting, embedding comparisons, held-out reply quality, and permanent privacy erasure are pending.
+- Interview explanation: "I built a local review application where drafts retain their evidence, edits and feedback are tied to exact revisions, and users can correct or withdraw cited memory without silently reusing stale context."
+
 - Added a responsive local browser review screen with contact/topic/cutoff selection, inspectable evidence and writing examples, editable drafts, saved-review history, and revision-bound feedback. Unsaved wording disables ratings and prompts before discarding; the page never sends a message. Packaged HTML/JS/CSS as local assets.
 - Verification for this step: all 46 tests passed. In a real Chromium browser, created a review, edited/saved revision 2, recorded usable/useful feedback, and reloaded to see persistent counts. An HTML-shaped synthetic message rendered literally with zero injected images and an unchanged page title.
 

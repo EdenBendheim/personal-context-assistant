@@ -3,6 +3,9 @@ const $ = id => document.getElementById(id);
 let review = null;
 let selectedContact = "";
 let busy = false;
+let memoryItems = [];
+let memoryItem = null;
+let memoryBaseline = "";
 
 function notice(text, error = false) {
   $("notice").textContent = text;
@@ -13,6 +16,9 @@ function controls() {
   document.querySelectorAll("input,select,textarea,button").forEach(el => { el.disabled = busy; });
   $("record").disabled = busy || Boolean(dirty());
   $("decision").querySelector('[value="usable"]').disabled = Boolean(review && !review.context_current);
+  $("memory-kind").disabled = busy || Boolean(memoryItem);
+  $("memory-save").disabled = busy || Boolean(memoryItem && memoryItem.status === "revoked") || (!memoryItem && (!review || !review.context_current));
+  $("memory-withdraw").disabled = busy || !memoryItem || memoryItem.status === "revoked";
 }
 async function perform(action) {
   if (busy) return;
@@ -40,7 +46,8 @@ function evidence(items, container, styles = false) {
   if (!items.length) addText(container, "p", "No context in this view.", "muted");
   for (const item of items) {
     const section = document.createElement("section"); section.className = "source";
-    addText(section, "h3", styles ? `${item.source} · ${item.timestamp}` : `${item.key} · ${item.kind}`);
+    const citation = !styles && review.original.citations.find(entry => entry.evidence_key === item.key);
+    addText(section, "h3", styles ? `${item.source} · ${item.timestamp}` : `${citation ? "["+citation.label+"] " : ""}${item.key} · ${item.kind}`);
     addText(section, "p", styles ? item.body : item.text, "snippet");
     const details = document.createElement("details");
     addText(details, "summary", "Inspect provenance");
@@ -77,6 +84,7 @@ async function refreshContact() {
   if (review) $("saved").value = review.review_id;
   const stats = await api(`/api/summary?contact=${encodeURIComponent(contact)}`);
   $("metrics").textContent = `${stats.reviews} saved · ${stats.rated_current_revisions} current revisions rated · ${stats.changed_drafts} edited. Decisions: ${JSON.stringify(stats.decisions)}. ${stats.metric_note}`;
+  await refreshMemory();
 }
 async function load(id) {
   const result = await api(`/api/reviews/${encodeURIComponent(id)}`);
@@ -90,7 +98,14 @@ async function load(id) {
   });
   await refreshContact();
 }
-function discardAllowed() { return !dirty() || window.confirm("Discard unsaved draft wording?"); }
+function memoryValues() {
+  return { kind: $("memory-kind").value, text: $("memory-text").value, reason: $("memory-reason").value,
+    sources: [...document.querySelectorAll("#memory-sources input:checked")].map(el => JSON.parse(el.value)) };
+}
+function memoryDirty() { return memoryBaseline && JSON.stringify(memoryValues()) !== memoryBaseline; }
+function discardAllowed(includeMemory = false) {
+  return (!dirty() && (!includeMemory || !memoryDirty())) || window.confirm(includeMemory ? "Discard unsaved draft or memory wording?" : "Discard unsaved draft wording?");
+}
 $("create-form").addEventListener("submit", event => {
   event.preventDefault(); if (!discardAllowed()) return;
   perform(async () => {
@@ -101,8 +116,8 @@ $("create-form").addEventListener("submit", event => {
   });
 });
 $("contact").addEventListener("change", () => {
-  if (!discardAllowed()) { $("contact").value = selectedContact; return; }
-  selectedContact = $("contact").value; review = null; $("workspace").hidden = true;
+  if (!discardAllowed(true)) { $("contact").value = selectedContact; return; }
+  selectedContact = $("contact").value; review = null; memoryItem = null; memoryBaseline = ""; $("workspace").hidden = true;
   perform(async () => { await refreshContact(); notice("Choose a topic or open a saved review."); });
 });
 $("load").addEventListener("click", () => {
@@ -122,7 +137,92 @@ $("feedback-form").addEventListener("submit", event => {
     await load(review.review_id); notice("Feedback recorded for the saved wording.");
   });
 });
-window.addEventListener("beforeunload", event => { if (dirty()) { event.preventDefault(); event.returnValue = ""; } });
+window.addEventListener("beforeunload", event => { if (dirty() || memoryDirty()) { event.preventDefault(); event.returnValue = ""; } });
+
+function renderMemory(item) {
+  memoryItem = item;
+  $("memory-select").value = item ? item.memory_id : "";
+  $("memory-kind").value = item ? item.kind : "fact";
+  $("memory-text").value = item ? item.text || "" : "";
+  $("memory-reason").value = "";
+  $("memory-state").textContent = item ? `Revision ${item.revision} · ${item.status} · ${item.eligible_at_cutoff ? "cutoff uses revision "+item.context_revision : "excluded at draft cutoff"}` : "New memory: choose citations from the draft's historical messages.";
+  const sources = new Map();
+  for (const entry of review ? review.original.packet.evidence : []) {
+    if (entry.kind === "message") {
+      const p = entry.provenance; sources.set(JSON.stringify([p.source, p.id]), { body: entry.text, source:p.source, id:p.id });
+    }
+  }
+  if (item) for (const source of item.source_messages) {
+    if (source.message) sources.set(JSON.stringify([source.source, source.message_id]), source.message);
+  }
+  const checked = new Set(item ? item.sources.map(ref => JSON.stringify([ref.source, ref.message_id])) : []);
+  $("memory-sources").replaceChildren();
+  if (!sources.size) addText($("memory-sources"), "p", "Create a draft with matching history to choose sources.", "muted");
+  for (const [key, source] of sources) {
+    const label = document.createElement("label"); label.className = "source-choice";
+    const checkbox = document.createElement("input"); checkbox.type = "checkbox"; checkbox.value = key; checkbox.checked = checked.has(key);
+    label.append(checkbox, document.createTextNode(`${source.source} / ${source.id}: ${source.body}`));
+    $("memory-sources").append(label);
+  }
+  $("memory-history").replaceChildren();
+  if (item) for (const revision of item.history) {
+    const details = document.createElement("details");
+    addText(details, "summary", `Revision ${revision.revision} · ${revision.status} · ${revision.effective_at}`);
+    addText(details, "p", revision.text || "Withdrawn"); addText(details, "p", revision.reason, "muted");
+    for (const source of revision.source_messages) {
+      addText(details, "p", `${source.source} / ${source.message_id} · ${source.current ? "source unchanged" : "source missing, changed, or unavailable"}`, "muted");
+      if (source.message) addText(details, "pre", source.message.body);
+    }
+    $("memory-history").append(details);
+  }
+  memoryBaseline = JSON.stringify(memoryValues()); controls();
+}
+async function refreshMemory() {
+  const preserve = memoryDirty();
+  const selected = memoryItem ? memoryItem.memory_id : "";
+  memoryItems = await api(`/api/memory?contact=${encodeURIComponent($("contact").value)}&before=${encodeURIComponent($("cutoff").value)}`);
+  $("memory-select").replaceChildren();
+  addText($("memory-select"), "option", "New reviewed memory").value = "";
+  for (const item of memoryItems) {
+    addText($("memory-select"), "option", `${item.kind} · ${item.status} · ${(item.text || "Withdrawn").slice(0, 70)}`).value = item.memory_id;
+  }
+  if (preserve) { $("memory-select").value = selected; return; }
+  renderMemory(memoryItems.find(item => item.memory_id === selected) || null);
+}
+$("memory-select").addEventListener("change", () => {
+  if (memoryDirty() && !window.confirm("Discard unsaved memory wording?")) { $("memory-select").value = memoryItem ? memoryItem.memory_id : ""; return; }
+  renderMemory(memoryItems.find(item => item.memory_id === $("memory-select").value) || null);
+});
+async function afterMemory(item) {
+  memoryBaseline = ""; memoryItem = item;
+  await refreshMemory();
+  if (review) {
+    const current = await api(`/api/reviews/${review.review_id}`);
+    review.context_current = current.context_current;
+    $("review-state").textContent = current.revision !== review.revision ? "Review changed in another editor — reopen before saving or rating." : `Saved revision ${review.revision} · ${current.context_current ? "context unchanged" : "context changed — rebuild before marking usable"}`;
+  }
+  notice("Memory saved. Use a cutoff after its revision time and rebuild to use the change.");
+}
+$("memory-form").addEventListener("submit", event => {
+  event.preventDefault(); perform(async () => {
+    const values = memoryValues();
+    let item;
+    if (memoryItem) {
+      const { kind, ...payload } = values;
+      item = await api(`/api/memory/${memoryItem.memory_id}/edit`, { ...payload, expected_revision: memoryItem.revision });
+    } else {
+      if (!review || !review.context_current) throw new Error("Rebuild current source context before adding memory");
+      item = await api("/api/memory", { ...values, contact: $("contact").value });
+    }
+    await afterMemory(item);
+  });
+});
+$("memory-withdraw").addEventListener("click", () => perform(async () => {
+  if (!$("memory-reason").value.trim()) throw new Error("Provide a reason for withdrawal");
+  const item = await api(`/api/memory/${memoryItem.memory_id}/withdraw`, { expected_revision: memoryItem.revision, reason: $("memory-reason").value });
+  await afterMemory(item); notice("Memory withdrawn; its revision history is retained.");
+}));
+$("current-time").addEventListener("click", () => perform(async () => { $("cutoff").value = new Date().toISOString(); await refreshMemory(); notice("Cutoff updated. Create a new review to rebuild its context."); }));
 $("cutoff").value = new Date().toISOString();
 perform(async () => {
   const result = await api("/api/contacts");

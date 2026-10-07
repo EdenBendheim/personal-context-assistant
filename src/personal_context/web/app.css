@@ -29,4 +29,9 @@ pre, .snippet { white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.5 u
 #notice { min-height: 24px; padding: 10px 0; }
 #notice[data-error="true"] { color: #a23424; }
 hr { border: 0; border-top: 1px solid #dce2de; margin: 24px 0; }
+.secondary { background: #e5eee8; color: #28563f; margin-left: 8px; }
+fieldset { border: 1px solid #dce2de; border-radius: 6px; margin: 8px 0 16px; padding: 12px; }
+legend { font-size: 13px; font-weight: 600; }
+.source-choice { font-weight: 400; overflow-wrap: anywhere; }
+.source-choice input { display: inline; width: auto; margin-right: 8px; }
 @media (max-width: 760px) { .workspace, .grid { grid-template-columns: 1fr; } header, main { padding: 20px; } .card { padding: 18px; } .saved { align-items: stretch; flex-direction: column; gap: 0; } }

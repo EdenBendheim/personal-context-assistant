@@ -11,6 +11,7 @@ from urllib.parse import parse_qs, urlsplit
 
 from .drafts import DraftRequest
 from .memory import nonempty
+from .memory_workspace import MemoryWorkspace
 from .reviews import Reviews
 from .store import Store
 
@@ -147,6 +148,28 @@ class Handler(BaseHTTPRequestHandler):
                 elif path[3] == "feedback":
                     payload = fields(self.body(), ("expected_revision", "decision"), ("retrieval", "style", "notes"))
                     result = reviews.feedback(path[2], owner=owner, **payload)
+                else:
+                    self.reply(404, {"error": "Unknown route"})
+                    return
+            elif method == "GET" and path == ["api", "memory"]:
+                fields(query, ("contact", "before"))
+                result = MemoryWorkspace(store, owner=owner).list(**query)
+            elif method == "GET" and len(path) == 3 and path[:2] == ["api", "memory"]:
+                fields(query, (), ("before",))
+                result = MemoryWorkspace(store, owner=owner).get(path[2], **query)
+            elif method == "POST" and path == ["api", "memory"]:
+                fields(query, ())
+                payload = fields(self.body(), ("contact", "kind", "text", "sources", "reason"))
+                result = MemoryWorkspace(store, owner=owner).create(**payload)
+            elif method == "POST" and len(path) == 4 and path[:2] == ["api", "memory"]:
+                fields(query, ())
+                memory = MemoryWorkspace(store, owner=owner)
+                if path[3] == "edit":
+                    payload = fields(self.body(), ("expected_revision", "text", "sources", "reason"))
+                    result = memory.revise(path[2], **payload)
+                elif path[3] == "withdraw":
+                    payload = fields(self.body(), ("expected_revision", "reason"))
+                    result = memory.withdraw(path[2], **payload)
                 else:
                     self.reply(404, {"error": "Unknown route"})
                     return

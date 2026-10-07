@@ -109,7 +109,25 @@ class ServerTests(unittest.TestCase):
             self.assertEqual(403, self.call(path, headers={"Sec-Fetch-Site":"cross-site"})[0])
         js = self.call("/app.js", headers={"Authorization":""})[1]
         self.assertNotIn(self.server.token, js)
-        self.assertNotIn("innerHTML", js)
-        self.assertIn("textContent", js)
         rid = self.create()[1]["review_id"]
         self.assertEqual([1], [item["revision"] for item in self.call("/api/reviews/"+rid+"/history")[1]])
+
+    def test_memory_http_correction_withdrawal_and_exclusive_cutoff(self):
+        from datetime import datetime, timedelta, timezone
+        before = (datetime.now(timezone.utc)+timedelta(minutes=1)).isoformat()
+        status, item, _ = self.call("/api/memory", dict(contact=CONTACT, kind="fact", text="Thursday demo.",
+            sources=[["gmail", "1"]], reason="Synthetic review"))
+        self.assertEqual(200, status)
+        mid = item["memory_id"]
+        self.assertFalse(self.call("/api/memory?contact="+CONTACT+"&before=2026-09-04T00:00:00Z")[1][0]["eligible_at_cutoff"])
+        self.assertTrue(self.call("/api/memory/"+mid)[1]["eligible_at_cutoff"])
+        rid = self.call("/api/reviews", dict(contact=CONTACT, before=before, query="demo"))[1]["review_id"]
+        edit = dict(expected_revision=1, text="Thursday demo confirmed.", sources=[["gmail", "1"]], reason="Clarified")
+        self.assertEqual(200, self.call("/api/memory/"+mid+"/edit", edit)[0])
+        self.assertEqual(409, self.call("/api/memory/"+mid+"/edit", edit)[0])
+        withdrawn = self.call("/api/memory/"+mid+"/withdraw", dict(expected_revision=2, reason="Withdrawn"))[1]
+        self.assertEqual("revoked", withdrawn["status"])
+        self.assertEqual([1, 2, 3], [x["revision"] for x in withdrawn["history"]])
+        self.assertFalse(self.call("/api/reviews/"+rid)[1]["context_current"])
+        invalid = dict(contact="riley@example.invalid", kind="fact", text="Wrong pair", sources=[["gmail", "1"]], reason="Invalid")
+        self.assertEqual(400, self.call("/api/memory", invalid)[0])

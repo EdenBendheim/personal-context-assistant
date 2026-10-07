@@ -27,10 +27,10 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 - [x] Persist original draft packets and immutable wording revisions with owner isolation and stale-editor checks.
 
 - [x] Build contact selection, source inspection, draft editing/reopening, and feedback in a local review interface.
-- [ ] Add cited-memory creation/correction/withdrawal to that browser interface.
+- [x] Add cited-memory creation/correction/withdrawal to that browser interface.
 - [ ] Add explicit local export deletion and index rebuild.
 - [x] Record useful/incorrect retrievals and changed wording without sending messages automatically.
-- [ ] Publish a synthetic walkthrough and architecture explanation.
+- [x] Publish synthetic demo commands, a browser walkthrough, and an architecture explanation.
 
 ## Milestone 4 — measured results
 
@@ -41,4 +41,4 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 
 ## Next session
 
-Build a small local review UI over the existing draft packets: select a contact/topic/cutoff, inspect citations and memory, edit the reply, and record feedback without sending. Add a language-model provider with an explicit semantic-support contract after that review path works; the current literal-quote provider cannot validate free-form factual prose or imitate style. Keep the fixed retrieval benchmark unchanged and extend separate drafting development cases. Embedding retrieval, permanent privacy erasure, automatic memory extraction, and real-user reply-quality evaluation remain pending. Keep a short explanation of each actual change and its checks in DEVLOG. The daily development run implements, checks, commits, and pushes an update; small useful steps are sufficient.
+The local review path now supports contact/topic/cutoff selection, source and memory inspection, draft editing/reopening, revision-bound feedback, and cited-memory creation/correction/withdrawal. Add a language-model provider with an explicit semantic-support contract and separate synthetic drafting cases. Compare its useful edits and source support against this extractive template before claiming style imitation. Keep the fixed retrieval benchmark unchanged. Embedding retrieval, permanent privacy erasure (including saved packet copies), automatic memory extraction, large-history pagination, and real-user reply-quality evaluation remain pending. Keep DEVLOG factual; small coherent verified daily steps are enough.

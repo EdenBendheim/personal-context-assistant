@@ -47,6 +47,22 @@
         </div>
       </div>
     </section>
+    <section class="card" id="memory-panel">
+      <h2>Reviewed memory</h2><p class="muted">Keep a fact or preference only after inspecting its supporting messages. Changes take effect now; your draft cutoff must be later to include them.</p>
+      <label>Memory item<select id="memory-select"><option value="">New reviewed memory</option></select></label>
+      <p id="memory-state">Create a draft to choose supporting messages.</p>
+      <form id="memory-form">
+        <label>Kind<select id="memory-kind"><option value="fact">Fact</option><option value="preference">Preference</option></select></label>
+        <label>Reviewed fact or preference<textarea id="memory-text" rows="3" required maxlength="4000"></textarea></label>
+        <fieldset><legend>Supporting messages</legend><div id="memory-sources"></div></fieldset>
+        <label>Reason for this change<input id="memory-reason" required maxlength="1000"></label>
+        <button type="submit" id="memory-save">Save reviewed memory</button>
+        <button type="button" id="memory-withdraw" class="secondary">Withdraw selected memory</button>
+        <button type="button" id="current-time" class="secondary">Use current time as draft cutoff</button>
+      </form>
+      <details><summary>Memory revisions and supporting messages</summary><div id="memory-history"></div></details>
+      <p class="muted">Withdrawal stops memory reuse and retains revision history. Permanent erasure remains a separate planned feature.</p>
+    </section>
     <section class="card"><h2>This contact’s review history</h2><p id="metrics">Choose a contact.</p></section>
   </main>
 </body>

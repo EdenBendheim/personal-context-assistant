@@ -2,7 +2,7 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
-**Status — October 6, 2026:** working export ingestion, import preview/error reporting, contact-specific retrieval, a fixed synthetic benchmark, editable memory, and a local extractive draft/review pipeline with persistent edits. A local browser review UI now works; language-model drafting and embedding retrieval are planned. No personalized language model has been trained.
+**Status — October 6, 2026:** working export ingestion, import preview/error reporting, contact-specific retrieval, a fixed synthetic benchmark, editable memory, and a local extractive draft/review pipeline with persistent edits, feedback, and a browser review workspace. A local browser review UI now works; language-model drafting and embedding retrieval are planned. No personalized language model has been trained.
 
 ## Working now
 
@@ -157,4 +157,18 @@ Start the server using the command above and open the printed `http://127.0.0.1:
 3. Edit and save wording. Unsaved wording must be saved before rating; conflicting editors require a reload.
 4. Record a decision plus retrieval/style feedback. Reopen the saved review after a restart to inspect revisions and earlier ratings.
 
-Contact changes and navigation protect unsaved wording. The interface uses text nodes for message content, a restrictive content-security policy, no external assets, and a responsive layout. A changed-context review cannot be marked usable until rebuilt. Citations still describe the original extractive quotes; they do not automatically validate your edited prose. Browser memory editing is the next step.
+Contact changes and navigation protect unsaved wording. The interface uses text nodes for message content, a restrictive content-security policy, no external assets, and a responsive layout. A changed-context review cannot be marked usable until rebuilt. Citations still describe the original extractive quotes; they do not automatically validate your edited prose. Cited memory can be created, corrected, and withdrawn in the same workspace.
+
+### Edit memory in the workspace
+
+Create a draft with source history, then choose supporting messages in **Reviewed memory**, write a fact/preference and a reason, and save. Select an existing item to inspect its revisions and current supporting message text, correct its wording/citations, or withdraw it with a reason. The selected kind/contact stays fixed. Source text is inspected only within the owner's exact conversation; a removed, changed, or moved source is marked unavailable/invalid.
+
+Browser edits use the real current time and expected revision numbers. The panel distinguishes the latest editable revision from the revision eligible at the selected draft cutoff. Use **Use current time as draft cutoff** and create a new review to include a new correction. Withdrawal also suppresses historical reuse and marks affected saved draft context stale. The immutable saved packet and memory audit still retain previous text; withdrawal is not erasure. The interface lists the latest 100 memory items/reviews per contact; history is unpaginated in this prototype.
+
+API equivalents: `GET /api/memory?contact=...&before=...`, `GET /api/memory/ID`, `POST /api/memory` with contact/kind/text/sources/reason, `POST /api/memory/ID/edit` with expected_revision/text/sources/reason, and `POST /api/memory/ID/withdraw` with expected_revision/reason. Sources are `[provider, message_id]` pairs. The owner is always the launch owner.
+
+### Architecture and next work
+
+Local exports → normalized SQLite messages → contact/time-limited retrieval + reviewed memory → immutable cited draft packet → saved wording revisions → human feedback. The browser talks only to the local owner-scoped API. No external scripts or message-send integration are involved.
+
+The usable review path is now implemented. Next: a language-model provider with semantic-support evaluation, followed by embedding retrieval comparisons on fixed splits. The current provider still produces an extractive template, not learned style imitation. Real-user reply quality and permanent privacy erasure remain unimplemented.
