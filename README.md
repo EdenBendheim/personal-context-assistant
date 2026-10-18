@@ -187,3 +187,11 @@ false paraphrase, and a model can mislabel a factual sentence as social/question
 text. These structural checks do not establish entailment, truth, style imitation
 or reply quality, and never authorize sending. No model service is called by this
 contract alone.
+
+The versioned `grounded-draft-v1` prompt puts instructions in a system message and
+the selected packet/schema in a separate JSON data message. It distinguishes
+historical evidence from outbound style examples and asks for abstention instead
+of invented facts. The response parser rejects duplicate keys, extra fields,
+markdown wrappers, nonfinite constants and oversized content. Prompt formatting
+is not a demonstrated defense against model prompt injection; human review and
+source checks still apply.

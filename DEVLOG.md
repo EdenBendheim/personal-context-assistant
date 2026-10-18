@@ -2,6 +2,11 @@
 
 ## October 17, 2026
 
+- Added a versioned structured drafting prompt/schema and strict JSON decoder.
+  Two tests verify instruction/data separation, owner-example provenance,
+  deterministic prompt fingerprints, length bounds and malformed/duplicate-key
+  rejection. No model quality or prompt-injection resistance is claimed.
+
 - Added a separate generative proposal contract with segmented wording, literal
   evidence quotes, explicit abstention, bounded output and source-change checks.
   Four synthetic tests cover unsupported/style-only citations, provider
