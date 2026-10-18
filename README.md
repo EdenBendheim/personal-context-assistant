@@ -213,3 +213,14 @@ an already installed local model and explicitly confirm local-only setup. See
 Loopback alone cannot prove that a separately managed daemon will not proxy data.
 No actual model inference has been validated yet: current adapter checks use a
 synthetic HTTP server, not an LLM or paid service.
+
+Generated results can be persisted with `Reviews(store).create(request, provider=...)`.
+Inference runs outside the SQLite writer transaction; context is revalidated
+before saving. Abstentions and provider failures create no review. Original
+segments, quotes and provider settings remain immutable through edits.
+
+Generated reviews require `feedback(..., decision="usable", support="supported")`
+for the exact current wording revision. Other support ratings are `needs_check`,
+`unsupported` and `not_rated`; an edit needs a fresh assessment. This is the
+person's recorded judgment, not an automatic entailment result or permission to
+send. Existing feedback is migrated with `not_rated`, preserving its history.

@@ -9,6 +9,7 @@ import json
 import uuid
 
 from .drafts import DraftEngine, DraftRequest
+from .generation import generate
 from .memory import nonempty
 from .store import Store
 
@@ -41,6 +42,11 @@ class Reviews:
                 notes TEXT NOT NULL, recorded_at TEXT NOT NULL,
                 FOREIGN KEY(review_id, revision) REFERENCES draft_edits(review_id, revision))""")
 
+        columns = {row["name"] for row in self.connection.execute("PRAGMA table_info(draft_feedback)")}
+        if "support" not in columns:
+            with self.connection:
+                self.connection.execute("ALTER TABLE draft_feedback ADD COLUMN support TEXT NOT NULL DEFAULT 'not_rated'")
+
     @contextmanager
     def _write(self):
         if self.connection.in_transaction:
@@ -60,11 +66,16 @@ class Reviews:
             raise ValueError("Review does not exist for this owner")
         return row
 
-    def create(self, request: DraftRequest) -> dict:
+    def create(self, request: DraftRequest, *, provider=None) -> dict:
+        if self.connection.in_transaction:
+            raise ValueError("Finish the pending store transaction before creating a review")
+        # Inference can take seconds: never hold the SQLite writer lock while it runs.
+        result = self.engine.draft(request) if provider is None else generate(self.engine, request, provider)
+        if result["status"] != "needs_review":
+            return result
         with self._write():
-            result = self.engine.draft(request)
-            if result["status"] != "needs_review":
-                return result
+            if self.engine.prepare(request).fingerprint != result["packet_sha256"]:
+                raise ValueError("Context changed before saving; rebuild the draft")
             review_id, created = str(uuid.uuid4()), now()
             self.connection.execute("INSERT INTO draft_reviews VALUES (?, ?, ?, ?, ?)",
                                     (review_id, request.owner, request.contact, created, json.dumps(result)))
@@ -110,12 +121,13 @@ class Reviews:
         return [dict(review_id=row["id"], created_at=row["created_at"]) for row in rows]
 
     def feedback(self, review_id: str, *, owner: str, expected_revision: int, decision: str,
-                 retrieval: str = "not_rated", style: str = "not_rated", notes: str = "") -> dict:
+                 retrieval: str = "not_rated", style: str = "not_rated", notes: str = "", support: str = "not_rated") -> dict:
         revision_number(expected_revision)
         for value, allowed, name in (
                 (decision, ("usable", "needs_work", "rejected"), "Decision"),
                 (retrieval, ("useful", "incorrect", "not_rated"), "Retrieval rating"),
-                (style, ("appropriate", "needs_edit", "not_rated"), "Style rating")):
+                (style, ("appropriate", "needs_edit", "not_rated"), "Style rating"),
+                (support, ("supported", "needs_check", "unsupported", "not_rated"), "Support review")):
             if value not in allowed:
                 raise ValueError(f"{name} is invalid")
         if not isinstance(notes, str) or len(notes) > 2000:
@@ -126,10 +138,14 @@ class Reviews:
                 raise ValueError("Stale review revision; reload before rating")
             if decision == "usable" and not review["context_current"]:
                 raise ValueError("Context changed; rebuild the draft before marking it usable")
+            if (decision == "usable" and review["original"].get("support_review_required")
+                    and support != "supported"):
+                raise ValueError("Review all generated wording against sources before marking it usable")
             item = dict(id=str(uuid.uuid4()), review_id=review_id, revision=expected_revision,
-                        decision=decision, retrieval=retrieval, style=style, notes=notes.strip(), recorded_at=now())
+                        decision=decision, retrieval=retrieval, style=style, notes=notes.strip(), support=support, recorded_at=now())
             self.connection.execute("""INSERT INTO draft_feedback
-                VALUES (:id, :review_id, :revision, :decision, :retrieval, :style, :notes, :recorded_at)""", item)
+                (id,review_id,revision,decision,retrieval,style,notes,recorded_at,support)
+                VALUES (:id, :review_id, :revision, :decision, :retrieval, :style, :notes, :recorded_at, :support)""", item)
             return item
 
     def feedback_history(self, review_id: str, *, owner: str) -> list[dict]:
@@ -139,7 +155,7 @@ class Reviews:
 
     def summary(self, *, owner: str, contact: str) -> dict:
         request = DraftRequest(owner, contact, now(), "summary")
-        rows = self.connection.execute("""SELECT r.result_json, e.text, f.decision, f.retrieval, f.style
+        rows = self.connection.execute("""SELECT r.result_json, e.text, f.decision, f.retrieval, f.style, f.support
             FROM draft_reviews r JOIN draft_edits e ON e.review_id = r.id
             AND e.revision = (SELECT MAX(revision) FROM draft_edits WHERE review_id = r.id)
             LEFT JOIN draft_feedback f ON f.id = (SELECT id FROM draft_feedback
@@ -156,6 +172,7 @@ class Reviews:
                     decisions=dict(Counter(row["decision"] for row in rated)),
                     retrieval=dict(Counter(row["retrieval"] for row in rated)),
                     style=dict(Counter(row["style"] for row in rated)),
+                    support=dict(Counter(row["support"] for row in rated)),
                     changed_drafts=sum(row["text"] != json.loads(row["result_json"])["draft_text"] for row in rows),
                     mean_word_overlap=sum(overlaps)/len(overlaps) if overlaps else None,
                     metric_note="Word overlap ignores order; feedback is subjective, not a held-out quality score.")

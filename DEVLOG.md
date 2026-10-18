@@ -2,6 +2,12 @@
 
 ## October 17, 2026
 
+- Persisted generated packets/settings and revision-bound human support ratings.
+  Usable generated drafts require an explicit supported assessment; edits need
+  re-rating. Four tests cover migration, abstention/failure rollback, exact
+  revision checks and another connection writing during inference without a
+  held writer lock. Concurrent source changes cannot become a saved review.
+
 - Added an opt-in loopback Ollama adapter using the official structured-chat
   contract. Four real synthetic HTTP tests cover bounded requests/provenance,
   no-proxy/no-redirect behavior, invalid/incomplete/tool responses, timeout
