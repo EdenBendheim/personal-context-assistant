@@ -224,3 +224,20 @@ for the exact current wording revision. Other support ratings are `needs_check`,
 `unsupported` and `not_rated`; an edit needs a fresh assessment. This is the
 person's recorded judgment, not an automatic entailment result or permission to
 send. Existing feedback is migrated with `not_rated`, preserving its history.
+
+### Enable local generation explicitly
+
+Both `personal_context.draft_cli` and `personal_context.review_server` accept
+`--local-model MODEL --confirm-local-only`, plus optional `--model-endpoint`,
+`--model-timeout`, `--model-max-tokens` and `--model-seed`. Keep the usual
+DB/owner/contact/topic/cutoff arguments. Without a model, the default remains the
+extractive baseline. Model-only flags without a model are rejected. No service
+is started, model installed, or cloud setting changed by these commands.
+
+The review server fixes its provider at launch; browser requests cannot replace
+it or specify another endpoint. Authenticated `GET /api/config` reports the active
+mode and requested configuration. Inference outages return HTTP 503 and save no
+review; explicit abstentions return `provider_abstained`, also without a saved
+review. The support rating is accepted by the feedback endpoint. This prototype
+server handles requests serially, so an inference request may occupy it until
+completion or the configured socket timeout.

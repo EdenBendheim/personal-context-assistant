@@ -2,6 +2,12 @@
 
 ## October 17, 2026
 
+- Wired explicit local-model options into the draft CLI and review server,
+  preserving default extractive behavior. Three entrypoint tests cover fixed
+  server configuration, no request-selected endpoint, human-support feedback,
+  unsaved abstentions and redacted inference outages without fallback success.
+  The authenticated config endpoint reports mode/settings and no sending.
+
 - Persisted generated packets/settings and revision-bound human support ratings.
   Usable generated drafts require an explicit supported assessment; edits need
   re-rating. Four tests cover migration, abstention/failure rollback, exact

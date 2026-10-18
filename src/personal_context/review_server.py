@@ -10,6 +10,8 @@ import sys
 from urllib.parse import parse_qs, urlsplit
 
 from .drafts import DraftRequest
+from .local_model import LocalModelError
+from .model_options import add_model_options,configured_provider
 from .memory import nonempty
 from .memory_workspace import MemoryWorkspace
 from .reviews import Reviews
@@ -23,11 +25,12 @@ def fields(payload, required, optional=()):
 
 
 class ReviewServer(HTTPServer):
-    def __init__(self, db: Path, *, owner: str, port: int = 0):
+    def __init__(self, db: Path, *, owner: str, port: int = 0, provider=None):
         self.db = Path(db).resolve()
         if not self.db.is_file():
             raise ValueError("Import messages into an existing database first")
         self.owner = nonempty(owner, "Owner").casefold()
+        self.provider = provider
         self.token = secrets.token_urlsafe(32)
         super().__init__(("127.0.0.1", port), Handler)
         self.url = f"http://127.0.0.1:{self.server_port}"
@@ -119,7 +122,13 @@ class Handler(BaseHTTPRequestHandler):
             reviews = Reviews(store)
             owner = self.server.owner
             path = parsed.path.strip("/").split("/")
-            if method == "GET" and path == ["api", "contacts"]:
+            if method == "GET" and path == ["api", "config"]:
+                fields(query, ())
+                result = dict(drafting="generative" if self.server.provider is not None else "extractive",
+                    provider=type(self.server.provider).__name__ if self.server.provider is not None else "ExtractiveProvider",
+                    configuration=self.server.provider.describe() if hasattr(self.server.provider,"describe") else {},
+                    sending_available=False)
+            elif method == "GET" and path == ["api", "contacts"]:
                 fields(query, ())
                 rows = store.connection.execute("""SELECT contact, COUNT(*) AS messages, MAX(timestamp) AS last_message
                     FROM (SELECT recipient AS contact, timestamp FROM messages WHERE author = ?
@@ -139,14 +148,14 @@ class Handler(BaseHTTPRequestHandler):
             elif method == "POST" and path == ["api", "reviews"]:
                 fields(query, ())
                 payload = fields(self.body(), ("contact", "before", "query"), ("mode", "limit"))
-                result = reviews.create(DraftRequest(owner=owner, **payload))
+                result = reviews.create(DraftRequest(owner=owner, **payload), provider=self.server.provider)
             elif method == "POST" and len(path) == 4 and path[:2] == ["api", "reviews"]:
                 fields(query, ())
                 if path[3] == "edit":
                     payload = fields(self.body(), ("expected_revision", "text"))
                     result = reviews.edit(path[2], owner=owner, **payload)
                 elif path[3] == "feedback":
-                    payload = fields(self.body(), ("expected_revision", "decision"), ("retrieval", "style", "notes"))
+                    payload = fields(self.body(), ("expected_revision", "decision"), ("retrieval", "style", "notes", "support"))
                     result = reviews.feedback(path[2], owner=owner, **payload)
                 else:
                     self.reply(404, {"error": "Unknown route"})
@@ -177,6 +186,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.reply(404, {"error": "Unknown route"})
                 return
             self.reply(200, result)
+        except LocalModelError as exc:
+            self.reply(503, {"error": str(exc)})
         except (ValueError, TypeError) as exc:
             message = str(exc) if isinstance(exc, ValueError) else "Invalid request field type"
             self.reply(409 if message.startswith(("Stale", "Context changed")) else 400, {"error": message})
@@ -201,9 +212,10 @@ def main():
     parser.add_argument("--db", type=Path, required=True)
     parser.add_argument("--owner", required=True)
     parser.add_argument("--port", type=int, default=8765, help="Loopback port; 0 chooses an available port")
+    add_model_options(parser)
     args = parser.parse_args()
     try:
-        server = ReviewServer(args.db, owner=args.owner, port=args.port)
+        server = ReviewServer(args.db, owner=args.owner, port=args.port, provider=configured_provider(args))
     except (ValueError, OSError, OverflowError) as exc:
         parser.error(str(exc))
     print(f"Open local review: {server.url}\nAPI bearer token: {server.token}", file=sys.stderr, flush=True)
