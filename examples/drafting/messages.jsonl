@@ -1,0 +1,3 @@
+{"id":"1","source":"gmail","thread":"demo","author":"owner@example.invalid","recipient":"alex@example.invalid","timestamp":"2026-09-01T10:00:00Z","body":"demo Thursday :D"}
+{"id":"other","source":"gmail","thread":"other","author":"owner@example.invalid","recipient":"riley@example.invalid","timestamp":"2026-09-01T10:00:00Z","body":"demo for Riley only"}
+{"id":"future","source":"gmail","thread":"demo","author":"owner@example.invalid","recipient":"alex@example.invalid","timestamp":"2026-09-05T10:00:00Z","body":"demo confirmed Friday"}

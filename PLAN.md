@@ -18,7 +18,8 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 - [x] Add an extractive quote-provider contract and an inspectable draft packet with citations.
 - [x] Separate generic, context-only, and personalized context configurations.
 - [x] Reject unavailable/nonliteral quotes and stale context; abstain when factual history is insufficient.
-- [ ] Add a language-model draft provider using retrieved citations and recipient examples.
+- [x] Add an opt-in local model adapter using retrieved citations and recipient examples, with strict response validation, abstention and revision-bound human support review.
+- [ ] Verify a real installed, cloud-disabled local model on synthetic reply cases (adapter has synthetic HTTP tests only).
 - [ ] Add semantic support checks for generated factual prose and evaluate style/reply quality.
 
 ## Milestone 3 — useful application
@@ -41,4 +42,18 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 
 ## Next session
 
-The local review path now supports contact/topic/cutoff selection, source and memory inspection, draft editing/reopening, revision-bound feedback, and cited-memory creation/correction/withdrawal. Add a language-model provider with an explicit semantic-support contract and separate synthetic drafting cases. Compare its useful edits and source support against this extractive template before claiming style imitation. Keep the fixed retrieval benchmark unchanged. Embedding retrieval, permanent privacy erasure (including saved packet copies), automatic memory extraction, large-history pagination, and real-user reply-quality evaluation remain pending. Keep DEVLOG factual; small coherent verified daily steps are enough.
+The local generative path is implemented end to end: versioned prompts and JSON
+schema, bounded loopback Ollama client, saved original segments/support/config,
+explicit human support ratings, CLI/server opt-in and browser inspection. Default
+remains extractive. Thirteen scripted contract cases are distinct from unchanged
+retrieval evaluation; two intentionally false wordings remain for human review,
+so semantic entailment is not automated or demonstrated.
+
+No installed Ollama service/cloud-disabled setup was available on October 17.
+Next: use an already installed local model with cloud disabled, record its exact
+weights/runtime and run bounded synthetic inference. Build held-out reply
+situations and blind comparisons before claiming style imitation or improved
+reply quality. Embedding retrieval, permanent privacy erasure (including saved
+packet copies), automatic memory extraction, large-history pagination and
+real-user evaluation remain pending. No sending integration is planned for the
+current review-only milestone.

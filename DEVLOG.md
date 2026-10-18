@@ -2,6 +2,25 @@
 
 ## October 17, 2026
 
+- Final local verification: all 70 tests passed; all 20 unchanged retrieval
+  cases retained recall/precision 1.0 with zero boundary violations, fingerprint
+  d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c.
+  All 13 scripted drafting cases passed; memory/draft walkthroughs and JS
+  syntax/whitespace checks passed. Real LLM inference remains unverified.
+
+- Added a separately fingerprinted 13-case scripted drafting regression suite
+  and CI gate. Three tests verify cases, detect a broken human-review flag and
+  reject invalid/duplicate manifests. All 13 cases pass; two deliberately false
+  wordings still require human review, exposing the lack of automatic semantic
+  entailment. Fixed retrieval benchmark is unchanged. No model binary/service
+  or confirmed cloud-disabled setup was available; actual inference and reply
+  quality remain unmeasured. No downloads, paid APIs or private messages used.
+- Interview explanation: "I added a local generative drafting path with source
+  inspection and revision-bound human review, then tested failures separately
+  from model quality. Genuine citations do not automatically make a paraphrase
+  true, so the app records that review explicitly."
+
+
 - Added browser generation-mode status, segmented wording/quote inspection,
   requested-configuration details and an explicit support selector. A real
   in-app browser check with a synthetic provider verified usable stays disabled

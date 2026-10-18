@@ -1,0 +1,325 @@
+{
+  "version": 1,
+  "kind": "synthetic generation contract regression",
+  "messages": "messages.jsonl",
+  "cases": [
+    {
+      "id": "literal-support",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "alex@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "demo",
+        "mode": "personalized"
+      },
+      "response": {
+        "segments": [
+          {
+            "text": "The demo is Thursday.",
+            "kind": "fact",
+            "support": [
+              {
+                "evidence_key": "message-1",
+                "quote": "demo Thursday"
+              }
+            ]
+          }
+        ],
+        "abstain_reason": null
+      },
+      "expected_status": "needs_review",
+      "semantic_label": "supported"
+    },
+    {
+      "id": "reviewed-memory",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "alex@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "demo",
+        "mode": "personalized"
+      },
+      "response": {
+        "segments": [
+          {
+            "text": "The demo is planned for Thursday.",
+            "kind": "fact",
+            "support": [
+              {
+                "evidence_key": "memory-1",
+                "quote": "Demo is planned for Thursday."
+              }
+            ]
+          }
+        ],
+        "abstain_reason": null
+      },
+      "expected_status": "needs_review",
+      "semantic_label": "supported",
+      "include_memory": true
+    },
+    {
+      "id": "contradicted-paraphrase-still-needs-human",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "alex@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "demo",
+        "mode": "personalized"
+      },
+      "response": {
+        "segments": [
+          {
+            "text": "The demo is Friday.",
+            "kind": "fact",
+            "support": [
+              {
+                "evidence_key": "message-1",
+                "quote": "demo Thursday"
+              }
+            ]
+          }
+        ],
+        "abstain_reason": null
+      },
+      "expected_status": "needs_review",
+      "semantic_label": "contradicted"
+    },
+    {
+      "id": "unknown-source",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "alex@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "demo",
+        "mode": "personalized"
+      },
+      "response": {
+        "segments": [
+          {
+            "text": "The demo is Thursday.",
+            "kind": "fact",
+            "support": [
+              {
+                "evidence_key": "unknown",
+                "quote": "demo Thursday"
+              }
+            ]
+          }
+        ],
+        "abstain_reason": null
+      },
+      "expected_status": "rejected",
+      "semantic_label": "not_applicable"
+    },
+    {
+      "id": "future-source",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "alex@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "demo",
+        "mode": "personalized"
+      },
+      "response": {
+        "segments": [
+          {
+            "text": "The demo is Thursday.",
+            "kind": "fact",
+            "support": [
+              {
+                "evidence_key": "future",
+                "quote": "demo Thursday"
+              }
+            ]
+          }
+        ],
+        "abstain_reason": null
+      },
+      "expected_status": "rejected",
+      "semantic_label": "not_applicable"
+    },
+    {
+      "id": "cross-contact-source",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "alex@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "demo",
+        "mode": "personalized"
+      },
+      "response": {
+        "segments": [
+          {
+            "text": "The demo is Thursday.",
+            "kind": "fact",
+            "support": [
+              {
+                "evidence_key": "other",
+                "quote": "demo Thursday"
+              }
+            ]
+          }
+        ],
+        "abstain_reason": null
+      },
+      "expected_status": "rejected",
+      "semantic_label": "not_applicable"
+    },
+    {
+      "id": "style-cannot-be-factual-source",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "alex@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "demo",
+        "mode": "personalized"
+      },
+      "response": {
+        "segments": [
+          {
+            "text": "The demo is Thursday.",
+            "kind": "fact",
+            "support": [
+              {
+                "evidence_key": "style-1",
+                "quote": "demo Thursday"
+              }
+            ]
+          }
+        ],
+        "abstain_reason": null
+      },
+      "expected_status": "rejected",
+      "semantic_label": "not_applicable"
+    },
+    {
+      "id": "invented-support-quote",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "alex@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "demo",
+        "mode": "personalized"
+      },
+      "response": {
+        "segments": [
+          {
+            "text": "The demo is Thursday.",
+            "kind": "fact",
+            "support": [
+              {
+                "evidence_key": "message-1",
+                "quote": "demo confirmed Friday"
+              }
+            ]
+          }
+        ],
+        "abstain_reason": null
+      },
+      "expected_status": "rejected",
+      "semantic_label": "not_applicable"
+    },
+    {
+      "id": "uncited-fact",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "alex@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "demo",
+        "mode": "personalized"
+      },
+      "response": {
+        "segments": [
+          {
+            "text": "The demo is Thursday.",
+            "kind": "fact",
+            "support": []
+          }
+        ],
+        "abstain_reason": null
+      },
+      "expected_status": "rejected",
+      "semantic_label": "not_applicable"
+    },
+    {
+      "id": "malformed-json",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "alex@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "demo",
+        "mode": "personalized"
+      },
+      "response": "{\"segments\":[],\"segments\":[],\"abstain_reason\":null}",
+      "expected_status": "rejected",
+      "semantic_label": "not_applicable"
+    },
+    {
+      "id": "explicit-abstention",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "alex@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "demo",
+        "mode": "personalized"
+      },
+      "response": {
+        "segments": [],
+        "abstain_reason": "Please confirm the current date."
+      },
+      "expected_status": "provider_abstained",
+      "semantic_label": "not_applicable"
+    },
+    {
+      "id": "cold-start-skips-provider",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "new@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "demo",
+        "mode": "personalized"
+      },
+      "response": {
+        "segments": [
+          {
+            "text": "The demo is Thursday.",
+            "kind": "fact",
+            "support": [
+              {
+                "evidence_key": "message-1",
+                "quote": "demo Thursday"
+              }
+            ]
+          }
+        ],
+        "abstain_reason": null
+      },
+      "expected_status": "needs_history",
+      "semantic_label": "not_applicable"
+    },
+    {
+      "id": "false-social-label-still-needs-human",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "alex@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "demo",
+        "mode": "personalized"
+      },
+      "response": {
+        "segments": [
+          {
+            "text": "The demo is Friday.",
+            "kind": "social",
+            "support": []
+          }
+        ],
+        "abstain_reason": null
+      },
+      "expected_status": "needs_review",
+      "semantic_label": "contradicted"
+    }
+  ],
+  "limitation": "Scripted provider outputs test infrastructure behavior. Semantic labels are human-authored fixture annotations, not automated judgments, held-out quality scores or language-model results."
+}

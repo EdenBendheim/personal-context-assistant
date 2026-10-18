@@ -2,7 +2,7 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
-**Status — October 6, 2026:** working export ingestion, import preview/error reporting, contact-specific retrieval, a fixed synthetic benchmark, editable memory, and a local extractive draft/review pipeline with persistent edits, feedback, and a browser review workspace. A local browser review UI now works; language-model drafting and embedding retrieval are planned. No personalized language model has been trained.
+**Status — October 17, 2026:** working ingestion, contact-scoped retrieval, editable memory and a persistent browser draft/review workspace. An opt-in local Ollama drafting adapter now has structured responses, source checks, abstention, and revision-bound human support review; the extractive baseline remains the default. Synthetic HTTP/browser/contract checks pass. A real local-model run, measured reply quality and embedding retrieval remain pending. No personalized language model has been trained.
 
 ## Working now
 
@@ -171,7 +171,7 @@ API equivalents: `GET /api/memory?contact=...&before=...`, `GET /api/memory/ID`,
 
 Local exports → normalized SQLite messages → contact/time-limited retrieval + reviewed memory → immutable cited draft packet → saved wording revisions → human feedback. The browser talks only to the local owner-scoped API. No external scripts or message-send integration are involved.
 
-The usable review path is now implemented. Next: a language-model provider with semantic-support evaluation, followed by embedding retrieval comparisons on fixed splits. The current provider still produces an extractive template, not learned style imitation. Real-user reply quality and permanent privacy erasure remain unimplemented.
+The review path now supports the default extractive baseline and an opt-in local generative provider. Next: verify an installed, cloud-disabled local model on synthetic messages, then evaluate semantic support and recipient/style preference on fixed reply cases before using real history. Embedding retrieval comparisons, real-user reply quality and permanent privacy erasure remain unimplemented.
 
 ## Generated wording contract (development API)
 
@@ -256,3 +256,25 @@ explains that the segment list still describes the original model draft. Earlier
 revision assessments remain in history but do not approve the new wording.
 Provider abstentions display a reason without creating an empty review. No
 sending control or integration has been added.
+
+
+## Scripted drafting regression suite
+
+```sh
+PYTHONPATH=src python3 -m personal_context.generation_evaluation examples/drafting/manifest.json
+```
+
+Thirteen fixed, invented cases check generated-response parsing, citation
+availability, contact/time exclusions, abstention and cold starts. Every generated
+wording result must require human support review. CI runs this separately from
+the unchanged 20-case retrieval benchmark. The manifest/message bytes have a
+reported SHA-256; reports omit message bodies and generated wording.
+
+This suite supplies scripted responses, not language-model predictions. All 13
+contract cases currently pass. Two intentionally contradicted wordings still
+reach human review: a false paraphrase citing a real quote and a factual claim
+mislabeled as social. These are explicit limitations, not semantic-check success.
+Fixture labels come from the author; elapsed times measure infrastructure only.
+No installed Ollama binary/service or cloud-disabled local setup was available
+at the October 17 check, so no actual model inference or style-quality result is
+claimed. Nothing was downloaded and no paid service was used.
