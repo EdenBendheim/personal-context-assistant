@@ -241,3 +241,18 @@ review; explicit abstentions return `provider_abstained`, also without a saved
 review. The support rating is accepted by the feedback endpoint. This prototype
 server handles requests serially, so an inference request may occupy it until
 completion or the configured socket timeout.
+
+### Review generated wording in the browser
+
+The mode badge identifies the active provider. A generated review shows every
+segment, its provider-suggested kind, linked literal quotes, and requested model
+configuration. Review social/question segments too: their labels do not rule
+out unsupported claims. Source text is rendered as text, never inserted as HTML.
+
+**Factual support of saved wording** starts unchecked. The usable option stays
+disabled until the reviewer explicitly checks all saved wording against sources;
+the API enforces the same requirement. Saving an edit resets this assessment and
+explains that the segment list still describes the original model draft. Earlier
+revision assessments remain in history but do not approve the new wording.
+Provider abstentions display a reason without creating an empty review. No
+sending control or integration has been added.

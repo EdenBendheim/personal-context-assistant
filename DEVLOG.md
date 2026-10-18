@@ -2,6 +2,14 @@
 
 ## October 17, 2026
 
+- Added browser generation-mode status, segmented wording/quote inspection,
+  requested-configuration details and an explicit support selector. A real
+  in-app browser check with a synthetic provider verified usable stays disabled
+  until checked, feedback persists, and saving edited wording requires a new
+  support assessment. HTML-shaped fixture text produced zero image elements
+  and no console errors. Screenshot is local/ignored under runs/. JS syntax
+  and three generation-entrypoint tests passed. No real LLM quality measured.
+
 - Wired explicit local-model options into the draft CLI and review server,
   preserving default extractive behavior. Three entrypoint tests cover fixed
   server configuration, no request-selected endpoint, human-support feedback,

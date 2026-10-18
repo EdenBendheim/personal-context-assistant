@@ -11,7 +11,7 @@
 <body>
   <header><p class="eyebrow">PERSONAL CONTEXT · LOCAL WORKSPACE</p><h1>A reply you can review.</h1>
     <p>Inspect the history, write your response, and record what helped.</p>
-    <p class="badge">Extractive baseline · drafts stay in your local database</p>
+    <p class="badge" id="provider-state">Loading draft configuration · review only</p>
   </header>
   <main>
     <p id="notice" role="status" aria-live="polite">Loading contacts…</p>
@@ -20,7 +20,7 @@
         <label>Reply topic<input id="topic" required maxlength="1000" placeholder="e.g. Thursday demo"></label>
         <label>Context before (exclusive, ISO time)<input id="cutoff" required></label>
         <label>Draft mode<select id="mode"><option value="personalized">History + memory + writing examples</option>
-          <option value="context">History only</option><option value="generic">Generic template</option></select></label>
+          <option value="context">History only</option><option value="generic">Topic only (no history)</option></select></label>
       </div>
       <button type="submit">Create review</button>
       <div class="saved"><label>Saved reviews<select id="saved"><option value="">Choose a saved review</option></select></label>
@@ -32,14 +32,20 @@
           <details><summary>Your writing examples</summary><div id="examples"></div></details></aside>
         <div class="card"><h2>Review your reply</h2><p id="review-state"></p>
           <ul id="review-notes"></ul>
+          <section id="generated-panel" hidden><h3>Generated wording and support</h3>
+            <p class="muted">Check every segment, including greetings and questions. These labels were suggested by the provider. Quotes do not automatically prove the wording is supported.</p>
+            <p id="segment-state" class="muted"></p><div id="generated-segments"></div>
+            <details><summary>Generation configuration</summary><pre id="generation-provenance"></pre></details>
+          </section>
           <label>Draft wording<textarea id="draft" rows="15" maxlength="100000"></textarea></label>
           <button id="save" type="button">Save wording</button>
-          <details><summary>Original template and edit history</summary><pre id="original"></pre><div id="history"></div></details>
+          <details><summary>Original draft and edit history</summary><pre id="original"></pre><div id="history"></div></details>
           <hr><h2>How useful was this?</h2>
           <form id="feedback-form"><div class="grid">
             <label>Decision<select id="decision"><option value="needs_work">Needs more work</option><option value="usable">Usable after my review</option><option value="rejected">Rejected</option></select></label>
             <label>Retrieved context<select id="retrieval"><option value="not_rated">Not rated</option><option value="useful">Useful</option><option value="incorrect">Incorrect / irrelevant</option></select></label>
             <label>Writing style<select id="style"><option value="not_rated">Not rated</option><option value="appropriate">Appropriate</option><option value="needs_edit">Needs editing</option></select></label>
+            <label>Factual support of saved wording<select id="support"><option value="not_rated">Not checked</option><option value="needs_check">Needs more checking</option><option value="unsupported">Unsupported / incorrect</option><option value="supported">I checked all wording against its sources</option></select></label>
           </div><label>Review notes<textarea id="feedback-notes" rows="3" maxlength="2000"></textarea></label>
           <button type="submit" id="record">Record feedback</button></form>
           <p class="muted">Ratings refer to saved wording. Edited prose needs your factual review. This interface has no sending action.</p>

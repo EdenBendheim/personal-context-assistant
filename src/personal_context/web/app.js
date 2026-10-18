@@ -15,7 +15,10 @@ function dirty() { return review && $("draft").value !== review.text; }
 function controls() {
   document.querySelectorAll("input,select,textarea,button").forEach(el => { el.disabled = busy; });
   $("record").disabled = busy || Boolean(dirty());
-  $("decision").querySelector('[value="usable"]').disabled = Boolean(review && !review.context_current);
+  const supportNeeded = review && review.original.support_review_required && $("support").value !== "supported";
+  const usable = $("decision").querySelector('[value="usable"]');
+  usable.disabled = Boolean(review && (!review.context_current || supportNeeded));
+  if (usable.disabled && $("decision").value === "usable") $("decision").value = "needs_work";
   $("memory-kind").disabled = busy || Boolean(memoryItem);
   $("memory-save").disabled = busy || Boolean(memoryItem && memoryItem.status === "revoked") || (!memoryItem && (!review || !review.context_current));
   $("memory-withdraw").disabled = busy || !memoryItem || memoryItem.status === "revoked";
@@ -55,6 +58,27 @@ function evidence(items, container, styles = false) {
     section.append(details); container.append(section);
   }
 }
+function renderSegments(result) {
+  const generated = result.original.generation_kind === "generative";
+  $("generated-panel").hidden = !generated; $("generated-segments").replaceChildren();
+  if (!generated) return;
+  $("segment-state").textContent = result.text === result.original.draft_text
+    ? "This segment list describes the saved original wording."
+    : "This segment list describes the original model draft. Check your current edited wording separately.";
+  for (const [index, segment] of result.original.segments.entries()) {
+    const section = document.createElement("section"); section.className = "source";
+    addText(section, "h4", `Segment ${index+1} · ${segment.kind} (provider label)`);
+    addText(section, "p", segment.text, "snippet");
+    if (!segment.citation_labels.length) addText(section, "p", "No cited factual support for this segment.", "muted");
+    for (const label of segment.citation_labels) {
+      const citation = result.original.citations.find(item => item.label === label);
+      addText(section, "p", `[${label}] ${citation.evidence_key} · ${citation.kind}`);
+      addText(section, "blockquote", citation.quote);
+    }
+    $("generated-segments").append(section);
+  }
+  $("generation-provenance").textContent = JSON.stringify(result.original.generation_provenance || {}, null, 2);
+}
 function render(result) {
   review = result;
   $("workspace").hidden = false;
@@ -65,13 +89,15 @@ function render(result) {
   $("review-state").textContent = `Saved revision ${result.revision} · ${result.context_current ? "context unchanged" : "context changed — rebuild before marking usable"}`;
   $("review-notes").replaceChildren();
   result.original.review_notes.forEach(text => addText($("review-notes"), "li", text));
+  renderSegments(result);
   evidence(result.original.packet.evidence, $("evidence"));
   evidence(result.original.packet.style_examples, $("examples"), true);
   $("decision").value = "needs_work"; $("retrieval").value = "not_rated"; $("style").value = "not_rated";
+  $("support").value = "not_rated";
   $("feedback-notes").value = "";
   $("feedback-history").replaceChildren();
   for (const item of result.feedback || []) {
-    addText($("feedback-history"), "p", `Revision ${item.revision}: ${item.decision} · ${item.retrieval} · ${item.style}${item.notes ? " — "+item.notes : ""}`, "muted");
+    addText($("feedback-history"), "p", `Revision ${item.revision}: ${item.decision} · ${item.retrieval} · ${item.style} · support: ${item.support || "not_rated"}${item.notes ? " — "+item.notes : ""}`, "muted");
   }
 }
 async function refreshContact() {
@@ -112,6 +138,7 @@ $("create-form").addEventListener("submit", event => {
     const result = await api("/api/reviews", { contact: $("contact").value, before: $("cutoff").value,
       query: $("topic").value, mode: $("mode").value });
     if (result.status === "needs_history") { notice("No matching history. Try another topic, import messages, or select the generic template.", true); return; }
+    if (result.status === "provider_abstained") { notice(`No draft saved: ${result.review_notes[0]}`, true); return; }
     await load(result.review_id); notice("Review saved. Inspect the sources and edit your reply.");
   });
 });
@@ -124,6 +151,7 @@ $("load").addEventListener("click", () => {
   if (!discardAllowed()) return;
   perform(async () => { if (!$("saved").value) throw new Error("Choose a saved review first"); await load($("saved").value); notice("Saved review reopened."); });
 });
+$("support").addEventListener("change", controls);
 $("draft").addEventListener("input", () => { controls(); notice(dirty() ? "Unsaved wording — save before rating." : "Wording matches the saved revision."); });
 $("save").addEventListener("click", () => perform(async () => {
   await api(`/api/reviews/${review.review_id}/edit`, { expected_revision: review.revision, text: $("draft").value });
@@ -133,7 +161,7 @@ $("feedback-form").addEventListener("submit", event => {
   event.preventDefault(); perform(async () => {
     if (dirty()) throw new Error("Save wording before recording feedback");
     await api(`/api/reviews/${review.review_id}/feedback`, { expected_revision: review.revision,
-      decision: $("decision").value, retrieval: $("retrieval").value, style: $("style").value, notes: $("feedback-notes").value });
+      decision: $("decision").value, retrieval: $("retrieval").value, style: $("style").value, support: $("support").value, notes: $("feedback-notes").value });
     await load(review.review_id); notice("Feedback recorded for the saved wording.");
   });
 });
@@ -225,6 +253,8 @@ $("memory-withdraw").addEventListener("click", () => perform(async () => {
 $("current-time").addEventListener("click", () => perform(async () => { $("cutoff").value = new Date().toISOString(); await refreshMemory(); notice("Cutoff updated. Create a new review to rebuild its context."); }));
 $("cutoff").value = new Date().toISOString();
 perform(async () => {
+  const config = await api("/api/config");
+  $("provider-state").textContent = `${config.drafting === "generative" ? "Local generative provider (human support review required)" : "Extractive baseline"} · review only · drafts stay in your local database`;
   const result = await api("/api/contacts");
   result.contacts.forEach(item => { const option = addText($("contact"), "option", item.contact); option.value = item.contact; });
   selectedContact = $("contact").value;
