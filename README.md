@@ -195,3 +195,21 @@ of invented facts. The response parser rejects duplicate keys, extra fields,
 markdown wrappers, nonfinite constants and oversized content. Prompt formatting
 is not a demonstrated defense against model prompt injection; human review and
 source checks still apply.
+
+### Local model adapter
+
+An opt-in `OllamaProvider(LocalModelConfig(...))` uses Ollama's
+[structured chat API](https://docs.ollama.com/api/chat) and
+[JSON-schema response format](https://docs.ollama.com/capabilities/structured-outputs).
+The client accepts only literal `http://127.0.0.1:PORT`, uses no proxy or redirects,
+limits prompt/response bytes, timeout and output tokens, and never pulls models.
+It rejects incomplete/tool-call responses and never silently falls back to a
+successful template if inference fails. Requested settings are retained with the
+review; they do not verify the daemon's model weights.
+
+Before enabling it, run Ollama with cloud disabled (`OLLAMA_NO_CLOUD=1`), choose
+an already installed local model and explicitly confirm local-only setup. See
+[Ollama's local-only configuration](https://docs.ollama.com/faq#how-do-i-disable-ollamas-cloud-features).
+Loopback alone cannot prove that a separately managed daemon will not proxy data.
+No actual model inference has been validated yet: current adapter checks use a
+synthetic HTTP server, not an LLM or paid service.

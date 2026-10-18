@@ -2,6 +2,12 @@
 
 ## October 17, 2026
 
+- Added an opt-in loopback Ollama adapter using the official structured-chat
+  contract. Four real synthetic HTTP tests cover bounded requests/provenance,
+  no-proxy/no-redirect behavior, invalid/incomplete/tool responses, timeout
+  redaction and preflight bounds. No real LLM, download or paid API was used.
+  Enabling requires an explicitly confirmed cloud-disabled local daemon.
+
 - Added a versioned structured drafting prompt/schema and strict JSON decoder.
   Two tests verify instruction/data separation, owner-example provenance,
   deterministic prompt fingerprints, length bounds and malformed/duplicate-key
