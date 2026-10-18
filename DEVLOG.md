@@ -1,5 +1,13 @@
 # Development log
 
+## October 17, 2026
+
+- Added a separate generative proposal contract with segmented wording, literal
+  evidence quotes, explicit abstention, bounded output and source-change checks.
+  Four synthetic tests cover unsupported/style-only citations, provider
+  mutation, cold starts and source-linked false paraphrases remaining unapproved.
+  These checks establish provenance, not semantic entailment or reply quality.
+
 ## October 6, 2026
 
 - Added browser and owner-scoped API memory creation, correction, withdrawal, and source/history inspection. Changed/missing citations are flagged; a source moved to another contact is never displayed. The panel reports the actual cutoff-eligible revision, and current-time edits require a rebuilt draft to enter its context. Lists are capped at 100 items; history pagination and permanent erasure remain pending.

@@ -172,3 +172,18 @@ API equivalents: `GET /api/memory?contact=...&before=...`, `GET /api/memory/ID`,
 Local exports → normalized SQLite messages → contact/time-limited retrieval + reviewed memory → immutable cited draft packet → saved wording revisions → human feedback. The browser talks only to the local owner-scoped API. No external scripts or message-send integration are involved.
 
 The usable review path is now implemented. Next: a language-model provider with semantic-support evaluation, followed by embedding retrieval comparisons on fixed splits. The current provider still produces an extractive template, not learned style imitation. Real-user reply quality and permanent privacy erasure remain unimplemented.
+
+## Generated wording contract (development API)
+
+`personal_context.generation.generate(engine, request, provider)` accepts a separate
+generative provider, leaving the extractive baseline unchanged. A proposal contains
+up to 12 fact/social/question segments or an explicit abstention. Factual segments
+must cite literal support from the retrieved evidence; outbound style examples
+cannot serve as factual citations. Support and draft lengths are bounded. The
+engine passes an isolated packet and rechecks source/memory state after generation.
+
+All generated wording requires human semantic review. A real quote can support a
+false paraphrase, and a model can mislabel a factual sentence as social/question
+text. These structural checks do not establish entailment, truth, style imitation
+or reply quality, and never authorize sending. No model service is called by this
+contract alone.
