@@ -1,5 +1,13 @@
 # Development log
 
+## October 21, 2026
+
+- Added a bounded embedding-provider contract with strict response counts,
+  finite/nonzero vectors, consistent dimensions, normalization and cosine scores.
+  Two synthetic checks cover scale-invariant similarity, input isolation,
+  malformed responses and refusal before provider calls. No model was installed
+  or invoked; no semantic quality claim.
+
 ## October 17, 2026
 
 - Final local verification: all 70 tests passed; all 20 unchanged retrieval

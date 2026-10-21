@@ -18,6 +18,14 @@ A communication assistant that retrieves relevant conversation history and the o
 
 This first retrieval baseline deliberately needs no API key, model download, or external service. It provides a measurable comparison for the embedding-based version.
 
+### Embedding contract foundation
+
+`embeddings.EmbeddingProvider` defines an explicit batch encoder interface.
+`embed_validated` bounds inputs and checks one nonzero finite vector per text,
+consistent dimensions and normalized cosine scoring. It preserves the caller's
+input list. This module contains no learned model or network client; synthetic
+vector checks are contract tests, not semantic retrieval or reply-quality results.
+
 ## Try the synthetic demo
 
 Python 3.11+; no runtime dependencies. All demo participants and messages are invented.
