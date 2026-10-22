@@ -33,6 +33,14 @@ and fails if more than 128 eligible messages would need encoding. It does not
 silently truncate history or cache vectors. The lexical baseline remains unchanged.
 Synthetic synonym vectors demonstrate routing/boundaries, not learned model quality.
 
+`local_embeddings.OllamaEmbeddingProvider` implements this interface through
+Ollama's [`POST /api/embed`](https://docs.ollama.com/api/embed). It requires an
+explicit model name and confirmation that the local daemon has cloud disabled.
+Only a literal loopback HTTP endpoint is allowed; there are no proxies, redirects,
+model downloads or fallbacks. Requests disable input truncation, use bounded
+timeouts, unload afterward and reject malformed/oversized responses. Tests use
+a synthetic HTTP fixture. No real embedding model has been run or evaluated.
+
 ## Try the synthetic demo
 
 Python 3.11+; no runtime dependencies. All demo participants and messages are invented.

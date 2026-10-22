@@ -2,6 +2,11 @@
 
 ## October 21, 2026
 
+- Added the opt-in loopback Ollama embedding adapter. Four synthetic HTTP tests
+  cover the batched API, disabled truncation, proxy bypass, configuration/input
+  refusal, redirects/errors, malformed vectors, response bounds and redacted
+  timeouts. No installed model, model download or paid service was used.
+
 - Added opt-in cosine retrieval scoped before encoding to the selected contact
   and exclusive cutoff, with retained provenance/outbound style separation and
   post-encoding source-change checks. Three synthetic checks cover synonym
