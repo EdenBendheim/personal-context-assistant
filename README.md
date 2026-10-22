@@ -26,6 +26,13 @@ consistent dimensions and normalized cosine scoring. It preserves the caller's
 input list. This module contains no learned model or network client; synthetic
 vector checks are contract tests, not semantic retrieval or reply-quality results.
 
+`semantic.EmbeddingSearch(store, provider)` is an opt-in cosine retriever with
+the same source/participant/exclusive-cutoff result contract. It filters history
+before encoding, rechecks sources afterward, retains outbound-only style examples,
+and fails if more than 128 eligible messages would need encoding. It does not
+silently truncate history or cache vectors. The lexical baseline remains unchanged.
+Synthetic synonym vectors demonstrate routing/boundaries, not learned model quality.
+
 ## Try the synthetic demo
 
 Python 3.11+; no runtime dependencies. All demo participants and messages are invented.

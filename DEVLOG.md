@@ -2,6 +2,12 @@
 
 ## October 21, 2026
 
+- Added opt-in cosine retrieval scoped before encoding to the selected contact
+  and exclusive cutoff, with retained provenance/outbound style separation and
+  post-encoding source-change checks. Three synthetic checks cover synonym
+  routing, no future/cross-contact provider inputs, stable ties, cold starts,
+  candidate bounds and source mutation. No learned encoder or quality result.
+
 - Added a bounded embedding-provider contract with strict response counts,
   finite/nonzero vectors, consistent dimensions, normalization and cosine scores.
   Two synthetic checks cover scale-invariant similarity, input isolation,
