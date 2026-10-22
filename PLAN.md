@@ -14,7 +14,10 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 
 ## Milestone 2 — drafting and retrieval comparisons
 
-- [ ] Add an embedding backend behind the same retrieval contract; retain lexical baseline.
+- [x] Add an optional embedding search backend/CLI behind the same retrieval contract; retain lexical baseline.
+- [x] Add a paired fixed-case retrieval comparison with source boundaries, provider settings and visible regressions.
+- [ ] Verify an installed cloud-disabled embedding model, freeze settings on development cases and report held-out retrieval results.
+- [ ] Decide whether measured embedding results justify integration into drafting and the review UI.
 - [x] Add an extractive quote-provider contract and an inspectable draft packet with citations.
 - [x] Separate generic, context-only, and personalized context configurations.
 - [x] Reject unavailable/nonliteral quotes and stale context; abstain when factual history is insufficient.
@@ -49,11 +52,16 @@ remains extractive. Thirteen scripted contract cases are distinct from unchanged
 retrieval evaluation; two intentionally false wordings remain for human review,
 so semantic entailment is not automated or demonstrated.
 
-No installed Ollama service/cloud-disabled setup was available on October 17.
+No installed Ollama service/cloud-disabled setup was available on October 21.
 Next: use an already installed local model with cloud disabled, record its exact
 weights/runtime and run bounded synthetic inference. Build held-out reply
 situations and blind comparisons before claiming style imitation or improved
-reply quality. Embedding retrieval, permanent privacy erasure (including saved
+reply quality. An opt-in embedding adapter, read-only search CLI and paired
+retrieval comparison now have synthetic contract/HTTP checks; no learned encoder
+has been run. Next, verify a local embedding model on development cases, freeze
+its exact weights/runtime/threshold, then report evaluation cases and failures.
+Drafting/UI retrieval remains lexical until measured results justify a change.
+Large-history embedding indexing, permanent privacy erasure (including saved
 packet copies), automatic memory extraction, large-history pagination and
 real-user evaluation remain pending. No sending integration is planned for the
 current review-only milestone.

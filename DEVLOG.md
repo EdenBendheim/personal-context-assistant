@@ -2,6 +2,23 @@
 
 ## October 21, 2026
 
+- Final local verification: all 85 tests passed. All 20 unchanged lexical
+  retrieval cases retained recall/precision 1.0 with zero boundary violations
+  and fingerprint d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c.
+  All 13 scripted drafting cases and both memory/draft walkthroughs passed.
+  No real model was available; learned embedding quality remains unverified.
+- Interview explanation: "I added optional local embedding search while keeping
+  lexical retrieval as a baseline. History is filtered before encoding and
+  checked afterward. The paired evaluator exposes worse results as well as
+  improvements; synthetic contract tests don't prove model quality."
+
+- Added paired fixed-case lexical/embedding evaluation with fingerprinted cases,
+  configuration snapshots, per-case failures, boundary counts and visible metric
+  deltas. Three tests exercise synonym routing, worse embedding precision,
+  configuration changes, fixed-manifest CLI failures and local-only confirmation.
+  All vectors are handwritten fixtures, not trained-model results. No model
+  quality or reply-quality improvement is claimed.
+
 - Added a separate embedding-search CLI with explicit model/local-only options,
   provider provenance and a read-only existing-store mode. Three synthetic HTTP
   integration tests cover a full command, unchanged SQLite bytes/write refusal,

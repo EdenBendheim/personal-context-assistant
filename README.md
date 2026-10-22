@@ -2,7 +2,7 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
-**Status — October 17, 2026:** working ingestion, contact-scoped retrieval, editable memory and a persistent browser draft/review workspace. An opt-in local Ollama drafting adapter now has structured responses, source checks, abstention, and revision-bound human support review; the extractive baseline remains the default. Synthetic HTTP/browser/contract checks pass. A real local-model run, measured reply quality and embedding retrieval remain pending. No personalized language model has been trained.
+**Status — October 21, 2026:** working ingestion, contact-scoped retrieval, editable memory and a persistent browser draft/review workspace. Opt-in local Ollama adapters support structured drafting and a separate embedding-search CLI. Synthetic HTTP/contract checks pass; lexical retrieval and extractive drafting remain the defaults. Real local-model inference, embedding quality and measured reply quality remain unverified. No personalized language model has been trained.
 
 ## Working now
 
@@ -18,7 +18,7 @@ A communication assistant that retrieves relevant conversation history and the o
 
 This first retrieval baseline deliberately needs no API key, model download, or external service. It provides a measurable comparison for the embedding-based version.
 
-### Embedding contract foundation
+### Optional embedding search
 
 `embeddings.EmbeddingProvider` defines an explicit batch encoder interface.
 `embed_validated` bounds inputs and checks one nonzero finite vector per text,
@@ -58,6 +58,31 @@ requested provider/threshold settings. It creates no database, persists no vecto
 and returns an error without lexical fallback if inference fails. The default
 threshold is untuned; cosine scores are not probabilities. Drafting and the review
 UI still use lexical retrieval. Large-history batching/indexing remains pending.
+
+### Compare retrieval on fixed cases
+
+With the same already installed, cloud-disabled local embedding model:
+
+```sh
+PYTHONPATH=src python3 -m personal_context.retrieval_comparison \
+  examples/benchmark/manifest.json --model YOUR_INSTALLED_MODEL \
+  --confirm-local-only --split development --min-score 0.2
+```
+
+The paired report evaluates both backends on identical source records, cases,
+cutoffs and limits. It retains the benchmark fingerprint, requested model/settings,
+threshold, per-case missing/unexpected IDs, boundary violations and metric deltas.
+It omits message bodies. Exit 1 means at least one backend missed an expected
+result, returned an unexpected result or violated a boundary; inference/config
+errors exit 2 without a successful report. Failed scores are not hidden.
+
+Choose settings on development cases, freeze the configuration, then use
+`--split evaluation`. Do not tune on evaluation results. Current checks use
+handwritten synthetic vectors to exercise the comparison, including a worse
+embedding result. They are not evidence of learned retrieval improvement. A real
+run must additionally record the model weights/runtime; a requested model name
+alone does not establish reproducibility or model identity. This benchmark does
+not measure reply quality, style or factual entailment.
 
 ## Try the synthetic demo
 
