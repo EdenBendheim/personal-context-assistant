@@ -12,6 +12,7 @@ dependencies = []
 [project.scripts]
 personal-context = "personal_context.cli:main"
 personal-context-eval = "personal_context.evaluation:main"
+personal-context-embedding-search = "personal_context.embedding_cli:main"
 personal-context-memory = "personal_context.memory_cli:main"
 personal-context-draft = "personal_context.draft_cli:main"
 personal-context-review = "personal_context.review_server:main"

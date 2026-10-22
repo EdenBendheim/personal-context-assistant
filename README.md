@@ -41,6 +41,24 @@ model downloads or fallbacks. Requests disable input truncation, use bounded
 timeouts, unload afterward and reject malformed/oversized responses. Tests use
 a synthetic HTTP fixture. No real embedding model has been run or evaluated.
 
+After importing the synthetic demo, an **already installed** embedding model can
+be tried separately from the default lexical CLI. First configure your Ollama
+daemon with cloud disabled; `--confirm-local-only` records your confirmation,
+not an automated inspection of its settings. Replace `YOUR_INSTALLED_MODEL`:
+
+```sh
+PYTHONPATH=src python3 -m personal_context.embedding_cli 'demo' \
+  --db data/demo.sqlite --model YOUR_INSTALLED_MODEL --confirm-local-only \
+  --owner owner@example.invalid --contact alex@example.invalid \
+  --before 2026-09-04T00:00:00Z --min-score 0.2
+```
+
+This opens an existing database read-only and prints source-bearing results plus
+requested provider/threshold settings. It creates no database, persists no vectors
+and returns an error without lexical fallback if inference fails. The default
+threshold is untuned; cosine scores are not probabilities. Drafting and the review
+UI still use lexical retrieval. Large-history batching/indexing remains pending.
+
 ## Try the synthetic demo
 
 Python 3.11+; no runtime dependencies. All demo participants and messages are invented.

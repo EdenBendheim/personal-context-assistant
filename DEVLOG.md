@@ -2,6 +2,12 @@
 
 ## October 21, 2026
 
+- Added a separate embedding-search CLI with explicit model/local-only options,
+  provider provenance and a read-only existing-store mode. Three synthetic HTTP
+  integration tests cover a full command, unchanged SQLite bytes/write refusal,
+  missing-store and unconfirmed-service refusal, and errors without fallback.
+  Default search, drafting and browser retrieval remain lexical.
+
 - Added the opt-in loopback Ollama embedding adapter. Four synthetic HTTP tests
   cover the batched API, disabled truncation, proxy bypass, configuration/input
   refusal, redirects/errors, malformed vectors, response bounds and redacted

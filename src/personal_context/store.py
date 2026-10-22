@@ -5,6 +5,7 @@ from dataclasses import asdict
 import math
 import re
 import sqlite3
+from pathlib import Path
 from typing import Iterable
 
 from .messages import Message, utc_timestamp
@@ -15,7 +16,12 @@ def tokens(text: str) -> set[str]:
 
 
 class Store:
-    def __init__(self, path: str = ":memory:"):
+    def __init__(self, path: str = ":memory:", *, readonly: bool = False):
+        if readonly:
+            self.connection = sqlite3.connect(Path(path).resolve().as_uri() + '?mode=ro', uri=True)
+            self.connection.row_factory = sqlite3.Row
+            self.connection.execute('PRAGMA query_only = ON')
+            return
         self.connection = sqlite3.connect(path)
         self.connection.row_factory = sqlite3.Row
         self.connection.execute("""CREATE TABLE IF NOT EXISTS messages (
