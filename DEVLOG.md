@@ -2,6 +2,13 @@
 
 ## October 23, 2026
 
+- Added explicit SQLite index rebuild with before/after integrity checks and
+  exact application-record fingerprint equality under a writer transaction.
+  Three synthetic checks pass for preserved retrieval/memory/reviews, rebuild
+  after removal, rollback on unexpected changes, pending-write refusal and
+  missing-file CLI behavior. This rebuilds SQLite indexes, not an embedding
+  index or a physical-erasure mechanism.
+
 - Added a preview-first privacy CLI requiring the exact plan hash and a
   separate explicit deletion flag. Existing-only SQLite connections avoid
   recreating a missing file or migrating its schema. Three CLI tests pass for

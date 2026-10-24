@@ -375,3 +375,17 @@ removal; preview and review again. Both the digest and confirmation are required
 Missing stores are never created and the CLI never unlinks source exports.
 There is no undo in this store after commit. Reimport can restore data, so manage
 original exports and backups separately. This CLI makes no physical-erasure claim.
+
+### Rebuild the local SQLite indexes
+
+```sh
+PYTHONPATH=src python3 -m personal_context.maintenance \
+  --db data/demo.sqlite --rebuild-indexes
+```
+
+This existing-store-only command runs integrity checks before and after
+`REINDEX`, within a writer transaction. Application rows and their privacy-plan
+fingerprint must remain identical; failures roll back. It works after contact
+removal and does not restore deleted records. This is SQLite maintenance, not
+vector-index rebuilding: embedding search currently retains no persistent index.
+It does not compact the file or delete exports/backups/storage remnants.
