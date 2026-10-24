@@ -62,6 +62,12 @@ class PrivacyTests(unittest.TestCase):
             store.connection.execute('UPDATE draft_reviews SET contact=? WHERE id=?', (OTHER, reverse['review_id']))
         self.assertFalse(Privacy(store).preview(owner=OWNER, contact=CONTACT)['can_apply'])
         self.assertNotIn(reverse['review_id'], json.dumps(plan))
+        Memory(store).create(owner=CONTACT, contact=OWNER, kind='fact', text='other owner memory',
+                             sources=[('synthetic', '1')], reason='separate owner', at='2026-09-03T00:00:00Z')
+        blocked = Privacy(store).preview(owner=OWNER, contact=CONTACT)
+        self.assertEqual(1, blocked['blockers']['memory_sources_outside_scope'])
+        self.assertEqual(1, blocked['blockers']['reverse_owner_memory'])
+        self.assertFalse(blocked['can_apply'])
 
     def test_minimal_schema_noop_and_pending_or_unknown_schema_fail_closed(self):
         store = Store(); self.addCleanup(store.close)

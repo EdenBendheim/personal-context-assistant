@@ -6,6 +6,7 @@ let busy = false;
 let memoryItems = [];
 let memoryItem = null;
 let memoryBaseline = "";
+let privacyPlan = null;
 
 function notice(text, error = false) {
   $("notice").textContent = text;
@@ -22,6 +23,9 @@ function controls() {
   $("memory-kind").disabled = busy || Boolean(memoryItem);
   $("memory-save").disabled = busy || Boolean(memoryItem && memoryItem.status === "revoked") || (!memoryItem && (!review || !review.context_current));
   $("memory-withdraw").disabled = busy || !memoryItem || memoryItem.status === "revoked";
+  $("privacy-preview").disabled = busy || !$("contact").value;
+  $("privacy-remove").disabled = busy || !privacyPlan || !privacyPlan.can_apply ||
+    privacyPlan.contact !== $("contact").value || $("privacy-contact").value !== privacyPlan.contact;
 }
 async function perform(action) {
   if (busy) return;
@@ -30,6 +34,7 @@ async function perform(action) {
   finally { busy = false; controls(); }
 }
 async function api(path, payload) {
+  if (payload !== undefined) resetPrivacy();
   const response = await fetch(path, { method: payload === undefined ? "GET" : "POST",
     headers: { Authorization: `Bearer ${globalThis.reviewToken}`, "Content-Type": "application/json" },
     body: payload === undefined ? undefined : JSON.stringify(payload), cache: "no-store" });
@@ -144,6 +149,7 @@ $("create-form").addEventListener("submit", event => {
 });
 $("contact").addEventListener("change", () => {
   if (!discardAllowed(true)) { $("contact").value = selectedContact; return; }
+  resetPrivacy();
   selectedContact = $("contact").value; review = null; memoryItem = null; memoryBaseline = ""; $("workspace").hidden = true;
   perform(async () => { await refreshContact(); notice("Choose a topic or open a saved review."); });
 });
@@ -251,6 +257,30 @@ $("memory-withdraw").addEventListener("click", () => perform(async () => {
   await afterMemory(item); notice("Memory withdrawn; its revision history is retained.");
 }));
 $("current-time").addEventListener("click", () => perform(async () => { $("cutoff").value = new Date().toISOString(); await refreshMemory(); notice("Cutoff updated. Create a new review to rebuild its context."); }));
+function resetPrivacy() {
+  privacyPlan = null;
+  $("privacy-contact").value = "";
+  $("privacy-plan").textContent = "No removal preview loaded. Preview again after changes.";
+}
+$("privacy-contact").addEventListener("input", controls);
+$("privacy-preview").addEventListener("click", () => perform(async () => {
+  resetPrivacy();
+  privacyPlan = await api(`/api/privacy?contact=${encodeURIComponent($("contact").value)}`);
+  $("privacy-plan").textContent = JSON.stringify({ contact: privacyPlan.contact, records: privacyPlan.counts,
+    blockers: privacyPlan.blockers, can_apply: privacyPlan.can_apply, plan_sha256: privacyPlan.plan_sha256 }, null, 2);
+  notice(privacyPlan.can_apply ? "Review the counts. Type this contact’s identifier to enable removal." :
+    "Removal is blocked because another scope retains source copies. No records were removed.");
+}));
+$("privacy-remove").addEventListener("click", () => {
+  const plan = privacyPlan;
+  if (!plan || !plan.can_apply || plan.contact !== $("contact").value || $("privacy-contact").value !== plan.contact) return;
+  if (!window.confirm(`Permanently remove the reviewed stored records for ${plan.contact}? This includes messages, memory history, saved drafts, edits and feedback. There is no undo here. Original exports and backups remain.`)) return;
+  perform(async () => {
+    await api("/api/privacy/remove", { contact: plan.contact, expected_plan_sha256: plan.plan_sha256, confirm: true });
+    // Reload also drops rendered packet/history copies and refreshes contacts.
+    window.location.reload();
+  });
+});
 $("cutoff").value = new Date().toISOString();
 perform(async () => {
   const config = await api("/api/config");

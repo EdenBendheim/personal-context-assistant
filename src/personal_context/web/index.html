@@ -67,7 +67,16 @@
         <button type="button" id="current-time" class="secondary">Use current time as draft cutoff</button>
       </form>
       <details><summary>Memory revisions and supporting messages</summary><div id="memory-history"></div></details>
-      <p class="muted">Withdrawal stops memory reuse and retains revision history. Permanent erasure remains a separate planned feature.</p>
+      <p class="muted">Withdrawal stops memory reuse and retains revision history. Use the separate removal preview below to remove current stored records.</p>
+    </section>
+    <section class="card" id="privacy-panel">
+      <h2>Remove stored contact data</h2>
+      <p>Preview all messages, memory revisions, saved drafts, edits and feedback for the selected contact. Applying removal has no undo in this database.</p>
+      <p class="muted">Original exports, backups, provider logs and copies outside this database remain. Physical storage erasure is not guaranteed; reimport can restore data.</p>
+      <button type="button" id="privacy-preview">Preview removal</button>
+      <pre id="privacy-plan">No removal preview loaded.</pre>
+      <label>Type the selected contact’s full identifier to confirm<input id="privacy-contact" autocomplete="off" spellcheck="false"></label>
+      <button type="button" id="privacy-remove" class="danger" disabled>Remove the reviewed stored records</button>
     </section>
     <section class="card"><h2>This contact’s review history</h2><p id="metrics">Choose a contact.</p></section>
   </main>

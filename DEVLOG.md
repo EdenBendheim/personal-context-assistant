@@ -1,6 +1,27 @@
 # Development log
 
-## October 23, 2026
+## October 23, 2026 — daily run completed October 24
+
+- Added authenticated owner-fixed privacy preview/apply routes and a workspace
+  panel with affected-record counts, typed identifier gating and final explicit
+  confirmation. Every write/contact switch clears the preview; server checks
+  also refuse stale state. Contacts with only saved copies stay selectable.
+  Three new HTTP tests pass, including orphaned raw sources and shared-copy
+  refusal; existing owner/auth and review tests remain green.
+- Final local checks: all 101 tests pass, all 20 fixed lexical retrieval cases
+  retain recall/precision 1.0 with zero boundary violations, all 13 scripted
+  generation cases pass, memory/draft demos and JS syntax/whitespace checks pass.
+  Real in-app browser check verified counts, typed-confirmation gating and
+  contact-switch invalidation. No real model/service, private data or paid
+  compute was used. No personal database or source export was removed.
+- Limitations: removal covers live records in the selected database scope;
+  external exports/backups, another open browser's display, uncited manual
+  copies, provider logs and physical storage remnants are not erased. Reimport
+  can restore data. Other-scope cited copies block removal. Real reply quality,
+  local model verification and export tracking remain pending.
+- Interview explanation: “I traced contact data through messages, memory and
+  saved draft histories, made removal previewable and transactional, rejected
+  stale or shared-scope plans, and verified that other contacts stay intact.”
 
 - Added explicit SQLite index rebuild with before/after integrity checks and
   exact application-record fingerprint equality under a writer transaction.

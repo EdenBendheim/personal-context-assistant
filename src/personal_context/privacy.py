@@ -21,7 +21,8 @@ TABLES = {
 }
 LIMITATIONS = (
     'Current SQLite store only; external exports, backups, browser displays, copied text and provider logs are not removed. '
-    'No guarantee of physical storage erasure. Reimporting an original export can restore deleted data.'
+    'Uncited text copies in other conversations are not detected. No guarantee of physical storage erasure. '
+    'Reimporting an original export can restore deleted data.'
 )
 
 

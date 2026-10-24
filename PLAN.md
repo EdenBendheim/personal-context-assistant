@@ -32,7 +32,9 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 
 - [x] Build contact selection, source inspection, draft editing/reopening, and feedback in a local review interface.
 - [x] Add cited-memory creation/correction/withdrawal to that browser interface.
-- [ ] Add explicit local export deletion and index rebuild.
+- [x] Add snapshot-bound contact removal including saved packets and revision copies, with CLI/API/UI confirmation.
+- [x] Rebuild SQLite indexes with integrity and unchanged-record checks.
+- [ ] Track original export files and offer explicit external-export deletion; backups/manual copies remain outside database removal.
 - [x] Record useful/incorrect retrievals and changed wording without sending messages automatically.
 - [x] Publish synthetic demo commands, a browser walkthrough, and an architecture explanation.
 
@@ -61,7 +63,11 @@ retrieval comparison now have synthetic contract/HTTP checks; no learned encoder
 has been run. Next, verify a local embedding model on development cases, freeze
 its exact weights/runtime/threshold, then report evaluation cases and failures.
 Drafting/UI retrieval remains lexical until measured results justify a change.
-Large-history embedding indexing, permanent privacy erasure (including saved
-packet copies), automatic memory extraction, large-history pagination and
+The October 23 run added removal of current contact-scoped database records,
+including saved packets, all revisions and feedback, with preview and explicit
+confirmation. SQLite index rebuilding preserves current records. Real-model
+inference remains blocked by unavailable local setup; it was not replaced by
+a synthetic quality claim. Large-history embedding indexing, tracking/removing
+external exports and backups, automatic memory extraction, pagination and
 real-user evaluation remain pending. No sending integration is planned for the
 current review-only milestone.

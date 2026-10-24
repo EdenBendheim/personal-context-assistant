@@ -35,3 +35,5 @@ legend { font-size: 13px; font-weight: 600; }
 .source-choice { font-weight: 400; overflow-wrap: anywhere; }
 .source-choice input { display: inline; width: auto; margin-right: 8px; }
 @media (max-width: 760px) { .workspace, .grid { grid-template-columns: 1fr; } header, main { padding: 20px; } .card { padding: 18px; } .saved { align-items: stretch; flex-direction: column; gap: 0; } }
+
+.danger { background: #9b3028; }

@@ -15,6 +15,7 @@ from .model_options import add_model_options,configured_provider
 from .memory import nonempty
 from .memory_workspace import MemoryWorkspace
 from .reviews import Reviews
+from .privacy import Privacy
 from .store import Store
 
 
@@ -130,11 +131,23 @@ class Handler(BaseHTTPRequestHandler):
                     sending_available=False)
             elif method == "GET" and path == ["api", "contacts"]:
                 fields(query, ())
-                rows = store.connection.execute("""SELECT contact, COUNT(*) AS messages, MAX(timestamp) AS last_message
-                    FROM (SELECT recipient AS contact, timestamp FROM messages WHERE author = ?
-                          UNION ALL SELECT author AS contact, timestamp FROM messages WHERE recipient = ?)
-                    WHERE contact != ? GROUP BY contact ORDER BY contact""", (owner, owner, owner))
+                rows = store.connection.execute("""WITH raw AS (
+                    SELECT recipient AS contact, timestamp FROM messages WHERE author = ?
+                    UNION ALL SELECT author AS contact, timestamp FROM messages WHERE recipient = ?),
+                    known AS (SELECT contact FROM raw UNION SELECT contact FROM draft_reviews WHERE owner = ?
+                              UNION SELECT contact FROM memory_items WHERE owner = ?)
+                    SELECT known.contact, COUNT(raw.timestamp) AS messages, MAX(raw.timestamp) AS last_message
+                    FROM known LEFT JOIN raw ON raw.contact = known.contact
+                    WHERE known.contact != ? GROUP BY known.contact ORDER BY known.contact""",
+                    (owner, owner, owner, owner, owner))
                 result = dict(owner=owner, contacts=[dict(row) for row in rows])
+            elif method == "GET" and path == ["api", "privacy"]:
+                fields(query, ("contact",))
+                result = Privacy(store).preview(owner=owner, **query)
+            elif method == "POST" and path == ["api", "privacy", "remove"]:
+                fields(query, ())
+                payload = fields(self.body(), ("contact", "expected_plan_sha256", "confirm"))
+                result = Privacy(store).apply(owner=owner, **payload)
             elif method == "GET" and path in (["api", "reviews"], ["api", "summary"]):
                 fields(query, ("contact",))
                 result = (reviews.list if path[1] == "reviews" else reviews.summary)(owner=owner, **query)

@@ -2,7 +2,13 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
-**Status — October 21, 2026:** working ingestion, contact-scoped retrieval, editable memory and a persistent browser draft/review workspace. Opt-in local Ollama adapters support structured drafting and a separate embedding-search CLI. Synthetic HTTP/contract checks pass; lexical retrieval and extractive drafting remain the defaults. Real local-model inference, embedding quality and measured reply quality remain unverified. No personalized language model has been trained.
+**Status — October 24, 2026 (October 23 scheduled run):** working ingestion,
+contact-scoped retrieval, editable memory and persistent draft review. Contact
+removal now previews every stored copy in its scope, requires an unchanged plan
+and explicit confirmation, and removes messages/memory/draft history atomically.
+A local UI/CLI and verified SQLite index rebuild are available. External exports,
+backups and physical storage remnants are not erased. Local-model adapters remain
+synthetically checked only; real inference and reply quality are unverified.
 
 ## Working now
 
@@ -164,7 +170,7 @@ The add/list result contains `memory_id` and `revision`. Use that ID with `histo
 
 Revisions default to the current UTC time; `--at` supplies an explicit timezone-aware effective time for imported history or controlled evaluations. Supporting messages cannot be later than their revision, and revision times must increase strictly. Context chooses the latest revision **strictly before** `--before`, so a later correction cannot leak backward. Withdrawal overrides historical retrieval too, preventing reuse of a memory the owner has explicitly withdrawn.
 
-Withdrawal is an exclusion tombstone, **not permanent erasure**: history retains previous text, reasons, and source IDs for review. Raw-export deletion and privacy erasure remain planned. Memory is local SQLite data; keep its database in ignored `data/`. There is no automatic memory extraction or message sending.
+Withdrawal is an exclusion tombstone, **not permanent erasure**: history retains previous text, reasons, and source IDs for review. Current database removal is a separate explicit preview/confirmation workflow below; raw-export deletion remains planned. Memory is local SQLite data; keep its database in ignored `data/`. There is no automatic memory extraction or message sending.
 
 ## Build a draft for review
 
@@ -237,7 +243,7 @@ API equivalents: `GET /api/memory?contact=...&before=...`, `GET /api/memory/ID`,
 
 Local exports → normalized SQLite messages → contact/time-limited retrieval + reviewed memory → immutable cited draft packet → saved wording revisions → human feedback. The browser talks only to the local owner-scoped API. No external scripts or message-send integration are involved.
 
-The review path now supports the default extractive baseline and an opt-in local generative provider. Next: verify an installed, cloud-disabled local model on synthetic messages, then evaluate semantic support and recipient/style preference on fixed reply cases before using real history. Embedding retrieval comparisons, real-user reply quality and permanent privacy erasure remain unimplemented.
+The review path now supports the default extractive baseline and an opt-in local generative provider. Next: verify an installed, cloud-disabled local model on synthetic messages, then evaluate semantic support and recipient/style preference on fixed reply cases before using real history. Embedding retrieval has a separate synthetic comparison; real-user reply quality and removal of external exports/backups remain pending.
 
 ## Generated wording contract (development API)
 
@@ -389,3 +395,25 @@ fingerprint must remain identical; failures roll back. It works after contact
 removal and does not restore deleted records. This is SQLite maintenance, not
 vector-index rebuilding: embedding search currently retains no persistent index.
 It does not compact the file or delete exports/backups/storage remnants.
+
+### Remove contact data in the local workspace
+
+Choose **Preview removal** to inspect counts. Removal stays disabled until you
+type the selected contact’s full identifier. A final confirmation explains the
+irreversible database action. Changing contacts or making another local write
+clears the preview; server-side snapshot checks also reject concurrent changes.
+After success the page reloads, dropping its rendered packets and refreshing
+contacts. No messages are sent. Another already-open tab may still display copies.
+
+Authenticated `GET /api/privacy?contact=...` returns the preview;
+`POST /api/privacy/remove` requires `contact`, `expected_plan_sha256` and literal
+`confirm: true`. The owner is fixed at server launch, not supplied by the request.
+Contacts with only saved drafts or memory remain selectable even if raw messages
+are already missing. Other-scope cited copies block removal. Uncited free-text
+copies elsewhere cannot be detected; manage those and original exports separately.
+
+Synthetic checks cover full-copy removal, owner/auth boundaries, stale plans,
+blocked shared sources and contacts with orphaned saved copies. A real browser
+check verified preview counts, typed-identifier gating and clearing on contact
+switch; no personal data was used or removed. This does not demonstrate model
+quality or guaranteed physical erasure.
