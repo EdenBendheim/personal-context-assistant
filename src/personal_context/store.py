@@ -16,11 +16,13 @@ def tokens(text: str) -> set[str]:
 
 
 class Store:
-    def __init__(self, path: str = ":memory:", *, readonly: bool = False):
-        if readonly:
-            self.connection = sqlite3.connect(Path(path).resolve().as_uri() + '?mode=ro', uri=True)
+    def __init__(self, path: str = ":memory:", *, readonly: bool = False, create: bool = True):
+        if readonly or not create:
+            mode = 'ro' if readonly else 'rw'
+            self.connection = sqlite3.connect(Path(path).resolve().as_uri() + '?mode='+mode, uri=True)
             self.connection.row_factory = sqlite3.Row
-            self.connection.execute('PRAGMA query_only = ON')
+            if readonly:
+                self.connection.execute('PRAGMA query_only = ON')
             return
         self.connection = sqlite3.connect(path)
         self.connection.row_factory = sqlite3.Row

@@ -10,6 +10,7 @@ requires-python = ">=3.11"
 dependencies = []
 
 [project.scripts]
+personal-context-privacy = "personal_context.privacy_cli:main"
 personal-context = "personal_context.cli:main"
 personal-context-eval = "personal_context.evaluation:main"
 personal-context-embedding-search = "personal_context.embedding_cli:main"

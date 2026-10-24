@@ -2,6 +2,12 @@
 
 ## October 23, 2026
 
+- Added a preview-first privacy CLI requiring the exact plan hash and a
+  separate explicit deletion flag. Existing-only SQLite connections avoid
+  recreating a missing file or migrating its schema. Three CLI tests pass for
+  preview/apply, stale-plan refusal, missing stores and untouched source exports.
+  No external file is unlinked and no personal database was used.
+
 - Added explicitly confirmed removal of the reviewed contact scope under a
   SQLite writer transaction. The exact snapshot/plan is rechecked before
   deleting child records, and untouched rows must remain identical. Secure

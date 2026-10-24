@@ -361,3 +361,17 @@ other-scope copies block applying. Pending caller writes are never committed.
 SQLite secure delete is enabled for the operation and restored afterward.
 This does not remove external exports,
 backups, browser copies or provider logs and cannot guarantee physical erasure.
+
+### Preview-first privacy CLI
+
+```sh
+PYTHONPATH=src python3 -m personal_context.privacy_cli --db data/demo.sqlite \
+  --owner owner@example.invalid --contact alex@example.invalid
+```
+
+To remove the reviewed current database records, repeat those arguments with
+`--apply-plan EXACT_PLAN_SHA256 --confirm-delete`. A stale plan fails without
+removal; preview and review again. Both the digest and confirmation are required.
+Missing stores are never created and the CLI never unlinks source exports.
+There is no undo in this store after commit. Reimport can restore data, so manage
+original exports and backups separately. This CLI makes no physical-erasure claim.
