@@ -1,5 +1,15 @@
 # Development log
 
+## October 23, 2026
+
+- Added a read-only contact-removal preview covering raw messages, memory
+  revisions/citations, original draft packets, wording edits and feedback.
+  Counts and a snapshot-bound plan hash omit message text. Other-scope retained
+  source copies block removal; unknown/incomplete schemas and pending writes
+  fail closed. Three synthetic tests pass, including unchanged database bytes.
+  Applying removal remains pending; external exports/physical erasure are outside
+  the preview contract. No real messages were inspected or removed.
+
 ## October 21, 2026
 
 - Final local verification: all 85 tests passed. All 20 unchanged lexical

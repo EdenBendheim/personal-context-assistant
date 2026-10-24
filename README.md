@@ -344,3 +344,15 @@ Fixture labels come from the author; elapsed times measure infrastructure only.
 No installed Ollama binary/service or cloud-disabled local setup was available
 at the October 17 check, so no actual model inference or style-quality result is
 claimed. Nothing was downloaded and no paid service was used.
+
+## Preview contact data removal
+
+`Privacy(store).preview(owner=..., contact=...)` in `personal_context.privacy`
+returns counts and a snapshot-bound `plan_sha256` without message text. It
+accounts for all stored revisions and packet copies in this contact scope,
+including drafts that no longer match current sources. Retained source copies
+in another scope block removal instead of deleting another owner's records.
+Unknown application tables, incomplete schema groups or pending writes are
+refused. Preview works with `Store(path, readonly=True)` and writes nothing.
+Applying the plan is not implemented yet. This does not remove external exports,
+backups, browser copies or provider logs and cannot guarantee physical erasure.
