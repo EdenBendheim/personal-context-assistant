@@ -132,3 +132,57 @@ class Privacy:
         with self._transaction():
             plan, _ = self._plan(self._snapshot(), owner, contact)
         return plan
+
+    def _delete_rows(self, selected):
+        # Children first: this also works when SQLite foreign-key checks are on.
+        keys = dict(messages=('source', 'id'), memory_items=('id',),
+            memory_revisions=('memory_id', 'revision'),
+            memory_sources=('memory_id', 'revision', 'source', 'message_id'),
+            draft_reviews=('id',), draft_edits=('review_id', 'revision'), draft_feedback=('id',))
+        for table in ('draft_feedback', 'draft_edits', 'draft_reviews',
+                      'memory_sources', 'memory_revisions', 'memory_items', 'messages'):
+            rows = selected.get(table, [])
+            if rows:
+                columns = keys[table]
+                cursor = self.connection.executemany(
+                    f'DELETE FROM {table} WHERE '+' AND '.join(f'{column} = ?' for column in columns),
+                    [tuple(row[column] for column in columns) for row in rows])
+                if cursor.rowcount != len(rows):
+                    raise ValueError('Removal count differs from the reviewed plan')
+
+    def apply(self, *, owner, contact, expected_plan_sha256, confirm=False):
+        """Remove exactly the reviewed scope; changed state requires a new preview.
+
+        ``confirm=True`` is an explicit caller decision, never inferred from a
+        preview. The transaction removes current live records, not external copies.
+        """
+        if confirm is not True:
+            raise ValueError('Explicit confirmation is required to remove stored contact data')
+        if (not isinstance(expected_plan_sha256, str) or len(expected_plan_sha256) != 64
+                or any(c not in '0123456789abcdef' for c in expected_plan_sha256)):
+            raise ValueError('Supply the exact preview plan SHA-256')
+        if self.connection.in_transaction:
+            raise ValueError('Finish the pending store transaction before removing contact data')
+        previous_secure = self.connection.execute('PRAGMA secure_delete').fetchone()[0]
+        try:
+            self.connection.execute('PRAGMA secure_delete = ON')
+            with self._transaction(write=True):
+                snapshot = self._snapshot()
+                plan, selected = self._plan(snapshot, owner, contact)
+                if plan['plan_sha256'] != expected_plan_sha256:
+                    raise ValueError('Stale removal plan; preview the current store before confirming again')
+                if not plan['can_apply']:
+                    raise ValueError('Other scopes retain source copies; resolve their ownership before removal')
+                self._delete_rows(selected)
+                after = self._snapshot()
+                expected = dict(schema=snapshot['schema'], rows={table: [row for row in records
+                    if row not in selected[table]] for table, records in snapshot['rows'].items()})
+                if after != expected:
+                    raise ValueError('Removal changed records outside the reviewed scope')
+                return dict(version=1, owner=plan['owner'], contact=plan['contact'],
+                    applied_plan_sha256=plan['plan_sha256'], deleted=plan['counts'],
+                    remaining_counts={table: len(rows) for table, rows in after['rows'].items()},
+                    store_sha256=_hash(after), secure_delete_enabled=True,
+                    physical_erasure_guaranteed=False, limitation=LIMITATIONS)
+        finally:
+            self.connection.execute(f'PRAGMA secure_delete = {int(previous_secure)}')

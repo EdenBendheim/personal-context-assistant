@@ -354,5 +354,10 @@ including drafts that no longer match current sources. Retained source copies
 in another scope block removal instead of deleting another owner's records.
 Unknown application tables, incomplete schema groups or pending writes are
 refused. Preview works with `Store(path, readonly=True)` and writes nothing.
-Applying the plan is not implemented yet. This does not remove external exports,
+`Privacy(store).apply(owner=..., contact=..., expected_plan_sha256=...,
+confirm=True)` rechecks the exact plan under a writer transaction and removes
+all selected live records atomically. Any store change requires a new preview;
+other-scope copies block applying. Pending caller writes are never committed.
+SQLite secure delete is enabled for the operation and restored afterward.
+This does not remove external exports,
 backups, browser copies or provider logs and cannot guarantee physical erasure.

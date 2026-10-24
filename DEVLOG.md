@@ -2,6 +2,15 @@
 
 ## October 23, 2026
 
+- Added explicitly confirmed removal of the reviewed contact scope under a
+  SQLite writer transaction. The exact snapshot/plan is rechecked before
+  deleting child records, and untouched rows must remain identical. Secure
+  delete is enabled for the operation, with its prior setting restored. Seven
+  privacy tests pass, including concurrent edits, retained other-scope copies,
+  full rollback after injected failure and preservation of another contact.
+  This removes current live database copies, not exports/backups or physical
+  storage remnants. Only synthetic stores were used.
+
 - Added a read-only contact-removal preview covering raw messages, memory
   revisions/citations, original draft packets, wording edits and feedback.
   Counts and a snapshot-bound plan hash omit message text. Other-scope retained
