@@ -1,5 +1,14 @@
 # Development log
 
+## October 26, 2026
+
+- Fixed current feedback summaries retaining usable ratings after supporting
+  sources changed. Summary and per-draft review now use the same context check;
+  stale counts explain exclusions while feedback history remains intact. The
+  browser refreshes metrics after memory updates. Regression checks cover
+  deleted/edited messages, withdrawn memory, a still-current generic draft and
+  owner isolation, plus the HTTP path. No real-model quality claim.
+
 ## October 23, 2026 — daily run completed October 24
 
 - Added authenticated owner-fixed privacy preview/apply routes and a workspace

@@ -113,9 +113,12 @@ async function refreshContact() {
   const placeholder = addText($("saved"), "option", "Choose a saved review"); placeholder.value = "";
   saved.forEach(item => { const option = addText($("saved"), "option", item.created_at); option.value = item.review_id; });
   if (review) $("saved").value = review.review_id;
-  const stats = await api(`/api/summary?contact=${encodeURIComponent(contact)}`);
-  $("metrics").textContent = `${stats.reviews} saved · ${stats.rated_current_revisions} current revisions rated · ${stats.changed_drafts} edited. Decisions: ${JSON.stringify(stats.decisions)}. ${stats.metric_note}`;
+  await refreshMetrics();
   await refreshMemory();
+}
+async function refreshMetrics() {
+  const stats = await api(`/api/summary?contact=${encodeURIComponent($("contact").value)}`);
+  $("metrics").textContent = `${stats.reviews} saved · ${stats.context_current_reviews} with current context · ${stats.stale_context_reviews} with changed context · ${stats.rated_current_revisions} current revisions rated · ${stats.changed_drafts} edited. Decisions: ${JSON.stringify(stats.decisions)}. ${stats.metric_note}`;
 }
 async function load(id) {
   const result = await api(`/api/reviews/${encodeURIComponent(id)}`);
@@ -235,6 +238,7 @@ async function afterMemory(item) {
     review.context_current = current.context_current;
     $("review-state").textContent = current.revision !== review.revision ? "Review changed in another editor — reopen before saving or rating." : `Saved revision ${review.revision} · ${current.context_current ? "context unchanged" : "context changed — rebuild before marking usable"}`;
   }
+  await refreshMetrics();
   notice("Memory saved. Use a cutoff after its revision time and rebuild to use the change.");
 }
 $("memory-form").addEventListener("submit", event => {

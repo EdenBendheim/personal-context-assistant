@@ -85,11 +85,17 @@ class ServerTests(unittest.TestCase):
         other = reviews.create(DraftRequest("other@example.invalid", "third@example.invalid", "2026-09-04T00:00:00Z", "private"))
         self.assertEqual(400, self.call("/api/reviews/"+other["review_id"])[0])
         rid = self.create()[1]["review_id"]
+        self.assertEqual(200, self.call("/api/reviews/"+rid+"/feedback",
+            dict(expected_revision=1, decision="usable"))[0])
         with store.connection:
             store.connection.execute("DELETE FROM messages WHERE id = '1'")
         store.close()
         self.assertFalse(self.call("/api/reviews/"+rid)[1]["context_current"])
         self.assertEqual(409, self.call("/api/reviews/"+rid+"/feedback", dict(expected_revision=1, decision="usable"))[0])
+        summary = self.call("/api/summary?contact="+CONTACT)[1]
+        self.assertEqual({}, summary["decisions"])
+        self.assertEqual(1, summary["stale_context_ratings"])
+        self.assertEqual("usable", self.call("/api/reviews/"+rid)[1]["feedback"][0]["decision"])
 
     def test_missing_database_is_not_created(self):
         missing = self.db.parent/"absent.sqlite"

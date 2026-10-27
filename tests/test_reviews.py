@@ -4,6 +4,7 @@ import unittest
 
 from personal_context.drafts import DraftRequest
 from personal_context.messages import Message
+from personal_context.memory import Memory
 from personal_context.reviews import Reviews
 from personal_context.store import Store
 
@@ -113,3 +114,37 @@ class ReviewTests(unittest.TestCase):
             self.reviews.feedback(rid, owner=OWNER, expected_revision=1, decision="usable")
         self.reviews.feedback(rid, owner=OWNER, expected_revision=1, decision="rejected", retrieval="incorrect")
         self.assertEqual(1, len(self.reviews.feedback_history(rid, owner=OWNER)))
+
+    def test_summary_excludes_ratings_after_source_edits_deletion_and_withdrawal(self):
+        for change in ("edit", "delete", "withdraw"):
+            with self.subTest(change=change):
+                store = Store()
+                self.addCleanup(store.close)
+                seed(store)
+                reviews = Reviews(store)
+                memory = Memory(store)
+                item = memory.create(owner=OWNER, contact=CONTACT, kind="fact",
+                    text="The demo is Thursday.", sources=[("gmail", "1")],
+                    reason="Synthetic review", at="2026-09-02T00:00:00Z")
+                review = reviews.create(request())
+                generic = reviews.create(request(mode="generic"))
+                for saved in (review, generic):
+                    reviews.feedback(saved["review_id"], owner=OWNER,
+                        expected_revision=1, decision="usable", retrieval="useful")
+                self.assertEqual(2, reviews.summary(owner=OWNER, contact=CONTACT)["rated_current_revisions"])
+                if change == "withdraw":
+                    memory.revoke(item["memory_id"], expected_revision=1,
+                        reason="Withdrawn", at="2026-09-03T00:00:00Z")
+                else:
+                    with store.connection:
+                        store.connection.execute("DELETE FROM messages" if change == "delete"
+                            else "UPDATE messages SET body = 'demo changed'")
+                summary = reviews.summary(owner=OWNER, contact=CONTACT)
+                self.assertFalse(reviews.get(review["review_id"], owner=OWNER)["context_current"])
+                self.assertEqual((2, 1, 1, 1, 1), tuple(summary[key] for key in (
+                    "reviews", "context_current_reviews", "stale_context_reviews",
+                    "stale_context_ratings", "rated_current_revisions")))
+                self.assertEqual({"usable": 1}, summary["decisions"])
+                self.assertEqual({"useful": 1}, summary["retrieval"])
+                self.assertEqual("usable", reviews.feedback_history(review["review_id"], owner=OWNER)[0]["decision"])
+                self.assertEqual(0, reviews.summary(owner="other@example.invalid", contact=CONTACT)["reviews"])

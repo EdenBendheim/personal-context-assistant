@@ -88,11 +88,14 @@ class Reviews:
         result = json.loads(row["result_json"])
         edit = self.connection.execute("SELECT * FROM draft_edits WHERE review_id = ? ORDER BY revision DESC LIMIT 1",
                                        (review_id,)).fetchone()
-        request = DraftRequest(**result["packet"]["request"])
-        current = self.engine.prepare(request).fingerprint == result["packet_sha256"]
+        current = self._context_current(result)
         return dict(review_id=review_id, owner=row["owner"], contact=row["contact"],
                     created_at=row["created_at"], revision=edit["revision"], text=edit["text"],
                     saved_at=edit["saved_at"], context_current=current, original=result)
+
+    def _context_current(self, result: dict) -> bool:
+        request = DraftRequest(**result["packet"]["request"])
+        return self.engine.prepare(request).fingerprint == result["packet_sha256"]
 
     def edit(self, review_id: str, *, owner: str, expected_revision: int, text: str) -> dict:
         revision_number(expected_revision)
@@ -161,18 +164,22 @@ class Reviews:
             LEFT JOIN draft_feedback f ON f.id = (SELECT id FROM draft_feedback
                 WHERE review_id = r.id AND revision = e.revision ORDER BY recorded_at DESC, id DESC LIMIT 1)
             WHERE r.owner = ? AND r.contact = ?""", (request.owner, request.contact)).fetchall()
-        rated = [row for row in rows if row["decision"] is not None]
+        current_rows = [row for row in rows if self._context_current(json.loads(row["result_json"]))]
+        rated = [row for row in current_rows if row["decision"] is not None]
+        stale_ratings = sum(row["decision"] is not None for row in rows) - len(rated)
         overlaps = []
         for row in rows:
             original = json.loads(row["result_json"])["draft_text"]
             a, b = Counter(original.split()), Counter(row["text"].split())
             total = sum(a.values()) + sum(b.values())
             overlaps.append(2*sum((a & b).values())/total if total else 1.0)
-        return dict(reviews=len(rows), rated_current_revisions=len(rated),
+        return dict(reviews=len(rows), context_current_reviews=len(current_rows),
+                    stale_context_reviews=len(rows)-len(current_rows),
+                    stale_context_ratings=stale_ratings, rated_current_revisions=len(rated),
                     decisions=dict(Counter(row["decision"] for row in rated)),
                     retrieval=dict(Counter(row["retrieval"] for row in rated)),
                     style=dict(Counter(row["style"] for row in rated)),
                     support=dict(Counter(row["support"] for row in rated)),
                     changed_drafts=sum(row["text"] != json.loads(row["result_json"])["draft_text"] for row in rows),
                     mean_word_overlap=sum(overlaps)/len(overlaps) if overlaps else None,
-                    metric_note="Word overlap ignores order; feedback is subjective, not a held-out quality score.")
+                    metric_note="Feedback excludes changed context and superseded wording. Word overlap covers all saved drafts and ignores order; these are subjective development diagnostics, not held-out quality scores.")

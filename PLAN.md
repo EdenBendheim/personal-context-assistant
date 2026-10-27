@@ -36,6 +36,7 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 - [x] Rebuild SQLite indexes with integrity and unchanged-record checks.
 - [ ] Track original export files and offer explicit external-export deletion; backups/manual copies remain outside database removal.
 - [x] Record useful/incorrect retrievals and changed wording without sending messages automatically.
+- [x] Exclude changed-source ratings from current feedback totals and refresh browser counts after memory changes.
 - [x] Publish synthetic demo commands, a browser walkthrough, and an architecture explanation.
 
 ## Milestone 4 — measured results

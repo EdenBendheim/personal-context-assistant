@@ -2,7 +2,7 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
-**Status — October 24, 2026 (October 23 scheduled run):** working ingestion,
+**Status — October 26, 2026:** working ingestion,
 contact-scoped retrieval, editable memory and persistent draft review. Contact
 removal now previews every stored copy in its scope, requires an unchanged plan
 and explicit confirmation, and removes messages/memory/draft history atomically.
@@ -206,7 +206,7 @@ Each loaded review reports `context_current`: the same contact/topic/cutoff pack
 
 `feedback(id, owner=..., expected_revision=N, decision="usable"|"needs_work"|"rejected", retrieval="useful"|"incorrect"|"not_rated", style="appropriate"|"needs_edit"|"not_rated", notes="...")` records a local assessment. Marking stale-context drafts usable is rejected; rejection/needs-work feedback still helps diagnose failures. This is a review label, not sending or automatic factual validation of edited prose.
 
-`feedback_history` preserves earlier assessments. `summary(owner=..., contact=...)` counts only the latest assessment of each current draft revision, so re-rating cannot inflate the sample and an edit needs a new rating. It also counts changed drafts and reports word multiset overlap against the original template. Overlap ignores word order; these subjective development measurements do not establish held-out reply quality. Empty samples report a null overlap.
+`feedback_history` preserves earlier assessments. `summary(owner=..., contact=...)` counts only the latest assessment of each current draft revision whose source context is still current, so re-rating cannot inflate the sample and an edit needs a new rating. Deleted or edited sources and withdrawn memory exclude earlier ratings from current decision/retrieval/style/support totals. Separate `stale_context_reviews` and `stale_context_ratings` counts explain exclusions; feedback history remains inspectable. Memory changes refresh these counts in the browser. It also counts changed drafts and reports word multiset overlap against the original template. Overlap ignores word order; these subjective development measurements do not establish held-out reply quality. Empty samples report a null overlap.
 
 ## Local review API
 
