@@ -7,6 +7,7 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 - [x] Common message schema, local export importers, provenance, and quote cleanup.
 - [x] Atomic SQLite persistence and deduplication.
 - [x] Contact-specific lexical retrieval and outbound style examples with timestamp cutoffs.
+- [x] Keep lexical search/style CLI lookups read-only and refuse missing stores without creating files.
 - [x] Add importer error summaries and an explicit preview before committing an import.
 - [x] Distinguish conflicting provider IDs from true duplicates and recheck conflicts atomically at apply time.
 - [x] Add conversation-level development/evaluation manifests and a fixed synthetic reply-context retrieval benchmark.

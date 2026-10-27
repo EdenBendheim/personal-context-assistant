@@ -2,6 +2,26 @@
 
 ## October 26, 2026
 
+- Final local verification: all 111 tests pass, all 20 unchanged retrieval
+  cases pass with zero boundary violations, and all 13 scripted generation
+  contract cases pass. Memory/draft demos, JavaScript syntax and whitespace
+  checks pass. Real browser verification used only an ignored synthetic store.
+- Limitations: no actual model inference or measured reply-quality improvement;
+  source-aware summary checks still scale with saved-review count. Saved reviews
+  now paginate, while memory/history pagination and real-model evaluation remain
+  pending. No private data, credentials, artifacts or paid compute were used.
+- Interview explanation: “I made the review loop more trustworthy and usable:
+  changed evidence invalidates old ratings, older drafts remain reachable,
+  conflicting exports fail atomically, and search cannot silently create a
+  database. I verified the user flow and data boundaries separately from model
+  quality.”
+
+- Lexical search/style CLI commands now open existing stores read-only and
+  report missing stores, unsupported schemas and bad parameters without
+  creating directories, empty databases or migrations. Three CLI tests pass;
+  both commands reject a write at the SQLite level and preserve database bytes.
+  Import remains the explicit database-creation operation.
+
 - Import preview now distinguishes conflicting provider IDs from genuine
   duplicates, rejects an ambiguous batch without writes, and reserves content
   aliases within the file. Apply checks IDs again under a writer transaction

@@ -49,14 +49,21 @@ def main():
         if not plan.report["ready"]:
             parser.exit(2)
         return
-    Path(args.db).parent.mkdir(parents=True, exist_ok=True)
-    store = Store(args.db)
+    store = None
     try:
+        if not Path(args.db).is_file():
+            raise ValueError("Import messages into an existing database before searching")
+        store = Store(args.db, readonly=True)
         parameters = dict(owner=args.owner, contact=args.contact, before=args.before, limit=args.limit)
         result = store.search(args.query, **parameters) if args.command == "search" else store.style_examples(**parameters)
         print(json.dumps(result, indent=2))
+    except ValueError as exc:
+        parser.exit(2, f"Context lookup failed: {exc}\n")
+    except (OSError, sqlite3.Error):
+        parser.exit(2, "Context lookup failed; use an existing supported database\n")
     finally:
-        store.close()
+        if store is not None:
+            store.close()
 
 
 if __name__ == "__main__":

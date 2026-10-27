@@ -107,7 +107,7 @@ python3 -m personal_context.cli --db data/demo.sqlite style \
 python3 -m unittest discover -s tests -v
 ```
 
-Reimporting the fixture inserts zero additional messages. The October message is excluded by the cutoff; Riley's conversation never enters Alex's context.
+Reimporting the fixture inserts zero additional messages. The October message is excluded by the cutoff; Riley's conversation never enters Alex's context. Both `search` and `style` open an existing database read-only. A missing or unsupported store returns exit 2 without creating directories, creating an empty database or migrating its schema; only an explicit import can create a store.
 
 ## Preview before importing
 
