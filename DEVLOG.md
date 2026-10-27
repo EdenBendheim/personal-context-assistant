@@ -2,6 +2,14 @@
 
 ## October 26, 2026
 
+- Added bounded cursor pages and topic/revision labels for saved reviews, with
+  a browser control that preserves unsaved wording and the current selection.
+  Store tests reached all 105 timestamp-tied reviews while another review arrived;
+  wrong-scope and removed cursors fail clearly. HTTP limits/auth tests pass.
+  A real browser loaded all 29 synthetic reviews, opened the oldest, preserved
+  unsaved text, and refreshed stale-rating counts after memory withdrawal;
+  no console errors. No private conversations or actual inference used.
+
 - Fixed current feedback summaries retaining usable ratings after supporting
   sources changed. Summary and per-draft review now use the same context check;
   stale counts explain exclusions while feedback history remains intact. The

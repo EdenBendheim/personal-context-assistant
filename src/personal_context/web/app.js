@@ -7,6 +7,7 @@ let memoryItems = [];
 let memoryItem = null;
 let memoryBaseline = "";
 let privacyPlan = null;
+let reviewCursor = null;
 
 function notice(text, error = false) {
   $("notice").textContent = text;
@@ -16,6 +17,7 @@ function dirty() { return review && $("draft").value !== review.text; }
 function controls() {
   document.querySelectorAll("input,select,textarea,button").forEach(el => { el.disabled = busy; });
   $("record").disabled = busy || Boolean(dirty());
+  $("older-reviews").disabled = busy || !reviewCursor;
   const supportNeeded = review && review.original.support_review_required && $("support").value !== "supported";
   const usable = $("decision").querySelector('[value="usable"]');
   usable.disabled = Boolean(review && (!review.context_current || supportNeeded));
@@ -105,14 +107,28 @@ function render(result) {
     addText($("feedback-history"), "p", `Revision ${item.revision}: ${item.decision} · ${item.retrieval} · ${item.style} · support: ${item.support || "not_rated"}${item.notes ? " — "+item.notes : ""}`, "muted");
   }
 }
-async function refreshContact() {
+function addSavedReviews(items) {
+  for (const item of items) {
+    let option = [...$("saved").options].find(entry => entry.value === item.review_id);
+    if (!option) { option = addText($("saved"), "option", ""); option.value = item.review_id; }
+    option.textContent = `${item.created_at} · ${item.query.slice(0, 70)} · revision ${item.revision}`;
+  }
+}
+async function refreshContact({resetSaved = true} = {}) {
   const contact = $("contact").value;
   if (!contact) return;
-  const saved = await api(`/api/reviews?contact=${encodeURIComponent(contact)}`);
-  $("saved").replaceChildren();
-  const placeholder = addText($("saved"), "option", "Choose a saved review"); placeholder.value = "";
-  saved.forEach(item => { const option = addText($("saved"), "option", item.created_at); option.value = item.review_id; });
-  if (review) $("saved").value = review.review_id;
+  if (resetSaved) {
+    reviewCursor = null;
+    const page = await api(`/api/reviews/page?contact=${encodeURIComponent(contact)}`);
+    $("saved").replaceChildren();
+    addText($("saved"), "option", "Choose a saved review").value = "";
+    addSavedReviews(page.reviews); reviewCursor = page.next_cursor;
+  }
+  if (review) {
+    addSavedReviews([{review_id:review.review_id, created_at:review.created_at,
+      query:review.original.packet.request.query, revision:review.revision}]);
+    $("saved").value = review.review_id;
+  }
   await refreshMetrics();
   await refreshMemory();
 }
@@ -120,7 +136,7 @@ async function refreshMetrics() {
   const stats = await api(`/api/summary?contact=${encodeURIComponent($("contact").value)}`);
   $("metrics").textContent = `${stats.reviews} saved · ${stats.context_current_reviews} with current context · ${stats.stale_context_reviews} with changed context · ${stats.rated_current_revisions} current revisions rated · ${stats.changed_drafts} edited. Decisions: ${JSON.stringify(stats.decisions)}. ${stats.metric_note}`;
 }
-async function load(id) {
+async function load(id, {resetSaved = false} = {}) {
   const result = await api(`/api/reviews/${encodeURIComponent(id)}`);
   render(result);
   const history = await api(`/api/reviews/${encodeURIComponent(id)}/history`);
@@ -130,7 +146,7 @@ async function load(id) {
     addText(details, "summary", `Revision ${item.revision} · ${item.saved_at}`);
     addText(details, "pre", item.text); $("history").append(details);
   });
-  await refreshContact();
+  await refreshContact({resetSaved});
 }
 function memoryValues() {
   return { kind: $("memory-kind").value, text: $("memory-text").value, reason: $("memory-reason").value,
@@ -147,7 +163,7 @@ $("create-form").addEventListener("submit", event => {
       query: $("topic").value, mode: $("mode").value });
     if (result.status === "needs_history") { notice("No matching history. Try another topic, import messages, or select the generic template.", true); return; }
     if (result.status === "provider_abstained") { notice(`No draft saved: ${result.review_notes[0]}`, true); return; }
-    await load(result.review_id); notice("Review saved. Inspect the sources and edit your reply.");
+    await load(result.review_id, {resetSaved:true}); notice("Review saved. Inspect the sources and edit your reply.");
   });
 });
 $("contact").addEventListener("change", () => {
@@ -160,6 +176,14 @@ $("load").addEventListener("click", () => {
   if (!discardAllowed()) return;
   perform(async () => { if (!$("saved").value) throw new Error("Choose a saved review first"); await load($("saved").value); notice("Saved review reopened."); });
 });
+$("older-reviews").addEventListener("click", () => perform(async () => {
+  if (!reviewCursor) return;
+  const page = await api(`/api/reviews/page?contact=${encodeURIComponent($("contact").value)}&cursor=${encodeURIComponent(reviewCursor)}`);
+  const selected = $("saved").value;
+  addSavedReviews(page.reviews); reviewCursor = page.next_cursor;
+  $("saved").value = selected;
+  notice("Older reviews loaded. Your open draft and unsaved wording are unchanged.");
+}));
 $("support").addEventListener("change", controls);
 $("draft").addEventListener("input", () => { controls(); notice(dirty() ? "Unsaved wording — save before rating." : "Wording matches the saved revision."); });
 $("save").addEventListener("click", () => perform(async () => {

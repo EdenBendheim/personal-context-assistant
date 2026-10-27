@@ -123,6 +123,34 @@ class Reviews:
             ORDER BY created_at DESC, id LIMIT 100""", (request.owner, request.contact))
         return [dict(review_id=row["id"], created_at=row["created_at"]) for row in rows]
 
+    def page(self, *, owner: str, contact: str, limit: int = 25, cursor: str | None = None) -> dict:
+        """Browse saved reviews without skipping old entries when new ones arrive."""
+        request = DraftRequest(owner, contact, now(), "list")
+        if type(limit) is not int or not 1 <= limit <= 100:
+            raise ValueError("Page limit must be an integer between 1 and 100")
+        parameters = [request.owner, request.contact]
+        boundary = ""
+        if cursor is not None:
+            cursor = nonempty(cursor, "Review cursor")
+            anchor = self.connection.execute("""SELECT created_at, id FROM draft_reviews
+                WHERE owner = ? AND contact = ? AND id = ?""",
+                (*parameters, cursor)).fetchone()
+            if anchor is None:
+                raise ValueError("Review cursor is unavailable for this conversation; reload the list")
+            boundary = "AND (r.created_at < ? OR (r.created_at = ? AND r.id < ?))"
+            parameters += [anchor["created_at"], anchor["created_at"], anchor["id"]]
+        rows = self.connection.execute(f"""SELECT r.id, r.created_at, r.result_json, e.revision
+            FROM draft_reviews r JOIN draft_edits e ON e.review_id = r.id
+            AND e.revision = (SELECT MAX(revision) FROM draft_edits WHERE review_id = r.id)
+            WHERE r.owner = ? AND r.contact = ? {boundary}
+            ORDER BY r.created_at DESC, r.id DESC LIMIT ?""", (*parameters, limit+1)).fetchall()
+        items = []
+        for row in rows[:limit]:
+            saved = json.loads(row["result_json"])["packet"]["request"]
+            items.append(dict(review_id=row["id"], created_at=row["created_at"],
+                query=saved["query"], mode=saved["mode"], revision=row["revision"]))
+        return dict(reviews=items, next_cursor=items[-1]["review_id"] if len(rows) > limit else None)
+
     def feedback(self, review_id: str, *, owner: str, expected_revision: int, decision: str,
                  retrieval: str = "not_rated", style: str = "not_rated", notes: str = "", support: str = "not_rated") -> dict:
         revision_number(expected_revision)

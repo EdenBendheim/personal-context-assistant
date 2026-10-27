@@ -1,6 +1,7 @@
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from personal_context.drafts import DraftRequest
 from personal_context.messages import Message
@@ -148,3 +149,38 @@ class ReviewTests(unittest.TestCase):
                 self.assertEqual({"useful": 1}, summary["retrieval"])
                 self.assertEqual("usable", reviews.feedback_history(review["review_id"], owner=OWNER)[0]["decision"])
                 self.assertEqual(0, reviews.summary(owner="other@example.invalid", contact=CONTACT)["reviews"])
+
+    def test_pages_reach_old_reviews_with_timestamp_ties_and_new_insertions(self):
+        with patch("personal_context.reviews.now", return_value="2026-09-05T00:00:00+00:00"):
+            saved = [self.reviews.create(request(mode="generic", query=f"topic {i}")) for i in range(105)]
+        edited = saved[0]
+        self.reviews.edit(edited["review_id"], owner=OWNER, expected_revision=1, text="Revised wording")
+        page = self.reviews.page(owner=OWNER.upper(), contact=CONTACT.upper(), limit=13)
+        newer = self.reviews.create(request(mode="generic", query="Arrived while browsing"))
+        entries = list(page["reviews"])
+        while page["next_cursor"] is not None:
+            page = self.reviews.page(owner=OWNER, contact=CONTACT, limit=13, cursor=page["next_cursor"])
+            entries.extend(page["reviews"])
+        expected = sorted((item["review_id"] for item in saved), reverse=True)
+        self.assertEqual(expected, [item["review_id"] for item in entries])
+        self.assertNotIn(newer["review_id"], expected)
+        metadata = next(item for item in entries if item["review_id"] == edited["review_id"])
+        self.assertEqual(("topic 0", "generic", 2), (metadata["query"], metadata["mode"], metadata["revision"]))
+        self.assertEqual(100, len(self.reviews.list(owner=OWNER, contact=CONTACT)))
+
+    def test_pages_reject_invalid_and_other_scope_cursors_without_exposing_text(self):
+        review = self.reviews.create(request(mode="generic", query="private topic"))
+        self.assertEqual({"reviews": [], "next_cursor": None},
+            self.reviews.page(owner=OWNER, contact="other@example.invalid"))
+        for limit in (0, 101, True, "3"):
+            with self.subTest(limit=limit), self.assertRaises(ValueError):
+                self.reviews.page(owner=OWNER, contact=CONTACT, limit=limit)
+        for changes in (dict(owner="other@example.invalid"), dict(contact="other@example.invalid"),
+                        dict(cursor="unknown"), dict(cursor="")):
+            with self.subTest(changes=changes), self.assertRaises(ValueError):
+                self.reviews.page(**(dict(owner=OWNER, contact=CONTACT, cursor=review["review_id"]) | changes))
+        with self.store.connection:
+            self.store.connection.execute("DELETE FROM draft_edits WHERE review_id = ?", (review["review_id"],))
+            self.store.connection.execute("DELETE FROM draft_reviews WHERE id = ?", (review["review_id"],))
+        with self.assertRaisesRegex(ValueError, "reload"):
+            self.reviews.page(owner=OWNER, contact=CONTACT, cursor=review["review_id"])

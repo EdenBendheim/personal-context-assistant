@@ -216,7 +216,7 @@ python3 -m personal_context.review_server --db data/demo.sqlite \
   --owner owner@example.invalid --port 8765
 ```
 
-The server requires an existing imported database, binds only to `127.0.0.1`, and prints its URL and a random per-launch bearer token to the local terminal. Requests use `Authorization: Bearer TOKEN`. Keep that token local. `GET /api/contacts` lists only this owner's conversations. `GET /api/reviews?contact=...`, `GET /api/reviews/ID`, and `GET /api/summary?contact=...` inspect saved work. `POST /api/reviews` takes contact/before/query and optional mode/limit; `/api/reviews/ID/edit` and `/feedback` use the fields described above. The owner is fixed at launch; a request cannot override it.
+The server requires an existing imported database, binds only to `127.0.0.1`, and prints its URL and a random per-launch bearer token to the local terminal. Requests use `Authorization: Bearer TOKEN`. Keep that token local. `GET /api/contacts` lists only this owner's conversations. `GET /api/reviews?contact=...`, `GET /api/reviews/ID`, and `GET /api/summary?contact=...` inspect saved work. `POST /api/reviews` takes contact/before/query and optional mode/limit; `/api/reviews/ID/edit` and `/feedback` use the fields described above. The owner is fixed at launch; a request cannot override it. `GET /api/reviews/page?contact=...` provides 25 saved reviews at a time (configurable `limit` from 1 to 100), topic/mode/revision metadata and an optional `next_cursor`. Supply that review ID as `cursor` for the next page. The cursor must belong to this owner/contact. Ordering uses creation time plus review ID, so new reviews do not shift an in-progress page. A removed cursor requires a list reload. The older `/api/reviews` route remains capped at 100 for compatibility.
 
 Responses are uncached. Unexpected Host/Origin headers and unauthenticated API reads/writes are rejected; there is no cross-origin access. JSON bodies are bounded and each request uses its own SQLite connection. Conflicting edits/usable labels return HTTP 409. Traffic paths and message bodies are not logged. This local single-user server is not an internet deployment service. There is no sending endpoint.
 
@@ -224,7 +224,7 @@ Responses are uncached. Unexpected Host/Origin headers and unauthenticated API r
 
 Start the server using the command above and open the printed `http://127.0.0.1:PORT/` URL. The page obtains its API token from a per-launch, uncached bootstrap; no token goes in a URL or browser storage.
 
-1. Select a contact, topic, exclusive ISO cutoff, and draft mode; create a review.
+1. Select a contact, topic, exclusive ISO cutoff, and draft mode; create a review. Saved-review labels include their topic and revision; use **Load older reviews** to browse beyond the first page without discarding open or unsaved wording.
 2. Inspect historical message/memory snippets, source provenance, and separate outbound writing examples.
 3. Edit and save wording. Unsaved wording must be saved before rating; conflicting editors require a reload.
 4. Record a decision plus retrieval/style feedback. Reopen the saved review after a restart to inspect revisions and earlier ratings.

@@ -29,6 +29,7 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 
 - [x] Add a loopback HTTP review API with a fixed owner, per-launch authorization, bounded requests, and integration checks.
 - [x] Persist original draft packets and immutable wording revisions with owner isolation and stale-editor checks.
+- [x] Browse all saved reviews with bounded, owner/contact-scoped cursor pages and topic/revision labels.
 
 - [x] Build contact selection, source inspection, draft editing/reopening, and feedback in a local review interface.
 - [x] Add cited-memory creation/correction/withdrawal to that browser interface.

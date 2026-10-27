@@ -151,6 +151,14 @@ class Handler(BaseHTTPRequestHandler):
             elif method == "GET" and path in (["api", "reviews"], ["api", "summary"]):
                 fields(query, ("contact",))
                 result = (reviews.list if path[1] == "reviews" else reviews.summary)(owner=owner, **query)
+            elif method == "GET" and path == ["api", "reviews", "page"]:
+                fields(query, ("contact",), ("limit", "cursor"))
+                if "limit" in query:
+                    try:
+                        query["limit"] = int(query["limit"])
+                    except ValueError:
+                        raise ValueError("Page limit must be an integer between 1 and 100") from None
+                result = reviews.page(owner=owner, **query)
             elif method == "GET" and len(path) == 3 and path[:2] == ["api", "reviews"]:
                 fields(query, ())
                 result = reviews.get(path[2], owner=owner)

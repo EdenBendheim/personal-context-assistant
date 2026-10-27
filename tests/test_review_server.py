@@ -103,6 +103,26 @@ class ServerTests(unittest.TestCase):
             ReviewServer(missing, owner=OWNER)
         self.assertFalse(missing.exists())
 
+    def test_saved_review_pages_are_bounded_scoped_and_authenticated(self):
+        for i in range(3):
+            status, _, _ = self.call("/api/reviews", dict(contact=CONTACT,
+                before="2026-09-04T00:00:00Z", query=f"Synthetic topic {i}", mode="generic"))
+            self.assertEqual(200, status)
+        route = "/api/reviews/page?contact="+CONTACT
+        status, first, _ = self.call(route+"&limit=2")
+        self.assertEqual(200, status)
+        self.assertEqual(2, len(first["reviews"]))
+        self.assertTrue(first["next_cursor"])
+        self.assertEqual("Synthetic topic 2", first["reviews"][0]["query"])
+        second = self.call(route+"&limit=2&cursor="+first["next_cursor"])[1]
+        self.assertEqual(1, len(second["reviews"]))
+        self.assertIsNone(second["next_cursor"])
+        for suffix in ("&limit=0", "&limit=101", "&limit=abc", "&cursor=unknown", "&owner=other"):
+            self.assertEqual(400, self.call(route+suffix)[0])
+        self.assertEqual(401, self.call(route, headers={"Authorization":""})[0])
+        other = self.call("/api/reviews/page?contact=other@example.invalid")[1]
+        self.assertEqual([], other["reviews"])
+
     def test_browser_bootstrap_assets_and_history_are_guarded_and_uncached(self):
         status, html, headers = self.call("/", headers={"Authorization":""})
         self.assertEqual(200, status)
