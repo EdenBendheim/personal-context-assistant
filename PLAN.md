@@ -8,6 +8,7 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 - [x] Atomic SQLite persistence and deduplication.
 - [x] Contact-specific lexical retrieval and outbound style examples with timestamp cutoffs.
 - [x] Add importer error summaries and an explicit preview before committing an import.
+- [x] Distinguish conflicting provider IDs from true duplicates and recheck conflicts atomically at apply time.
 - [x] Add conversation-level development/evaluation manifests and a fixed synthetic reply-context retrieval benchmark.
 - [x] Define contact-scoped, source-aware memory with immutable correction/withdrawal history.
 - [x] Add explicit memory editing, provenance invalidation, and stale-editor protection.

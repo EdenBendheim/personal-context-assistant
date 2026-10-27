@@ -39,6 +39,10 @@ def main():
             store = Store(args.db)
             try:
                 result["inserted"] = store.ingest(plan.messages)
+            except ValueError as exc:
+                parser.exit(2, f"Import failed: {exc}\n")
+            except sqlite3.Error:
+                parser.exit(2, "Local database import failed; no messages were inserted\n")
             finally:
                 store.close()
         print(json.dumps(result, indent=2))

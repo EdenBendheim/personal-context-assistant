@@ -32,8 +32,8 @@ class PreviewTests(unittest.TestCase):
             path.write_text("\n".join(map(json.dumps, rows)) + '\n\n{broken\n{"id":"missing"}\n')
             report = plan_import(path, db=db).report
             self.assertEqual((report["valid"], report["duplicates"], report["would_insert"],
-                              report["invalid"], report["skipped"]), (5, 3, 2, 2, 1))
-            self.assertEqual([error["record"] for error in report["errors"]], [7, 8])
+                              report["invalid"], report["skipped"], report["conflicts"]), (5, 2, 2, 2, 1, 1))
+            self.assertEqual([error["record"] for error in report["errors"]], [2, 7, 8])
             self.assertFalse(report["ready"])
             self.assertEqual(db.read_bytes(), original)
 
@@ -102,6 +102,64 @@ class PreviewTests(unittest.TestCase):
             self.assertEqual(json.loads(output.getvalue())["inserted"], 1)
             report = plan_import(path, db=db).report
             self.assertEqual((report["duplicates"], report["would_insert"]), (1, 0))
+
+    def test_conflicting_ids_block_apply_without_persisting_candidates_or_values(self):
+        with tempfile.TemporaryDirectory() as folder:
+            db, path = Path(folder)/"existing.sqlite", Path(folder)/"fixture.jsonl"
+            store = Store(str(db))
+            store.ingest([Message.from_dict(record())]); store.close()
+            original = db.read_bytes()
+            path.write_text('\n'.join(map(json.dumps, [record("2", body="Valid candidate"),
+                record(body="PRIVATE CHANGED MESSAGE")])))
+            output = io.StringIO()
+            with patch("sys.argv", ["personal-context", "--db", str(db), "import", str(path)]):
+                with contextlib.redirect_stdout(output), self.assertRaises(SystemExit) as error:
+                    main()
+            self.assertEqual(2, error.exception.code)
+            report = json.loads(output.getvalue())
+            self.assertEqual((1, 1, 0, False), (report["conflicts"], report["would_insert"], report["inserted"], report["ready"]))
+            self.assertNotIn("PRIVATE", output.getvalue())
+            self.assertEqual(original, db.read_bytes())
+
+    def test_alias_ids_remain_consistent_even_when_the_first_content_is_duplicate(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path, db = Path(folder)/"fixture.jsonl", Path(folder)/"absent.sqlite"
+            path.write_text('\n'.join(map(json.dumps, [record(), record("alias"),
+                record("alias", body="Different content under the same alias")])))
+            report = plan_import(path, db=db).report
+            self.assertEqual((3, 1, 1, 1, False), tuple(report[key] for key in (
+                "valid", "duplicates", "conflicts", "would_insert", "ready")))
+            self.assertEqual(3, report["errors"][0]["record"])
+            self.assertFalse(db.exists())
+
+    def test_apply_rechecks_conflicts_that_arrive_after_preview_and_rolls_back(self):
+        with tempfile.TemporaryDirectory() as folder:
+            db, path = Path(folder)/"messages.sqlite", Path(folder)/"fixture.jsonl"
+            first = Store(str(db)); self.addCleanup(first.close)
+            first.ingest([Message.from_dict(record())])
+            path.write_text(json.dumps(record("2", body="Planned message")))
+            plan = plan_import(path, db=db)
+            self.assertTrue(plan.report["ready"])
+            second = Store(str(db))
+            second.ingest([Message.from_dict(record("2", body="Arrived after preview"))]); second.close()
+            with self.assertRaisesRegex(ValueError, "conflicts"):
+                first.ingest([Message.from_dict(record("3", body="Must roll back")), *plan.messages])
+            self.assertEqual(["1", "2"], [row["id"] for row in first.connection.execute("SELECT id FROM messages ORDER BY id")])
+            self.assertEqual("Arrived after preview", first.connection.execute("SELECT body FROM messages WHERE id='2'").fetchone()[0])
+            first.connection.execute("UPDATE messages SET body = 'pending edit' WHERE id='1'")
+            with self.assertRaisesRegex(ValueError, "pending"):
+                first.ingest(plan.messages)
+            self.assertTrue(first.connection.in_transaction)
+            first.connection.rollback()
+            output, errors = io.StringIO(), io.StringIO()
+            with patch("sys.argv", ["personal-context", "--db", str(db), "import", str(path)]), \
+                    patch("personal_context.cli.plan_import", return_value=plan):
+                with contextlib.redirect_stdout(output), contextlib.redirect_stderr(errors), self.assertRaises(SystemExit) as error:
+                    main()
+            self.assertEqual(2, error.exception.code)
+            self.assertEqual("", output.getvalue())
+            self.assertIn("identifier conflicts", errors.getvalue())
+            self.assertNotIn("Planned message", errors.getvalue())
 
 
 if __name__ == "__main__":

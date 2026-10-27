@@ -21,13 +21,13 @@ def plan_import(path: str | Path, *, db: str | Path, format: str = "jsonl",
     Duplicate counts include conflicts within the file and with the existing store.
     Counts are a snapshot, not a promise about concurrent changes before import.
     """
-    ids, fingerprints = set(), set()
+    ids, fingerprints = {}, set()
     db_path = Path(db)
     if db_path.exists():
         connection = sqlite3.connect(db_path.resolve().as_uri() + "?mode=ro", uri=True)
         try:
             for source, id, fingerprint in connection.execute("SELECT source, id, fingerprint FROM messages"):
-                ids.add((source, id))
+                ids[(source, id)] = fingerprint
                 fingerprints.add(fingerprint)
         finally:
             connection.close()
@@ -41,7 +41,7 @@ def plan_import(path: str | Path, *, db: str | Path, format: str = "jsonl",
         records = scan_jsonl(path)
     else:
         raise ValueError("Unsupported import format")
-    report = dict(format=format, valid=0, invalid=0, skipped=0, duplicates=0,
+    report = dict(format=format, valid=0, invalid=0, skipped=0, duplicates=0, conflicts=0,
                   would_insert=0, errors=[])
     messages = []
     for record in records:
@@ -55,12 +55,19 @@ def plan_import(path: str | Path, *, db: str | Path, format: str = "jsonl",
             report["valid"] += 1
             key = (message.source, message.id)
             fingerprint = message.fingerprint
-            if key in ids or fingerprint in fingerprints:
+            if key in ids and ids[key] != fingerprint:
+                report["conflicts"] += 1
+                report["errors"].append(dict(record=record.number,
+                    reason="Message identifier conflicts with different normalized content"))
+                continue
+            known_id = key in ids
+            # Reserve aliases even when content deduplicates to an existing record.
+            ids[key] = fingerprint
+            if known_id or fingerprint in fingerprints:
                 report["duplicates"] += 1
             else:
-                ids.add(key)
                 fingerprints.add(fingerprint)
                 messages.append(message)
     report["would_insert"] = len(messages)
-    report["ready"] = report["invalid"] == 0
+    report["ready"] = report["invalid"] == 0 and report["conflicts"] == 0
     return ImportPlan(messages, report)

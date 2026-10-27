@@ -2,6 +2,14 @@
 
 ## October 26, 2026
 
+- Import preview now distinguishes conflicting provider IDs from genuine
+  duplicates, rejects an ambiguous batch without writes, and reserves content
+  aliases within the file. Apply checks IDs again under a writer transaction
+  and rolls back if another import changed the store after preview. Errors
+  omit message values. Nine import-preview tests and seven context tests pass,
+  including within-file aliases, conflicting existing records, an intervening
+  writer, CLI failure reporting and preservation of pending user writes.
+
 - Added bounded cursor pages and topic/revision labels for saved reviews, with
   a browser control that preserves unsaved wording and the current selection.
   Store tests reached all 105 timestamp-tied reviews while another review arrived;

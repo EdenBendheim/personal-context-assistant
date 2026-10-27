@@ -37,11 +37,24 @@ class Store:
         self.connection.close()
 
     def ingest(self, messages: Iterable[Message]) -> int:
+        if self.connection.in_transaction:
+            raise ValueError("Finish the pending store transaction before importing messages")
         inserted = 0
+        seen = {}
         # One transaction: malformed exports cannot leave a partial import.
         with self.connection:
+            self.connection.execute("BEGIN IMMEDIATE")
             for message in messages:
                 fields = asdict(message) | {"fingerprint": message.fingerprint}
+                key = (message.source, message.id)
+                previous = seen.get(key)
+                if previous is None:
+                    existing = self.connection.execute(
+                        "SELECT fingerprint FROM messages WHERE source = ? AND id = ?", key).fetchone()
+                    previous = existing["fingerprint"] if existing else None
+                if previous is not None and previous != fields["fingerprint"]:
+                    raise ValueError("Message identifier conflicts with different normalized content; no messages imported")
+                seen[key] = fields["fingerprint"]
                 result = self.connection.execute("""INSERT INTO messages
                     VALUES (:id, :source, :thread, :author, :recipient, :timestamp, :body, :fingerprint)
                     ON CONFLICT DO NOTHING""", fields)
