@@ -161,18 +161,28 @@ class Memory:
             raise ValueError("Memory does not exist")
         return [self._snapshot(row) for row in rows]
 
-    def context(self, *, owner: str, contact: str, before: str, limit: int = 10) -> list[dict]:
+    def context(self, *, owner: str, contact: str, before: str, limit: int = 10,
+                memory_ids: list[str] | None = None) -> list[dict]:
         owner, contact = scope(owner, contact)
         cutoff = utc_timestamp(before)
         if type(limit) is not int or limit < 1:
             raise ValueError("limit must be a positive integer")
-        rows = self.connection.execute("""SELECT i.owner, i.contact, i.kind, r.* FROM memory_items i
+        selection, identifiers = "", []
+        if memory_ids is not None:
+            if (not isinstance(memory_ids, (list, tuple)) or not 1 <= len(memory_ids) <= 100
+                    or any(not isinstance(value, str) or not value.strip() for value in memory_ids)
+                    or len(set(memory_ids)) != len(memory_ids)):
+                raise ValueError("Memory selection must contain 1-100 distinct nonempty IDs")
+            identifiers = list(memory_ids)
+            selection = "AND i.id IN ("+",".join("?" for _ in identifiers)+")"
+        rows = self.connection.execute(f"""SELECT i.owner, i.contact, i.kind, r.* FROM memory_items i
             JOIN memory_revisions r ON i.id = r.memory_id WHERE i.owner = ? AND i.contact = ?
             AND r.revision = (SELECT MAX(v.revision) FROM memory_revisions v
                              WHERE v.memory_id = i.id AND v.effective_at < ?)
             AND (SELECT v.status FROM memory_revisions v WHERE v.memory_id = i.id
                  ORDER BY v.revision DESC LIMIT 1) = 'active'
-            ORDER BY r.effective_at DESC, i.id""", (owner, contact, cutoff)).fetchall()
+            {selection}
+            ORDER BY r.effective_at DESC, i.id""", (owner, contact, cutoff, *identifiers)).fetchall()
         results = []
         for row in rows:
             item = self._snapshot(row)

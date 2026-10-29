@@ -1,5 +1,14 @@
 # Development log
 
+## October 28, 2026
+
+- Added bounded owner/contact memory pages and current-only inspection, preserving
+  cutoff/source/withdrawal checks while avoiding eager revision-history loading.
+  Immutable creation-time/ID cursors keep older items reachable when another
+  item is created or revised. Three synthetic tests cover 105 timestamp-tied
+  items, source privacy, exclusive cutoffs, bad/removed cursors and preservation
+  of pending caller writes. HTTP/browser integration remains next.
+
 ## October 26, 2026
 
 - Final local verification: all 111 tests pass, all 20 unchanged retrieval

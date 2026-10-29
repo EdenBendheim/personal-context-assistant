@@ -145,6 +145,15 @@ Compare generic drafting, lexical context, embedding context, and contact-specif
 
 ## Review and edit cited memory
 
+`MemoryWorkspace.page(contact=..., before=..., limit=25, cursor=...)` returns
+`items` and `next_cursor`, with current revisions and source/cutoff annotations
+but no full revision histories. Limits are 1–100. Order uses immutable creation
+time and ID, so an edit cannot move an unseen item behind the cursor. Cursors
+must belong to the owner's selected contact; removed cursors require a reload.
+`get(id, before=..., include_history=False)` inspects one current revision.
+These reads preserve caller transactions and share a source-consistent SQLite
+snapshot. The older list/get contracts remain available.
+
 Memory is an explicitly reviewed fact or preference, not an automatically extracted claim. Each active revision must cite at least one existing `(source, message_id)` in the exact owner/contact conversation. The store pins each source's content fingerprint; removed or changed messages invalidate the memory in context. Provenance records let a person inspect support; they do not automatically prove that a sentence follows from its citations.
 
 Run the complete synthetic correction/withdrawal walkthrough without writing a database:
