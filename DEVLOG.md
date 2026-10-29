@@ -2,6 +2,11 @@
 
 ## October 28, 2026
 
+- Added bounded, newest-first revision-history pages and removed eager full-history
+  reads from core memory writes. Three new tests traverse 105 revisions while
+  another arrives, reject invalid/wrong-owner cursors and retain withdrawal/source
+  audits without exposing moved contact bodies or committing pending writes.
+
 - Added bounded owner/contact memory pages and current-only inspection, preserving
   cutoff/source/withdrawal checks while avoiding eager revision-history loading.
   Immutable creation-time/ID cursors keep older items reachable when another

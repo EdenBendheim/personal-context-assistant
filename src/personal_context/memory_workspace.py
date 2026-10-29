@@ -108,6 +108,28 @@ class MemoryWorkspace:
                      for row in rows[:limit]]
             return dict(items=items, next_cursor=items[-1]['memory_id'] if len(rows) > limit else None)
 
+    def history_page(self, memory_id: str, *, limit: int = 25, cursor: int | None = None) -> dict:
+        """Inspect immutable revisions newest-first, with current source availability."""
+        if type(limit) is not int or not 1 <= limit <= 100:
+            raise ValueError('Page limit must be an integer between 1 and 100')
+        if cursor is not None and (type(cursor) is not int or cursor < 1):
+            raise ValueError('Revision cursor must be a positive integer')
+        with self._inspection():
+            contact = self._contact(memory_id)
+            if cursor is not None and self.store.connection.execute('''SELECT 1 FROM memory_revisions
+                    WHERE memory_id = ? AND revision = ?''', (memory_id, cursor)).fetchone() is None:
+                raise ValueError('Revision cursor is unavailable for this memory; reload its history')
+            boundary = '' if cursor is None else 'AND r.revision < ?'
+            parameters = [memory_id] if cursor is None else [memory_id, cursor]
+            rows = self.store.connection.execute(f'''SELECT i.owner, i.contact, i.kind, r.*
+                FROM memory_items i JOIN memory_revisions r ON r.memory_id = i.id
+                WHERE i.id = ? {boundary} ORDER BY r.revision DESC LIMIT ?''',
+                (*parameters, limit+1)).fetchall()
+            history = [self.memory._snapshot(row) for row in rows[:limit]]
+            self._source_messages(history, contact)
+            return dict(memory_id=memory_id, items=history,
+                        next_cursor=history[-1]['revision'] if len(rows) > limit else None)
+
     def list(self, *, contact: str, before: str) -> list[dict]:
         request = DraftRequest(self.owner, contact, before, "list")
         ids = self.store.connection.execute("""SELECT i.id FROM memory_items i

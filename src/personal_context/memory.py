@@ -108,7 +108,7 @@ class Memory:
             refs = self._sources(sources, owner=owner, contact=contact, at=timestamp)
             self.connection.execute("INSERT INTO memory_items VALUES (?, ?, ?, ?)", (memory_id, owner, contact, kind))
             self._append(memory_id, 1, text=text, status="active", at=timestamp, reason=reason, sources=refs)
-            result = self.history(memory_id)[-1]
+            result = self._revision(memory_id, 1)
         return result
 
     def _current(self, memory_id: str, expected_revision: int, at: str) -> dict:
@@ -135,7 +135,7 @@ class Memory:
             refs = self._sources(sources, owner=current["owner"], contact=current["contact"], at=timestamp)
             self._append(memory_id, expected_revision+1, text=text, status="active", at=timestamp,
                          reason=reason, sources=refs)
-            result = self.history(memory_id)[-1]
+            result = self._revision(memory_id, expected_revision+1)
         return result
 
     def revoke(self, memory_id: str, *, expected_revision: int, reason: str, at: str | None = None) -> dict:
@@ -144,7 +144,7 @@ class Memory:
             self._current(memory_id, expected_revision, timestamp)
             self._append(memory_id, expected_revision+1, text=None, status="revoked", at=timestamp,
                          reason=reason, sources=[])
-            result = self.history(memory_id)[-1]
+            result = self._revision(memory_id, expected_revision+1)
         return result
 
     def _snapshot(self, row) -> dict:
@@ -160,6 +160,14 @@ class Memory:
         if not rows:
             raise ValueError("Memory does not exist")
         return [self._snapshot(row) for row in rows]
+
+    def _revision(self, memory_id: str, revision: int) -> dict:
+        row = self.connection.execute('''SELECT i.owner, i.contact, i.kind, r.* FROM memory_items i
+            JOIN memory_revisions r ON i.id = r.memory_id
+            WHERE i.id = ? AND r.revision = ?''', (memory_id, revision)).fetchone()
+        if row is None:
+            raise ValueError('Memory revision does not exist')
+        return self._snapshot(row)
 
     def context(self, *, owner: str, contact: str, before: str, limit: int = 10,
                 memory_ids: list[str] | None = None) -> list[dict]:

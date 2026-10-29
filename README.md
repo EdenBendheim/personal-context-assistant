@@ -154,6 +154,13 @@ must belong to the owner's selected contact; removed cursors require a reload.
 These reads preserve caller transactions and share a source-consistent SQLite
 snapshot. The older list/get contracts remain available.
 
+`history_page(id, limit=25, cursor=REVISION)` returns at most 100 revisions,
+newest first, with `items` and an optional integer `next_cursor`. New corrections
+do not shift an older page. Each revision includes its cited sources and their
+current availability; another contact's moved source body stays hidden. Core
+memory writes now retrieve only the revision they appended. Compatibility APIs
+that explicitly return complete histories remain unbounded.
+
 Memory is an explicitly reviewed fact or preference, not an automatically extracted claim. Each active revision must cite at least one existing `(source, message_id)` in the exact owner/contact conversation. The store pins each source's content fingerprint; removed or changed messages invalidate the memory in context. Provenance records let a person inspect support; they do not automatically prove that a sentence follows from its citations.
 
 Run the complete synthetic correction/withdrawal walkthrough without writing a database:
