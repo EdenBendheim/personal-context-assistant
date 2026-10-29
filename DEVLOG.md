@@ -2,6 +2,12 @@
 
 ## October 28, 2026
 
+- Exposed paged memory summaries, current-only inspection and revision-history
+  pages through authenticated owner-fixed HTTP routes. Three real HTTP tests
+  cover limits/cursors, malformed/repeated/forged-owner parameters, exclusive
+  cutoffs, missing authentication and moved-source body redaction. Browser
+  integration remains next; the compatibility response shapes are retained.
+
 - Added bounded, newest-first revision-history pages and removed eager full-history
   reads from core memory writes. Three new tests traverse 105 revisions while
   another arrives, reject invalid/wrong-owner cursors and retain withdrawal/source

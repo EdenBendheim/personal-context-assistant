@@ -184,9 +184,30 @@ class Handler(BaseHTTPRequestHandler):
             elif method == "GET" and path == ["api", "memory"]:
                 fields(query, ("contact", "before"))
                 result = MemoryWorkspace(store, owner=owner).list(**query)
+            elif method == 'GET' and path == ['api', 'memory', 'page']:
+                fields(query, ('contact', 'before'), ('limit', 'cursor'))
+                if 'limit' in query:
+                    try:
+                        query['limit'] = int(query['limit'])
+                    except ValueError:
+                        raise ValueError('Page limit must be an integer between 1 and 100') from None
+                result = MemoryWorkspace(store, owner=owner).page(**query)
             elif method == "GET" and len(path) == 3 and path[:2] == ["api", "memory"]:
                 fields(query, (), ("before",))
                 result = MemoryWorkspace(store, owner=owner).get(path[2], **query)
+            elif method == 'GET' and len(path) == 4 and path[:2] == ['api', 'memory'] and path[3] == 'current':
+                fields(query, (), ('before',))
+                result = MemoryWorkspace(store, owner=owner).get(path[2], include_history=False, **query)
+            elif (method == 'GET' and len(path) == 5 and path[:2] == ['api', 'memory']
+                    and path[3:] == ['history', 'page']):
+                fields(query, (), ('limit', 'cursor'))
+                for field in ('limit', 'cursor'):
+                    if field in query:
+                        try:
+                            query[field] = int(query[field])
+                        except ValueError:
+                            raise ValueError('Page limits and revision cursors must be integers') from None
+                result = MemoryWorkspace(store, owner=owner).history_page(path[2], **query)
             elif method == "POST" and path == ["api", "memory"]:
                 fields(query, ())
                 payload = fields(self.body(), ("contact", "kind", "text", "sources", "reason"))

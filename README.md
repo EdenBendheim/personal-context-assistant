@@ -161,6 +161,13 @@ current availability; another contact's moved source body stays hidden. Core
 memory writes now retrieve only the revision they appended. Compatibility APIs
 that explicitly return complete histories remain unbounded.
 
+The owner-fixed local API exposes `GET /api/memory/page?contact=...&before=...`
+with optional `limit` and memory-ID `cursor`, `GET /api/memory/ID/current?before=...`,
+and `GET /api/memory/ID/history/page?limit=...&cursor=REVISION`. The paged routes
+return `items` and `next_cursor`. All require the launch token, reject owner
+overrides/repeated parameters, and retain moved-source body redaction. Older
+routes keep their compatibility response shapes.
+
 Memory is an explicitly reviewed fact or preference, not an automatically extracted claim. Each active revision must cite at least one existing `(source, message_id)` in the exact owner/contact conversation. The store pins each source's content fingerprint; removed or changed messages invalidate the memory in context. Provenance records let a person inspect support; they do not automatically prove that a sentence follows from its citations.
 
 Run the complete synthetic correction/withdrawal walkthrough without writing a database:
