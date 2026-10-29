@@ -32,6 +32,7 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 - [x] Add a loopback HTTP review API with a fixed owner, per-launch authorization, bounded requests, and integration checks.
 - [x] Persist original draft packets and immutable wording revisions with owner isolation and stale-editor checks.
 - [x] Browse all saved reviews with bounded, owner/contact-scoped cursor pages and topic/revision labels.
+- [x] Browse memory and revision history with bounded, source-aware pages that preserve unsaved wording.
 
 - [x] Build contact selection, source inspection, draft editing/reopening, and feedback in a local review interface.
 - [x] Add cited-memory creation/correction/withdrawal to that browser interface.
@@ -72,6 +73,6 @@ including saved packets, all revisions and feedback, with preview and explicit
 confirmation. SQLite index rebuilding preserves current records. Real-model
 inference remains blocked by unavailable local setup; it was not replaced by
 a synthetic quality claim. Large-history embedding indexing, tracking/removing
-external exports and backups, automatic memory extraction, pagination and
+external exports and backups, automatic memory extraction, paginated draft-edit history and
 real-user evaluation remain pending. No sending integration is planned for the
 current review-only milestone.

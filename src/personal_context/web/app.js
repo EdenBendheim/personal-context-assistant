@@ -8,6 +8,9 @@ let memoryItem = null;
 let memoryBaseline = "";
 let privacyPlan = null;
 let reviewCursor = null;
+let memoryCursor = null;
+let memoryHistoryCursor = null;
+let memoryHistory = [];
 
 function notice(text, error = false) {
   $("notice").textContent = text;
@@ -18,6 +21,8 @@ function controls() {
   document.querySelectorAll("input,select,textarea,button").forEach(el => { el.disabled = busy; });
   $("record").disabled = busy || Boolean(dirty());
   $("older-reviews").disabled = busy || !reviewCursor;
+  $("older-memories").disabled = busy || !memoryCursor;
+  $("older-memory-history").disabled = busy || !memoryHistoryCursor;
   const supportNeeded = review && review.original.support_review_required && $("support").value !== "supported";
   const usable = $("decision").querySelector('[value="usable"]');
   usable.disabled = Boolean(review && (!review.context_current || supportNeeded));
@@ -170,6 +175,7 @@ $("contact").addEventListener("change", () => {
   if (!discardAllowed(true)) { $("contact").value = selectedContact; return; }
   resetPrivacy();
   selectedContact = $("contact").value; review = null; memoryItem = null; memoryBaseline = ""; $("workspace").hidden = true;
+  memoryItems = []; memoryCursor = null; renderMemory(null); addMemoryItems([]);
   perform(async () => { await refreshContact(); notice("Choose a topic or open a saved review."); });
 });
 $("load").addEventListener("click", () => {
@@ -225,8 +231,14 @@ function renderMemory(item) {
     label.append(checkbox, document.createTextNode(`${source.source} / ${source.id}: ${source.body}`));
     $("memory-sources").append(label);
   }
-  $("memory-history").replaceChildren();
-  if (item) for (const revision of item.history) {
+  memoryHistory = []; memoryHistoryCursor = null;
+  $("memory-history").replaceChildren(); $("memory-history-count").textContent = "No revisions loaded.";
+  memoryBaseline = JSON.stringify(memoryValues()); controls();
+}
+function addMemoryHistory(items) {
+  for (const revision of items) {
+    if (memoryHistory.some(item => item.revision === revision.revision)) continue;
+    memoryHistory.push(revision);
     const details = document.createElement("details");
     addText(details, "summary", `Revision ${revision.revision} · ${revision.status} · ${revision.effective_at}`);
     addText(details, "p", revision.text || "Withdrawn"); addText(details, "p", revision.reason, "muted");
@@ -236,24 +248,66 @@ function renderMemory(item) {
     }
     $("memory-history").append(details);
   }
-  memoryBaseline = JSON.stringify(memoryValues()); controls();
+  $("memory-history-count").textContent = `${memoryHistory.length} revision${memoryHistory.length === 1 ? "" : "s"} loaded · most recent first.`;
 }
-async function refreshMemory() {
-  const preserve = memoryDirty();
-  const selected = memoryItem ? memoryItem.memory_id : "";
-  memoryItems = await api(`/api/memory?contact=${encodeURIComponent($("contact").value)}&before=${encodeURIComponent($("cutoff").value)}`);
+function addMemoryItems(items, selected = $("memory-select").value) {
+  for (const item of items) {
+    const index = memoryItems.findIndex(entry => entry.memory_id === item.memory_id);
+    if (index < 0) memoryItems.push(item); else memoryItems[index] = item;
+  }
   $("memory-select").replaceChildren();
   addText($("memory-select"), "option", "New reviewed memory").value = "";
   for (const item of memoryItems) {
     addText($("memory-select"), "option", `${item.kind} · ${item.status} · ${(item.text || "Withdrawn").slice(0, 70)}`).value = item.memory_id;
   }
-  if (preserve) { $("memory-select").value = selected; return; }
-  renderMemory(memoryItems.find(item => item.memory_id === selected) || null);
+  $("memory-select").value = selected;
+  $("memory-count").textContent = `${memoryItems.length} ${memoryItems.length === 1 ? "memory" : "memories"} loaded.`;
+}
+async function loadMemory(id) {
+  if (!id) { renderMemory(null); return; }
+  try {
+    const item = await api(`/api/memory/${encodeURIComponent(id)}/current?before=${encodeURIComponent($("cutoff").value)}`);
+    const history = await api(`/api/memory/${encodeURIComponent(id)}/history/page`);
+    renderMemory(item); addMemoryHistory(history.items); memoryHistoryCursor = history.next_cursor;
+  } catch (error) {
+    $("memory-select").value = memoryItem ? memoryItem.memory_id : "";
+    throw error;
+  }
+}
+async function refreshMemory() {
+  const preserve = memoryDirty();
+  const selected = memoryItem ? memoryItem.memory_id : "";
+  const page = await api(`/api/memory/page?contact=${encodeURIComponent($("contact").value)}&before=${encodeURIComponent($("cutoff").value)}`);
+  let selectedItem = null;
+  if (selected && !page.items.some(item => item.memory_id === selected)) {
+    selectedItem = preserve ? memoryItem : await api(`/api/memory/${encodeURIComponent(selected)}/current?before=${encodeURIComponent($("cutoff").value)}`);
+  }
+  memoryItems = []; memoryCursor = page.next_cursor;
+  addMemoryItems(page.items, selected);
+  if (selectedItem) addMemoryItems([selectedItem], selected);
+  if (!preserve) await loadMemory(selected);
 }
 $("memory-select").addEventListener("change", () => {
   if (memoryDirty() && !window.confirm("Discard unsaved memory wording?")) { $("memory-select").value = memoryItem ? memoryItem.memory_id : ""; return; }
-  renderMemory(memoryItems.find(item => item.memory_id === $("memory-select").value) || null);
+  const selected = $("memory-select").value;
+  perform(async () => { await loadMemory(selected); notice("Memory and its recent revisions loaded."); });
 });
+$("refresh-memories").addEventListener("click", () => perform(async () => {
+  const preserve = memoryDirty();
+  await refreshMemory(); notice(preserve ? "Memories refreshed. Your unsaved wording is unchanged." : "Memories refreshed.");
+}));
+$("older-memories").addEventListener("click", () => perform(async () => {
+  if (!memoryCursor) return;
+  const page = await api(`/api/memory/page?contact=${encodeURIComponent($("contact").value)}&before=${encodeURIComponent($("cutoff").value)}&cursor=${encodeURIComponent(memoryCursor)}`);
+  addMemoryItems(page.items); memoryCursor = page.next_cursor;
+  notice("More memories loaded. Your selected memory and unsaved wording are unchanged.");
+}));
+$("older-memory-history").addEventListener("click", () => perform(async () => {
+  if (!memoryItem || !memoryHistoryCursor) return;
+  const page = await api(`/api/memory/${encodeURIComponent(memoryItem.memory_id)}/history/page?cursor=${memoryHistoryCursor}`);
+  addMemoryHistory(page.items); memoryHistoryCursor = page.next_cursor;
+  notice("Older revisions loaded. Your current wording is unchanged.");
+}));
 async function afterMemory(item) {
   memoryBaseline = ""; memoryItem = item;
   await refreshMemory();

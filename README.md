@@ -10,6 +10,10 @@ A local UI/CLI and verified SQLite index rebuild are available. External exports
 backups and physical storage remnants are not erased. Local-model adapters remain
 synthetically checked only; real inference and reply quality are unverified.
 
+**October 28 update:** memory summaries and correction histories now have bounded
+cursor pages. The browser loads 25 at a time and preserves unsaved wording when
+loading more; current memory inspection retains source and cutoff annotations.
+
 ## Working now
 
 - Normalized JSONL, plain-text Gmail/standard MBOX, and outbound Discord export CSV ingestion.
@@ -167,6 +171,15 @@ and `GET /api/memory/ID/history/page?limit=...&cursor=REVISION`. The paged route
 return `items` and `next_cursor`. All require the launch token, reject owner
 overrides/repeated parameters, and retain moved-source body redaction. Older
 routes keep their compatibility response shapes.
+
+The memory panel offers **Load more memories**, **Refresh memories**, and
+**Load older memory revisions**. Loading another page preserves the selected
+memory, unsaved memory wording and unsaved draft. Opening an item loads current
+sources and 25 recent revisions; older revisions are inspected explicitly.
+Refresh keeps an edited old item selected even if it lies outside the first
+page. Changing contacts clears page state after the unsaved-edit prompt. Legacy
+write/detail responses can still contain complete histories; large-export
+streaming and real-model quality evaluation remain separate pending work.
 
 Memory is an explicitly reviewed fact or preference, not an automatically extracted claim. Each active revision must cite at least one existing `(source, message_id)` in the exact owner/contact conversation. The store pins each source's content fingerprint; removed or changed messages invalidate the memory in context. Provenance records let a person inspect support; they do not automatically prove that a sentence follows from its citations.
 

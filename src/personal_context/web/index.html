@@ -57,6 +57,9 @@
     <section class="card" id="memory-panel">
       <h2>Reviewed memory</h2><p class="muted">Keep a fact or preference only after inspecting its supporting messages. Changes take effect now; your draft cutoff must be later to include them.</p>
       <label>Memory item<select id="memory-select"><option value="">New reviewed memory</option></select></label>
+      <p id="memory-count" class="muted">No memories loaded.</p>
+      <button type="button" id="older-memories" class="secondary" disabled>Load more memories</button>
+      <button type="button" id="refresh-memories" class="secondary">Refresh memories</button>
       <p id="memory-state">Create a draft to choose supporting messages.</p>
       <form id="memory-form">
         <label>Kind<select id="memory-kind"><option value="fact">Fact</option><option value="preference">Preference</option></select></label>
@@ -67,7 +70,11 @@
         <button type="button" id="memory-withdraw" class="secondary">Withdraw selected memory</button>
         <button type="button" id="current-time" class="secondary">Use current time as draft cutoff</button>
       </form>
-      <details><summary>Memory revisions and supporting messages</summary><div id="memory-history"></div></details>
+      <details><summary>Memory revisions and supporting messages</summary>
+        <p id="memory-history-count" class="muted">No revisions loaded.</p>
+        <div id="memory-history"></div>
+        <button type="button" id="older-memory-history" class="secondary" disabled>Load older memory revisions</button>
+      </details>
       <p class="muted">Withdrawal stops memory reuse and retains revision history. Use the separate removal preview below to remove current stored records.</p>
     </section>
     <section class="card" id="privacy-panel">

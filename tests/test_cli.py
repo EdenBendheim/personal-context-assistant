@@ -78,8 +78,9 @@ class LookupCliTests(unittest.TestCase):
                     self.assertNotIn("Traceback", errors)
                     self.assertEqual(original, path.read_bytes())
             unrelated = Path(folder)/"unrelated.sqlite"
-            with sqlite3.connect(unrelated) as connection:
-                connection.execute("CREATE TABLE unrelated (value TEXT)")
+            with contextlib.closing(sqlite3.connect(unrelated)) as connection:
+                with connection:
+                    connection.execute("CREATE TABLE unrelated (value TEXT)")
             original = unrelated.read_bytes()
             code, output, errors = invoke(unrelated, "style")
             self.assertEqual((2, ""), (code, output))

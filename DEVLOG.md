@@ -2,6 +2,27 @@
 
 ## October 28, 2026
 
+- Final local verification: all **120 tests passed**, all 20 unchanged retrieval
+  cases passed with zero boundary violations, and all 13 scripted generation
+  cases passed. Memory/draft demos, JavaScript syntax and whitespace checks pass.
+  No installed local Ollama/model setup was available; actual inference and
+  reply-quality improvement remain unverified. No private data or paid APIs used.
+- Interview explanation: “I made long memory and correction histories browsable
+  without eagerly loading every revision, kept source/owner checks on each page,
+  and verified that loading more never replaces someone's unsaved reply.”
+
+- Connected the browser to bounded memory/current/history routes with explicit
+  load-more and refresh controls. Pagination preserves current selections and
+  unsaved memory/draft wording; refresh retains a selected item outside page one.
+  Contact switches clear memory page state. A real browser reached all 29
+  synthetic memories and 29 revisions, preserved both unsaved editors, retained
+  an old selected item during refresh, saved a correction and cleared page state
+  when switching contacts. HTML-shaped text created zero images; console errors
+  were zero. Proof remains local/ignored; the temporary server/tab were closed.
+- Fixed a pre-existing SQLite fixture that left its connection open and caused
+  an intermittent ResourceWarning in an unrelated CLI stderr assertion under
+  Python 3.14. The fixture now closes the connection; the full suite passes.
+
 - Exposed paged memory summaries, current-only inspection and revision-history
   pages through authenticated owner-fixed HTTP routes. Three real HTTP tests
   cover limits/cursors, malformed/repeated/forged-owner parameters, exclusive
