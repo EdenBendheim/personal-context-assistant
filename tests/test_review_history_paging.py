@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from personal_context.reviews import Reviews
 from personal_context.store import Store
@@ -36,3 +37,32 @@ class ReviewHistoryPagingTests(unittest.TestCase):
         self.assertTrue(self.store.connection.in_transaction)
         self.store.connection.rollback()
         self.assertEqual('demo Thursday :D', self.store.connection.execute('SELECT body FROM messages').fetchone()[0])
+
+    def test_feedback_pages_reach_timestamp_ties_and_keep_revision_bound_ratings(self):
+        with patch('personal_context.reviews.now', return_value='2026-09-05T00:00:00+00:00'):
+            old = [self.reviews.feedback(self.rid, owner=OWNER, expected_revision=1, decision='needs_work',
+                       notes=f'Note {i}') for i in range(105)]
+        page = self.reviews.feedback_page(self.rid, owner=OWNER, limit=13)
+        self.reviews.edit(self.rid, owner=OWNER, expected_revision=1, text='A new wording')
+        latest = self.reviews.feedback(self.rid, owner=OWNER, expected_revision=2, decision='needs_work')
+        items = list(page['items'])
+        while page['next_cursor'] is not None:
+            page = self.reviews.feedback_page(self.rid, owner=OWNER, limit=13, cursor=page['next_cursor'])
+            items.extend(page['items'])
+        self.assertEqual(sorted((i['id'] for i in old), reverse=True), [i['id'] for i in items])
+        self.assertTrue(all(i['revision'] == 1 for i in items))
+        self.assertEqual(latest['id'], self.reviews.feedback_page(self.rid, owner=OWNER)['items'][0]['id'])
+
+    def test_feedback_cursors_cannot_cross_reviews_or_owners(self):
+        row = self.reviews.feedback(self.rid, owner=OWNER, expected_revision=1, decision='needs_work')
+        other = self.reviews.create(request(mode='generic'))['review_id']
+        for changes in (dict(limit=0), dict(limit=101), dict(limit=True), dict(cursor=''),
+                        dict(cursor='missing'), dict(owner='other@example.invalid')):
+            with self.subTest(changes=changes), self.assertRaises(ValueError):
+                self.reviews.feedback_page(self.rid, **(dict(owner=OWNER) | changes))
+        with self.assertRaisesRegex(ValueError, 'unavailable'):
+            self.reviews.feedback_page(other, owner=OWNER, cursor=row['id'])
+        self.store.connection.execute("UPDATE messages SET body = 'pending' WHERE id = '1'")
+        self.reviews.feedback_page(self.rid, owner=OWNER)
+        self.assertTrue(self.store.connection.in_transaction)
+        self.store.connection.rollback()

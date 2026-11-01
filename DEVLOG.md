@@ -2,6 +2,8 @@
 
 ## November 1, 2026
 
+- Added indexed newest-first feedback pages with owner/review-scoped immutable time/ID cursors. Four history tests and seven privacy tests pass, including 105 tied ratings, a new revision/rating during browsing, wrong-review refusal and pending-write preservation. Legacy complete feedback remains available.
+
 - Added bounded newest-first draft-edit history pages using immutable revision cursors and a shared read snapshot. Two synthetic tests reach 105 old revisions despite a new edit, reject wrong-owner/invalid cursors and preserve pending caller writes. Full history remains a compatibility API.
 
 ## October 28, 2026

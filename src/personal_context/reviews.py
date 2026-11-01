@@ -41,6 +41,8 @@ class Reviews:
                 decision TEXT NOT NULL, retrieval TEXT NOT NULL, style TEXT NOT NULL,
                 notes TEXT NOT NULL, recorded_at TEXT NOT NULL,
                 FOREIGN KEY(review_id, revision) REFERENCES draft_edits(review_id, revision))""")
+            self.connection.execute('''CREATE INDEX IF NOT EXISTS feedback_history_order
+                ON draft_feedback(review_id, recorded_at DESC, id DESC)''')
 
         columns = {row["name"] for row in self.connection.execute("PRAGMA table_info(draft_feedback)")}
         if "support" not in columns:
@@ -213,6 +215,26 @@ class Reviews:
         self._row(review_id, owner)
         return [dict(row) for row in self.connection.execute(
             "SELECT * FROM draft_feedback WHERE review_id = ? ORDER BY recorded_at, id", (review_id,))]
+
+    def feedback_page(self, review_id: str, *, owner: str, limit: int = 25,
+                      cursor: str | None = None) -> dict:
+        if type(limit) is not int or not 1 <= limit <= 100:
+            raise ValueError('Page limit must be an integer between 1 and 100')
+        with self._read():
+            self._row(review_id, owner)
+            parameters, boundary = [review_id], ''
+            if cursor is not None:
+                cursor = nonempty(cursor, 'Feedback cursor')
+                anchor = self.connection.execute('''SELECT recorded_at, id FROM draft_feedback
+                    WHERE review_id = ? AND id = ?''', (review_id, cursor)).fetchone()
+                if anchor is None:
+                    raise ValueError('Feedback cursor is unavailable for this review; reload the history')
+                boundary = 'AND (recorded_at < ? OR (recorded_at = ? AND id < ?))'
+                parameters += [anchor['recorded_at'], anchor['recorded_at'], anchor['id']]
+            rows = self.connection.execute(f'''SELECT * FROM draft_feedback WHERE review_id = ? {boundary}
+                ORDER BY recorded_at DESC, id DESC LIMIT ?''', (*parameters, limit+1)).fetchall()
+            items = [dict(row) for row in rows[:limit]]
+            return dict(items=items, next_cursor=items[-1]['id'] if len(rows) > limit else None)
 
     def summary(self, *, owner: str, contact: str) -> dict:
         request = DraftRequest(owner, contact, now(), "summary")
