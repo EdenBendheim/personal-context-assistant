@@ -21,6 +21,7 @@ class LocalModelConfig:
     max_tokens: int = 1024
     seed: int = 29
     local_only_confirmed: bool = False
+    expected_digest: str | None = None
 
     def __post_init__(self):
         if (not isinstance(self.model,str) or not re.fullmatch(r'[A-Za-z0-9_./:-]{1,100}',self.model)
@@ -38,22 +39,31 @@ class LocalModelConfig:
                 or type(self.seed) is not int or not 0<=self.seed<2**31):raise ValueError('Invalid local inference bounds')
         if self.local_only_confirmed is not True:
             raise ValueError('Confirm Ollama runs with cloud disabled before enabling local inference')
+        if self.expected_digest is not None and (not isinstance(self.expected_digest, str)
+                or re.fullmatch('[0-9a-f]{64}', self.expected_digest) is None):
+            raise ValueError('Expected model digest must be a lowercase SHA-256')
 
 
 class OllamaProvider:
     def __init__(self,config:LocalModelConfig):
         if not isinstance(config,LocalModelConfig):raise ValueError('Use validated local model settings')
         self.config=config
+        from .local_identity import ModelIdentityGuard
+        self.identity = ModelIdentityGuard(config, 'completion')
 
     def describe(self):
-        return dict(backend='ollama_chat',prompt_version=PROMPT_VERSION,settings=asdict(self.config),
-            identity_note='Requested model/settings, not verified model-weight identity or semantic validation')
+        result = dict(backend='ollama_chat',prompt_version=PROMPT_VERSION,settings=asdict(self.config),
+            identity_note='Requested model/settings, not a served-weight attestation or semantic validation')
+        if self.config.expected_digest is not None:
+            result['model_identity'] = self.identity.capture()
+        return result
 
     def generate(self,packet):
         messages=prompt_messages(packet)
         # Conservatively bound prompt bytes, not an estimated tokenizer count.
         if sum(len(m['content'].encode()) for m in messages)>6000:
             raise LocalModelError('Prompt exceeds local 6,000-byte budget; reduce retrieval limit/history')
+        self.identity.capture()
         payload=dict(model=self.config.model,messages=messages,format=deepcopy(SCHEMA),stream=False,keep_alive=0,
             options=dict(temperature=0,seed=self.config.seed,num_predict=self.config.max_tokens,num_ctx=8192))
         url=urlsplit(self.config.endpoint);connection=HTTPConnection('127.0.0.1',url.port,timeout=self.config.timeout)
@@ -67,6 +77,7 @@ class OllamaProvider:
             if len(raw)>65_536:raise LocalModelError('Local model response exceeds 65,536 bytes')
             try:result=json.loads(raw)
             except (ValueError,UnicodeError,RecursionError):raise LocalModelError('Local model returned invalid JSON') from None
+            self.identity.check_response(result)
             if (not isinstance(result,dict) or result.get('done') is not True or result.get('done_reason')!='stop'
                     or not isinstance(result.get('message'),dict) or result['message'].get('role')!='assistant'
                     or result['message'].get('tool_calls')):

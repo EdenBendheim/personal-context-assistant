@@ -16,6 +16,7 @@ class LocalEmbeddingConfig:
     endpoint: str = 'http://127.0.0.1:11434'
     timeout: float = 30
     local_only_confirmed: bool = False
+    expected_digest: str | None = None
 
     def __post_init__(self):
         # Share the drafting client's loopback, model-name and timeout rules.
@@ -28,13 +29,19 @@ class OllamaEmbeddingProvider:
         if not isinstance(config, LocalEmbeddingConfig):
             raise ValueError('Use validated local embedding settings')
         self.config = config
+        from .local_identity import ModelIdentityGuard
+        self.identity = ModelIdentityGuard(config, 'embedding')
 
     def describe(self):
-        return dict(backend='ollama_embed', settings=asdict(self.config), truncate=False,
+        result = dict(backend='ollama_embed', settings=asdict(self.config), truncate=False,
                     identity_note='Requested model/settings; model weights and retrieval quality are not verified')
+        if self.config.expected_digest is not None:
+            result['model_identity'] = self.identity.capture()
+        return result
 
     def embed(self, texts):
         inputs = validate_texts(texts)
+        self.identity.capture()
         connection = HTTPConnection('127.0.0.1', urlsplit(self.config.endpoint).port,
                                     timeout=self.config.timeout)
         try:
@@ -55,6 +62,7 @@ class OllamaEmbeddingProvider:
                 raise LocalModelError('Local embedding model returned invalid JSON') from None
             if not isinstance(result, dict) or result.get('error'):
                 raise LocalModelError('Local embedding model returned an invalid or failed result')
+            self.identity.check_response(result)
             try:
                 vectors = normalize_vectors(result.get('embeddings'), len(inputs))
             except ValueError:

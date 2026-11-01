@@ -45,6 +45,11 @@ model bytes are omitted from the receipt. No model is pulled or inference run by
 this command; no redirects/proxies/cloud fallback. Cloud-disabled configuration
 still needs independent confirmation ([Ollama FAQ](https://docs.ollama.com/faq)).
 These are integrity receipts, not producer authentication or model-quality scores.
+Chat/server and embedding CLIs also accept `--expected-model-digest SHA256`.
+Pinned providers retain the inspected identity in provenance, recheck it around
+every inference request and require the response to name that model. A changed
+tag, runtime or show receipt fails without fallback. Unpinned compatibility
+behavior is retained; pinning does not automate factual or style review.
 
 ### Optional embedding search
 

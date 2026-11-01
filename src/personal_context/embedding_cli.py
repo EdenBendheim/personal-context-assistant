@@ -12,6 +12,7 @@ def add_embedding_arguments(parser):
     parser.add_argument('--model', required=True, help='Name of an already installed local embedding model')
     parser.add_argument('--endpoint', default='http://127.0.0.1:11434')
     parser.add_argument('--timeout', type=float, default=30)
+    parser.add_argument('--expected-model-digest',help='Pin the exact installed local model digest')
     parser.add_argument('--confirm-local-only', action='store_true',
                         help='Confirm the local Ollama daemon has cloud disabled')
     parser.add_argument('--min-score', type=float, default=.2, help='Untuned cosine threshold, not a probability')
@@ -20,7 +21,7 @@ def add_embedding_arguments(parser):
 
 def provider_from_arguments(args):
     return OllamaEmbeddingProvider(LocalEmbeddingConfig(args.model, endpoint=args.endpoint,
-        timeout=args.timeout, local_only_confirmed=args.confirm_local_only))
+        timeout=args.timeout, local_only_confirmed=args.confirm_local_only, expected_digest=args.expected_model_digest))
 
 
 def main():

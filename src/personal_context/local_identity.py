@@ -1,5 +1,6 @@
 """Read-only loopback runtime/model receipts and optional local blob verification."""
 import argparse
+from copy import deepcopy
 import hashlib
 from http.client import HTTPConnection, HTTPException
 import json
@@ -66,6 +67,28 @@ def inspect_model(config, *, expected_digest=None, capability=None):
         show_sha256=hashlib.sha256(json.dumps(shown, sort_keys=True, separators=(',', ':'), allow_nan=False).encode()).hexdigest(),
         local_only_confirmed=True,
         limitation='Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality')
+
+
+class ModelIdentityGuard:
+    """Optional stable identity checked around each inference request."""
+    def __init__(self, config, capability):
+        self.config, self.capability, self.snapshot = config, capability, None
+
+    def capture(self):
+        digest = self.config.expected_digest
+        if digest is None:
+            return None
+        current = inspect_model(self.config, expected_digest=digest, capability=self.capability)
+        if self.snapshot is not None and current != self.snapshot:
+            raise LocalModelError('Local model/runtime identity changed during inference')
+        self.snapshot = deepcopy(current)
+        return deepcopy(current)
+
+    def check_response(self, response):
+        if self.config.expected_digest is not None:
+            if not isinstance(response, dict) or response.get('model') != self.config.model:
+                raise LocalModelError('Inference response does not name the pinned model')
+            self.capture()
 
 
 def _file_sha(path):
