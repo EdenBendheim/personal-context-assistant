@@ -35,7 +35,7 @@ class LocalModelTests(unittest.TestCase):
             result=generate(self.engine,self.request,OllamaProvider(self.config))
         path,body=self.requests[0];self.assertEqual('/api/chat',path)
         self.assertFalse(body['stream']);self.assertEqual(0,body['keep_alive']);self.assertEqual(1024,body['options']['num_predict'])
-        self.assertEqual('fact',body['format']['properties']['segments']['items']['properties']['kind']['enum'][0])
+        self.assertEqual('fact',body['format']['anyOf'][0]['properties']['segments']['items']['properties']['kind']['enum'][0])
         self.assertEqual('The demo is Thursday.',result['draft_text'])
         self.assertEqual('synthetic-fixture',result['generation_provenance']['settings']['model'])
         self.assertTrue(result['support_review_required'])

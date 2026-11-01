@@ -1,0 +1,192 @@
+{
+  "version": 1,
+  "kind": "synthetic provider reply study",
+  "benchmark_sha256": "2c0e651707f2b0470289b4f69ec6f3fd802fe449473eef208a624d9031418c88",
+  "prompt_version": "grounded-draft-v1",
+  "split": "development",
+  "configuration": {
+    "backend": "ollama_chat",
+    "prompt_version": "grounded-draft-v1",
+    "settings": {
+      "model": "qwen2.5:1.5b",
+      "endpoint": "http://127.0.0.1:59298",
+      "timeout": 60.0,
+      "max_tokens": 512,
+      "seed": 29,
+      "local_only_confirmed": true,
+      "expected_digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b"
+    },
+    "identity_note": "Requested model/settings, not a served-weight attestation or semantic validation",
+    "model_identity": {
+      "version": 1,
+      "model": "qwen2.5:1.5b",
+      "digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+      "size_bytes": 986061892,
+      "runtime_version": "0.40.13",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "format": "gguf",
+        "family": "qwen2",
+        "parameter_size": "1.5B",
+        "quantization_level": "Q4_K_M"
+      },
+      "show_sha256": "936ae1b50dcafdf77b9ab5a2e407329ac407983cd4a42dcc4316d13eacc2ccee",
+      "local_only_confirmed": true,
+      "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+    }
+  },
+  "modes": [
+    "generic",
+    "context",
+    "personalized"
+  ],
+  "attempts": 12,
+  "provider_calls": 10,
+  "statuses": {
+    "rejected": 10,
+    "needs_history": 2
+  },
+  "cases": [
+    {
+      "case_id": "alex-demo",
+      "split": "development",
+      "mode": "generic",
+      "reference_fact_for_human_review": "The demo is Thursday at 10.",
+      "provider_calls": 1,
+      "elapsed_seconds": 2.883670042036101,
+      "status": "rejected",
+      "draft_text": "",
+      "error": "Abstention requires no segments and a bounded reason"
+    },
+    {
+      "case_id": "alex-demo",
+      "split": "development",
+      "mode": "context",
+      "reference_fact_for_human_review": "The demo is Thursday at 10.",
+      "provider_calls": 1,
+      "elapsed_seconds": 2.0159962499747053,
+      "status": "rejected",
+      "draft_text": "",
+      "error": "Abstention requires no segments and a bounded reason"
+    },
+    {
+      "case_id": "alex-demo",
+      "split": "development",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "The demo is Thursday at 10.",
+      "provider_calls": 1,
+      "elapsed_seconds": 2.0177790409652516,
+      "status": "rejected",
+      "draft_text": "",
+      "error": "Abstention requires no segments and a bounded reason"
+    },
+    {
+      "case_id": "bea-import",
+      "split": "development",
+      "mode": "generic",
+      "reference_fact_for_human_review": "The importer expects CSV without attachments.",
+      "provider_calls": 1,
+      "elapsed_seconds": 4.0943596250144765,
+      "status": "rejected",
+      "draft_text": "",
+      "error": "Abstention requires no segments and a bounded reason"
+    },
+    {
+      "case_id": "bea-import",
+      "split": "development",
+      "mode": "context",
+      "reference_fact_for_human_review": "The importer expects CSV without attachments.",
+      "provider_calls": 1,
+      "elapsed_seconds": 4.408573583001271,
+      "status": "rejected",
+      "draft_text": "",
+      "error": "Local model response is incomplete or requests unsupported tools"
+    },
+    {
+      "case_id": "bea-import",
+      "split": "development",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "The importer expects CSV without attachments.",
+      "provider_calls": 1,
+      "elapsed_seconds": 2.066546833026223,
+      "status": "rejected",
+      "draft_text": "",
+      "error": "Abstention requires no segments and a bounded reason"
+    },
+    {
+      "case_id": "cam-office-hours",
+      "split": "development",
+      "mode": "generic",
+      "reference_fact_for_human_review": "Office hours are in room 214.",
+      "provider_calls": 1,
+      "elapsed_seconds": 1.492697290959768,
+      "status": "rejected",
+      "draft_text": "",
+      "error": "Abstention requires no segments and a bounded reason"
+    },
+    {
+      "case_id": "cam-office-hours",
+      "split": "development",
+      "mode": "context",
+      "reference_fact_for_human_review": "Office hours are in room 214.",
+      "provider_calls": 1,
+      "elapsed_seconds": 2.2814750829711556,
+      "status": "rejected",
+      "draft_text": "",
+      "error": "Abstention requires no segments and a bounded reason"
+    },
+    {
+      "case_id": "cam-office-hours",
+      "split": "development",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "Office hours are in room 214.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.3669817090267316,
+      "status": "rejected",
+      "draft_text": "",
+      "error": "Abstention requires no segments and a bounded reason"
+    },
+    {
+      "case_id": "dan-meeting",
+      "split": "development",
+      "mode": "generic",
+      "reference_fact_for_human_review": "There is no relevant factual history before the cutoff.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.8238003329606727,
+      "status": "rejected",
+      "draft_text": "",
+      "error": "Abstention requires no segments and a bounded reason"
+    },
+    {
+      "case_id": "dan-meeting",
+      "split": "development",
+      "mode": "context",
+      "reference_fact_for_human_review": "There is no relevant factual history before the cutoff.",
+      "provider_calls": 0,
+      "elapsed_seconds": 0.0004907919792458415,
+      "status": "needs_history",
+      "draft_text": "",
+      "packet_sha256": "f6d9e406cb8460100169dc5110027dd9fefb29091dc8ade2a891865ae95a71d8",
+      "citations": []
+    },
+    {
+      "case_id": "dan-meeting",
+      "split": "development",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "There is no relevant factual history before the cutoff.",
+      "provider_calls": 0,
+      "elapsed_seconds": 0.0004562089452520013,
+      "status": "needs_history",
+      "draft_text": "",
+      "packet_sha256": "e9038d1f9bd4549daefdec6a653414551a7d630368c168a749f122c08ca75e07",
+      "citations": []
+    }
+  ],
+  "reply_quality_scored": false,
+  "semantic_entailment_automated": false,
+  "sending_performed": false,
+  "limitation": "Generated text and literal citation checks require human review. Provider rejection/abstention is retained, not hidden. Timing includes model loading and local infrastructure. Synthetic examples do not establish owner-style imitation or real-user preference."
+}

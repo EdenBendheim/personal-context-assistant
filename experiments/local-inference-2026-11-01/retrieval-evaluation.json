@@ -1,0 +1,813 @@
+{
+  "version": 1,
+  "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+  "split": "evaluation",
+  "embedding_configuration": {
+    "backend": "embedding_cosine",
+    "provider": {
+      "backend": "ollama_embed",
+      "settings": {
+        "model": "nomic-embed-text:v1.5",
+        "endpoint": "http://127.0.0.1:59298",
+        "timeout": 60.0,
+        "local_only_confirmed": true,
+        "expected_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f"
+      },
+      "truncate": false,
+      "identity_note": "Requested model/settings; model weights and retrieval quality are not verified",
+      "model_identity": {
+        "version": 1,
+        "model": "nomic-embed-text:v1.5",
+        "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+        "size_bytes": 274302450,
+        "runtime_version": "0.40.13",
+        "capabilities": [
+          "embedding"
+        ],
+        "details": {
+          "format": "gguf",
+          "family": "nomic-bert",
+          "parameter_size": "137M",
+          "quantization_level": "F16"
+        },
+        "show_sha256": "41c94bc16035574698cc6d6bdf6faafae0eab6c9d1847c11b39c94437f65f81d",
+        "local_only_confirmed": true,
+        "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+      }
+    },
+    "min_score": 0.6,
+    "max_candidates": 128,
+    "cache": "none",
+    "limitation": "Cosine similarity is not factual support or measured reply quality"
+  },
+  "lexical": {
+    "version": 1,
+    "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+    "split": "evaluation",
+    "cases": [
+      {
+        "id": "morgan-projector",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "discord",
+            "3-3"
+          ],
+          [
+            "gmail",
+            "3-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "3-3"
+          ],
+          [
+            "gmail",
+            "3-1"
+          ]
+        ]
+      },
+      {
+        "id": "morgan-launch",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "gmail",
+            "3-1"
+          ],
+          [
+            "gmail",
+            "3-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "3-3"
+          ],
+          [
+            "gmail",
+            "3-1"
+          ]
+        ]
+      },
+      {
+        "id": "morgan-volcano",
+        "split": "evaluation",
+        "recall": null,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [],
+        "style_retrieved": [
+          [
+            "discord",
+            "3-3"
+          ],
+          [
+            "gmail",
+            "3-1"
+          ]
+        ]
+      },
+      {
+        "id": "casey-projector",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "discord",
+            "4-3"
+          ],
+          [
+            "gmail",
+            "4-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "4-3"
+          ],
+          [
+            "gmail",
+            "4-1"
+          ]
+        ]
+      },
+      {
+        "id": "casey-launch",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "gmail",
+            "4-1"
+          ],
+          [
+            "gmail",
+            "4-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "4-3"
+          ],
+          [
+            "gmail",
+            "4-1"
+          ]
+        ]
+      },
+      {
+        "id": "casey-volcano",
+        "split": "evaluation",
+        "recall": null,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [],
+        "style_retrieved": [
+          [
+            "discord",
+            "4-3"
+          ],
+          [
+            "gmail",
+            "4-1"
+          ]
+        ]
+      },
+      {
+        "id": "taylor-projector",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "discord",
+            "5-3"
+          ],
+          [
+            "gmail",
+            "5-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "5-3"
+          ],
+          [
+            "gmail",
+            "5-1"
+          ]
+        ]
+      },
+      {
+        "id": "taylor-launch",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "gmail",
+            "5-1"
+          ],
+          [
+            "gmail",
+            "5-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "5-3"
+          ],
+          [
+            "gmail",
+            "5-1"
+          ]
+        ]
+      },
+      {
+        "id": "taylor-volcano",
+        "split": "evaluation",
+        "recall": null,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [],
+        "style_retrieved": [
+          [
+            "discord",
+            "5-3"
+          ],
+          [
+            "gmail",
+            "5-1"
+          ]
+        ]
+      },
+      {
+        "id": "jordan-projector",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "discord",
+            "6-3"
+          ],
+          [
+            "gmail",
+            "6-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "6-3"
+          ],
+          [
+            "gmail",
+            "6-1"
+          ]
+        ]
+      },
+      {
+        "id": "jordan-launch",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "gmail",
+            "6-1"
+          ],
+          [
+            "gmail",
+            "6-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "6-3"
+          ],
+          [
+            "gmail",
+            "6-1"
+          ]
+        ]
+      },
+      {
+        "id": "jordan-volcano",
+        "split": "evaluation",
+        "recall": null,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [],
+        "style_retrieved": [
+          [
+            "discord",
+            "6-3"
+          ],
+          [
+            "gmail",
+            "6-1"
+          ]
+        ]
+      },
+      {
+        "id": "morgan-no-prior-history",
+        "split": "evaluation",
+        "recall": null,
+        "precision": 1.0,
+        "style_recall": null,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [],
+        "style_retrieved": []
+      },
+      {
+        "id": "quinn-no-owner-examples",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": null,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "gmail",
+            "7-1"
+          ]
+        ],
+        "style_retrieved": []
+      }
+    ],
+    "case_count": 14,
+    "macro_recall": 1.0,
+    "macro_precision": 1.0,
+    "boundary_violations": 0,
+    "passed": true,
+    "limitation": "Synthetic retrieval regression benchmark; does not evaluate generated replies or real-user quality"
+  },
+  "embedding": {
+    "version": 1,
+    "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+    "split": "evaluation",
+    "cases": [
+      {
+        "id": "morgan-projector",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "discord",
+            "3-3"
+          ],
+          [
+            "gmail",
+            "3-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "3-3"
+          ],
+          [
+            "gmail",
+            "3-1"
+          ]
+        ]
+      },
+      {
+        "id": "morgan-launch",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "gmail",
+            "3-1"
+          ],
+          [
+            "gmail",
+            "3-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "3-3"
+          ],
+          [
+            "gmail",
+            "3-1"
+          ]
+        ]
+      },
+      {
+        "id": "morgan-volcano",
+        "split": "evaluation",
+        "recall": null,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [],
+        "style_retrieved": [
+          [
+            "discord",
+            "3-3"
+          ],
+          [
+            "gmail",
+            "3-1"
+          ]
+        ]
+      },
+      {
+        "id": "casey-projector",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "discord",
+            "4-3"
+          ],
+          [
+            "gmail",
+            "4-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "4-3"
+          ],
+          [
+            "gmail",
+            "4-1"
+          ]
+        ]
+      },
+      {
+        "id": "casey-launch",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "gmail",
+            "4-1"
+          ],
+          [
+            "gmail",
+            "4-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "4-3"
+          ],
+          [
+            "gmail",
+            "4-1"
+          ]
+        ]
+      },
+      {
+        "id": "casey-volcano",
+        "split": "evaluation",
+        "recall": null,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [],
+        "style_retrieved": [
+          [
+            "discord",
+            "4-3"
+          ],
+          [
+            "gmail",
+            "4-1"
+          ]
+        ]
+      },
+      {
+        "id": "taylor-projector",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "discord",
+            "5-3"
+          ],
+          [
+            "gmail",
+            "5-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "5-3"
+          ],
+          [
+            "gmail",
+            "5-1"
+          ]
+        ]
+      },
+      {
+        "id": "taylor-launch",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "gmail",
+            "5-1"
+          ],
+          [
+            "gmail",
+            "5-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "5-3"
+          ],
+          [
+            "gmail",
+            "5-1"
+          ]
+        ]
+      },
+      {
+        "id": "taylor-volcano",
+        "split": "evaluation",
+        "recall": null,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [],
+        "style_retrieved": [
+          [
+            "discord",
+            "5-3"
+          ],
+          [
+            "gmail",
+            "5-1"
+          ]
+        ]
+      },
+      {
+        "id": "jordan-projector",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "discord",
+            "6-3"
+          ],
+          [
+            "gmail",
+            "6-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "6-3"
+          ],
+          [
+            "gmail",
+            "6-1"
+          ]
+        ]
+      },
+      {
+        "id": "jordan-launch",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "gmail",
+            "6-1"
+          ],
+          [
+            "gmail",
+            "6-2"
+          ]
+        ],
+        "style_retrieved": [
+          [
+            "discord",
+            "6-3"
+          ],
+          [
+            "gmail",
+            "6-1"
+          ]
+        ]
+      },
+      {
+        "id": "jordan-volcano",
+        "split": "evaluation",
+        "recall": null,
+        "precision": 1.0,
+        "style_recall": 1.0,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [],
+        "style_retrieved": [
+          [
+            "discord",
+            "6-3"
+          ],
+          [
+            "gmail",
+            "6-1"
+          ]
+        ]
+      },
+      {
+        "id": "morgan-no-prior-history",
+        "split": "evaluation",
+        "recall": null,
+        "precision": 1.0,
+        "style_recall": null,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [],
+        "style_retrieved": []
+      },
+      {
+        "id": "quinn-no-owner-examples",
+        "split": "evaluation",
+        "recall": 1.0,
+        "precision": 1.0,
+        "style_recall": null,
+        "missing": [],
+        "style_missing": [],
+        "unexpected": [],
+        "boundary_violations": 0,
+        "retrieved": [
+          [
+            "gmail",
+            "7-1"
+          ]
+        ],
+        "style_retrieved": []
+      }
+    ],
+    "case_count": 14,
+    "macro_recall": 1.0,
+    "macro_precision": 1.0,
+    "boundary_violations": 0,
+    "passed": true,
+    "limitation": "Synthetic retrieval regression benchmark; does not evaluate generated replies or real-user quality"
+  },
+  "embedding_minus_lexical": {
+    "macro_recall": 0.0,
+    "macro_precision": 0.0,
+    "boundary_violations": 0
+  },
+  "passed": true,
+  "limitation": "Fixed synthetic retrieval only; not learned-model validation, reply quality or factual entailment; small previously established synthetic cases, not a fresh real-user holdout",
+  "development_freeze_sha256": "fe727367cb8e73a7cdab5cf632c164f8ac4e7fee6e7388ae00887878e2c37ef4",
+  "source_sha256": "46c96b5586ee0c4c0fd3e1484d9eb0732427ff2e37b3345d229a568d3eae8492",
+  "threshold_selected_on": "development"
+}

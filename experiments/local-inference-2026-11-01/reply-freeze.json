@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "created_at": "2026-11-01T16:57:24.489635+00:00",
+  "benchmark_sha256": "2c0e651707f2b0470289b4f69ec6f3fd802fe449473eef208a624d9031418c88",
+  "source_sha256": "46c96b5586ee0c4c0fd3e1484d9eb0732427ff2e37b3345d229a568d3eae8492",
+  "configuration": {
+    "backend": "ollama_chat",
+    "prompt_version": "grounded-draft-v3",
+    "settings": {
+      "model": "qwen2.5:1.5b",
+      "endpoint": "http://127.0.0.1:59298",
+      "timeout": 60,
+      "max_tokens": 512,
+      "seed": 29,
+      "local_only_confirmed": true,
+      "expected_digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b"
+    },
+    "identity_note": "Requested model/settings, not a served-weight attestation or semantic validation",
+    "model_identity": {
+      "version": 1,
+      "model": "qwen2.5:1.5b",
+      "digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+      "size_bytes": 986061892,
+      "runtime_version": "0.40.13",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "format": "gguf",
+        "family": "qwen2",
+        "parameter_size": "1.5B",
+        "quantization_level": "Q4_K_M"
+      },
+      "show_sha256": "936ae1b50dcafdf77b9ab5a2e407329ac407983cd4a42dcc4316d13eacc2ccee",
+      "local_only_confirmed": true,
+      "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+    }
+  },
+  "development_report_sha256": "27ba877f336d258c9a7a17a433eda0647bd8855d690cc3469dfc5868d59c2729",
+  "prompt_version": "grounded-draft-v3",
+  "evaluation_inspected": false,
+  "rule": "One evaluation pass with no prompt/settings changes after development; human inspection only, no quality score",
+  "freeze_sha256": "8486f8eb7a1d6dbf221ce52afe9f810ea9cb0909a358ae9def914a6cc3094941"
+}

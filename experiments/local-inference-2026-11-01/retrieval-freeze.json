@@ -1,0 +1,1842 @@
+{
+  "version": 1,
+  "kind": "development-frozen synthetic retrieval",
+  "selection_rule": "Zero boundary violations; maximize harmonic mean of macro precision/recall, then precision, then threshold",
+  "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+  "source_sha256": "46c96b5586ee0c4c0fd3e1484d9eb0732427ff2e37b3345d229a568d3eae8492",
+  "provider_configuration": {
+    "backend": "ollama_embed",
+    "settings": {
+      "model": "nomic-embed-text:v1.5",
+      "endpoint": "http://127.0.0.1:59298",
+      "timeout": 60.0,
+      "local_only_confirmed": true,
+      "expected_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f"
+    },
+    "truncate": false,
+    "identity_note": "Requested model/settings; model weights and retrieval quality are not verified",
+    "model_identity": {
+      "version": 1,
+      "model": "nomic-embed-text:v1.5",
+      "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+      "size_bytes": 274302450,
+      "runtime_version": "0.40.13",
+      "capabilities": [
+        "embedding"
+      ],
+      "details": {
+        "format": "gguf",
+        "family": "nomic-bert",
+        "parameter_size": "137M",
+        "quantization_level": "F16"
+      },
+      "show_sha256": "41c94bc16035574698cc6d6bdf6faafae0eab6c9d1847c11b39c94437f65f81d",
+      "local_only_confirmed": true,
+      "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+    }
+  },
+  "thresholds": [
+    0.2,
+    0.4,
+    0.6,
+    0.8
+  ],
+  "max_candidates": 128,
+  "selected_threshold": 0.6,
+  "development": [
+    {
+      "version": 1,
+      "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+      "split": "development",
+      "embedding_configuration": {
+        "backend": "embedding_cosine",
+        "provider": {
+          "backend": "ollama_embed",
+          "settings": {
+            "model": "nomic-embed-text:v1.5",
+            "endpoint": "http://127.0.0.1:59298",
+            "timeout": 60.0,
+            "local_only_confirmed": true,
+            "expected_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f"
+          },
+          "truncate": false,
+          "identity_note": "Requested model/settings; model weights and retrieval quality are not verified",
+          "model_identity": {
+            "version": 1,
+            "model": "nomic-embed-text:v1.5",
+            "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+            "size_bytes": 274302450,
+            "runtime_version": "0.40.13",
+            "capabilities": [
+              "embedding"
+            ],
+            "details": {
+              "format": "gguf",
+              "family": "nomic-bert",
+              "parameter_size": "137M",
+              "quantization_level": "F16"
+            },
+            "show_sha256": "41c94bc16035574698cc6d6bdf6faafae0eab6c9d1847c11b39c94437f65f81d",
+            "local_only_confirmed": true,
+            "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+          }
+        },
+        "min_score": 0.2,
+        "max_candidates": 128,
+        "cache": "none",
+        "limitation": "Cosine similarity is not factual support or measured reply quality"
+      },
+      "lexical": {
+        "version": 1,
+        "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+        "split": "development",
+        "cases": [
+          {
+            "id": "alex-projector",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-launch",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "gmail",
+                "1-1"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-projector",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-launch",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "gmail",
+                "2-1"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          }
+        ],
+        "case_count": 6,
+        "macro_recall": 1.0,
+        "macro_precision": 1.0,
+        "boundary_violations": 0,
+        "passed": true,
+        "limitation": "Synthetic retrieval regression benchmark; does not evaluate generated replies or real-user quality"
+      },
+      "embedding": {
+        "version": 1,
+        "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+        "split": "development",
+        "cases": [
+          {
+            "id": "alex-projector",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 0.6666666666666666,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [
+              [
+                "gmail",
+                "1-1"
+              ]
+            ],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-launch",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 0.6666666666666666,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [
+              [
+                "discord",
+                "1-3"
+              ]
+            ],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 0.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-projector",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 0.6666666666666666,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [
+              [
+                "gmail",
+                "2-1"
+              ]
+            ],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-launch",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 0.6666666666666666,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [
+              [
+                "discord",
+                "2-3"
+              ]
+            ],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 0.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          }
+        ],
+        "case_count": 6,
+        "macro_recall": 1.0,
+        "macro_precision": 0.4444444444444444,
+        "boundary_violations": 0,
+        "passed": false,
+        "limitation": "Synthetic retrieval regression benchmark; does not evaluate generated replies or real-user quality"
+      },
+      "embedding_minus_lexical": {
+        "macro_recall": 0.0,
+        "macro_precision": -0.5555555555555556,
+        "boundary_violations": 0
+      },
+      "passed": false,
+      "limitation": "Fixed synthetic retrieval only; not learned-model validation, reply quality or factual entailment"
+    },
+    {
+      "version": 1,
+      "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+      "split": "development",
+      "embedding_configuration": {
+        "backend": "embedding_cosine",
+        "provider": {
+          "backend": "ollama_embed",
+          "settings": {
+            "model": "nomic-embed-text:v1.5",
+            "endpoint": "http://127.0.0.1:59298",
+            "timeout": 60.0,
+            "local_only_confirmed": true,
+            "expected_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f"
+          },
+          "truncate": false,
+          "identity_note": "Requested model/settings; model weights and retrieval quality are not verified",
+          "model_identity": {
+            "version": 1,
+            "model": "nomic-embed-text:v1.5",
+            "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+            "size_bytes": 274302450,
+            "runtime_version": "0.40.13",
+            "capabilities": [
+              "embedding"
+            ],
+            "details": {
+              "format": "gguf",
+              "family": "nomic-bert",
+              "parameter_size": "137M",
+              "quantization_level": "F16"
+            },
+            "show_sha256": "41c94bc16035574698cc6d6bdf6faafae0eab6c9d1847c11b39c94437f65f81d",
+            "local_only_confirmed": true,
+            "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+          }
+        },
+        "min_score": 0.4,
+        "max_candidates": 128,
+        "cache": "none",
+        "limitation": "Cosine similarity is not factual support or measured reply quality"
+      },
+      "lexical": {
+        "version": 1,
+        "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+        "split": "development",
+        "cases": [
+          {
+            "id": "alex-projector",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-launch",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "gmail",
+                "1-1"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-projector",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-launch",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "gmail",
+                "2-1"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          }
+        ],
+        "case_count": 6,
+        "macro_recall": 1.0,
+        "macro_precision": 1.0,
+        "boundary_violations": 0,
+        "passed": true,
+        "limitation": "Synthetic retrieval regression benchmark; does not evaluate generated replies or real-user quality"
+      },
+      "embedding": {
+        "version": 1,
+        "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+        "split": "development",
+        "cases": [
+          {
+            "id": "alex-projector",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 0.6666666666666666,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [
+              [
+                "gmail",
+                "1-1"
+              ]
+            ],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-launch",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 0.6666666666666666,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [
+              [
+                "discord",
+                "1-3"
+              ]
+            ],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 0.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-projector",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 0.6666666666666666,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [
+              [
+                "gmail",
+                "2-1"
+              ]
+            ],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-launch",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 0.6666666666666666,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [
+              [
+                "discord",
+                "2-3"
+              ]
+            ],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 0.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          }
+        ],
+        "case_count": 6,
+        "macro_recall": 1.0,
+        "macro_precision": 0.4444444444444444,
+        "boundary_violations": 0,
+        "passed": false,
+        "limitation": "Synthetic retrieval regression benchmark; does not evaluate generated replies or real-user quality"
+      },
+      "embedding_minus_lexical": {
+        "macro_recall": 0.0,
+        "macro_precision": -0.5555555555555556,
+        "boundary_violations": 0
+      },
+      "passed": false,
+      "limitation": "Fixed synthetic retrieval only; not learned-model validation, reply quality or factual entailment"
+    },
+    {
+      "version": 1,
+      "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+      "split": "development",
+      "embedding_configuration": {
+        "backend": "embedding_cosine",
+        "provider": {
+          "backend": "ollama_embed",
+          "settings": {
+            "model": "nomic-embed-text:v1.5",
+            "endpoint": "http://127.0.0.1:59298",
+            "timeout": 60.0,
+            "local_only_confirmed": true,
+            "expected_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f"
+          },
+          "truncate": false,
+          "identity_note": "Requested model/settings; model weights and retrieval quality are not verified",
+          "model_identity": {
+            "version": 1,
+            "model": "nomic-embed-text:v1.5",
+            "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+            "size_bytes": 274302450,
+            "runtime_version": "0.40.13",
+            "capabilities": [
+              "embedding"
+            ],
+            "details": {
+              "format": "gguf",
+              "family": "nomic-bert",
+              "parameter_size": "137M",
+              "quantization_level": "F16"
+            },
+            "show_sha256": "41c94bc16035574698cc6d6bdf6faafae0eab6c9d1847c11b39c94437f65f81d",
+            "local_only_confirmed": true,
+            "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+          }
+        },
+        "min_score": 0.6,
+        "max_candidates": 128,
+        "cache": "none",
+        "limitation": "Cosine similarity is not factual support or measured reply quality"
+      },
+      "lexical": {
+        "version": 1,
+        "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+        "split": "development",
+        "cases": [
+          {
+            "id": "alex-projector",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-launch",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "gmail",
+                "1-1"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-projector",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-launch",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "gmail",
+                "2-1"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          }
+        ],
+        "case_count": 6,
+        "macro_recall": 1.0,
+        "macro_precision": 1.0,
+        "boundary_violations": 0,
+        "passed": true,
+        "limitation": "Synthetic retrieval regression benchmark; does not evaluate generated replies or real-user quality"
+      },
+      "embedding": {
+        "version": 1,
+        "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+        "split": "development",
+        "cases": [
+          {
+            "id": "alex-projector",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-launch",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "gmail",
+                "1-1"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-projector",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-launch",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "gmail",
+                "2-1"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          }
+        ],
+        "case_count": 6,
+        "macro_recall": 1.0,
+        "macro_precision": 1.0,
+        "boundary_violations": 0,
+        "passed": true,
+        "limitation": "Synthetic retrieval regression benchmark; does not evaluate generated replies or real-user quality"
+      },
+      "embedding_minus_lexical": {
+        "macro_recall": 0.0,
+        "macro_precision": 0.0,
+        "boundary_violations": 0
+      },
+      "passed": true,
+      "limitation": "Fixed synthetic retrieval only; not learned-model validation, reply quality or factual entailment"
+    },
+    {
+      "version": 1,
+      "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+      "split": "development",
+      "embedding_configuration": {
+        "backend": "embedding_cosine",
+        "provider": {
+          "backend": "ollama_embed",
+          "settings": {
+            "model": "nomic-embed-text:v1.5",
+            "endpoint": "http://127.0.0.1:59298",
+            "timeout": 60.0,
+            "local_only_confirmed": true,
+            "expected_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f"
+          },
+          "truncate": false,
+          "identity_note": "Requested model/settings; model weights and retrieval quality are not verified",
+          "model_identity": {
+            "version": 1,
+            "model": "nomic-embed-text:v1.5",
+            "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+            "size_bytes": 274302450,
+            "runtime_version": "0.40.13",
+            "capabilities": [
+              "embedding"
+            ],
+            "details": {
+              "format": "gguf",
+              "family": "nomic-bert",
+              "parameter_size": "137M",
+              "quantization_level": "F16"
+            },
+            "show_sha256": "41c94bc16035574698cc6d6bdf6faafae0eab6c9d1847c11b39c94437f65f81d",
+            "local_only_confirmed": true,
+            "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+          }
+        },
+        "min_score": 0.8,
+        "max_candidates": 128,
+        "cache": "none",
+        "limitation": "Cosine similarity is not factual support or measured reply quality"
+      },
+      "lexical": {
+        "version": 1,
+        "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+        "split": "development",
+        "cases": [
+          {
+            "id": "alex-projector",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-launch",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "gmail",
+                "1-1"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-projector",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-launch",
+            "split": "development",
+            "recall": 1.0,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [
+              [
+                "gmail",
+                "2-1"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          }
+        ],
+        "case_count": 6,
+        "macro_recall": 1.0,
+        "macro_precision": 1.0,
+        "boundary_violations": 0,
+        "passed": true,
+        "limitation": "Synthetic retrieval regression benchmark; does not evaluate generated replies or real-user quality"
+      },
+      "embedding": {
+        "version": 1,
+        "benchmark_sha256": "d43ffd7edd646635a2357378d75a06fc75d7e45ef5665363a3f66f0997c4e77c",
+        "split": "development",
+        "cases": [
+          {
+            "id": "alex-projector",
+            "split": "development",
+            "recall": 0.0,
+            "precision": 0.0,
+            "style_recall": 1.0,
+            "missing": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-launch",
+            "split": "development",
+            "recall": 0.0,
+            "precision": 0.0,
+            "style_recall": 1.0,
+            "missing": [
+              [
+                "gmail",
+                "1-1"
+              ],
+              [
+                "gmail",
+                "1-2"
+              ]
+            ],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "alex-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "1-3"
+              ],
+              [
+                "gmail",
+                "1-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-projector",
+            "split": "development",
+            "recall": 0.0,
+            "precision": 0.0,
+            "style_recall": 1.0,
+            "missing": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-launch",
+            "split": "development",
+            "recall": 0.0,
+            "precision": 0.0,
+            "style_recall": 1.0,
+            "missing": [
+              [
+                "gmail",
+                "2-1"
+              ],
+              [
+                "gmail",
+                "2-2"
+              ]
+            ],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          },
+          {
+            "id": "riley-volcano",
+            "split": "development",
+            "recall": null,
+            "precision": 1.0,
+            "style_recall": 1.0,
+            "missing": [],
+            "style_missing": [],
+            "unexpected": [],
+            "boundary_violations": 0,
+            "retrieved": [],
+            "style_retrieved": [
+              [
+                "discord",
+                "2-3"
+              ],
+              [
+                "gmail",
+                "2-1"
+              ]
+            ]
+          }
+        ],
+        "case_count": 6,
+        "macro_recall": 0.0,
+        "macro_precision": 0.3333333333333333,
+        "boundary_violations": 0,
+        "passed": false,
+        "limitation": "Synthetic retrieval regression benchmark; does not evaluate generated replies or real-user quality"
+      },
+      "embedding_minus_lexical": {
+        "macro_recall": -1.0,
+        "macro_precision": -0.6666666666666667,
+        "boundary_violations": 0
+      },
+      "passed": false,
+      "limitation": "Fixed synthetic retrieval only; not learned-model validation, reply quality or factual entailment"
+    }
+  ],
+  "evaluation_inspected": false,
+  "freeze_sha256": "fe727367cb8e73a7cdab5cf632c164f8ac4e7fee6e7388ae00887878e2c37ef4"
+}

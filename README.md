@@ -2,13 +2,15 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
-**Status — October 26, 2026:** working ingestion,
-contact-scoped retrieval, editable memory and persistent draft review. Contact
-removal now previews every stored copy in its scope, requires an unchanged plan
-and explicit confirmation, and removes messages/memory/draft history atomically.
-A local UI/CLI and verified SQLite index rebuild are available. External exports,
-backups and physical storage remnants are not erased. Local-model adapters remain
-synthetically checked only; real inference and reply quality are unverified.
+**Status — November 1, 2026:** working ingestion, contact-scoped retrieval,
+editable memory and persistent draft review. Bounded histories preserve unsaved
+edits. Real local Qwen chat and Nomic embedding inference now run with pinned
+identity/file receipts. Nomic ties the lexical baseline on 14 established
+synthetic evaluation cases; the small chat model mostly abstains and produces
+weak or unsupported drafts. Human review remains required. See the
+[measured results and failures](experiments/LOCAL-INFERENCE-2026-11-01.md).
+Contact removal is snapshot-bound and atomic; external exports, backups and
+physical storage remnants remain outside database removal.
 
 **October 28 update:** memory summaries and correction histories now have bounded
 cursor pages. The browser loads 25 at a time and preserves unsaved wording when
@@ -83,7 +85,8 @@ explicit model name and confirmation that the local daemon has cloud disabled.
 Only a literal loopback HTTP endpoint is allowed; there are no proxies, redirects,
 model downloads or fallbacks. Requests disable input truncation, use bounded
 timeouts, unload afterward and reject malformed/oversized responses. Tests use
-a synthetic HTTP fixture. No real embedding model has been run or evaluated.
+a synthetic HTTP fixture. The first real Nomic run ties the lexical baseline;
+its development freeze, exact model receipts and limitations are in the report above.
 
 After importing the synthetic demo, an **already installed** embedding model can
 be tried separately from the default lexical CLI. First configure your Ollama
@@ -326,7 +329,11 @@ API equivalents: `GET /api/memory?contact=...&before=...`, `GET /api/memory/ID`,
 
 Local exports → normalized SQLite messages → contact/time-limited retrieval + reviewed memory → immutable cited draft packet → saved wording revisions → human feedback. The browser talks only to the local owner-scoped API. No external scripts or message-send integration are involved.
 
-The review path now supports the default extractive baseline and an opt-in local generative provider. Next: verify an installed, cloud-disabled local model on synthetic messages, then evaluate semantic support and recipient/style preference on fixed reply cases before using real history. Embedding retrieval has a separate synthetic comparison; real-user reply quality and removal of external exports/backups remain pending.
+The review path supports the default extractive baseline and an opt-in local
+generative provider, now exercised with real local inference on invented messages.
+Next: improve source-complete retrieval and measure semantic support/usefulness
+on a larger reply set. Real-user preference/style evaluation and removal of
+external exports/backups remain pending.
 
 ## Generated wording contract (development API)
 
@@ -366,8 +373,9 @@ Before enabling it, run Ollama with cloud disabled (`OLLAMA_NO_CLOUD=1`), choose
 an already installed local model and explicitly confirm local-only setup. See
 [Ollama's local-only configuration](https://docs.ollama.com/faq#how-do-i-disable-ollamas-cloud-features).
 Loopback alone cannot prove that a separately managed daemon will not proxy data.
-No actual model inference has been validated yet: current adapter checks use a
-synthetic HTTP server, not an LLM or paid service.
+Adapter tests use synthetic HTTP servers; a separate real-model study and browser
+smoke now verify local inference. Its poor reply outcomes do not establish useful
+generation or style imitation. No paid service was used.
 
 Generated results can be persisted with `Reviews(store).create(request, provider=...)`.
 Inference runs outside the SQLite writer transaction; context is revalidated
@@ -430,9 +438,9 @@ contract cases currently pass. Two intentionally contradicted wordings still
 reach human review: a false paraphrase citing a real quote and a factual claim
 mislabeled as social. These are explicit limitations, not semantic-check success.
 Fixture labels come from the author; elapsed times measure infrastructure only.
-No installed Ollama binary/service or cloud-disabled local setup was available
-at the October 17 check, so no actual model inference or style-quality result is
-claimed. Nothing was downloaded and no paid service was used.
+The November 1 real-model study is separate from this scripted suite. Its public
+receipts record actual local model/runtime downloads and inference failures;
+no style-quality improvement or paid service is claimed.
 
 ## Preview contact data removal
 

@@ -1,0 +1,366 @@
+{
+  "version": 1,
+  "kind": "synthetic provider reply study",
+  "benchmark_sha256": "2c0e651707f2b0470289b4f69ec6f3fd802fe449473eef208a624d9031418c88",
+  "prompt_version": "grounded-draft-v3",
+  "split": "development",
+  "configuration": {
+    "backend": "ollama_chat",
+    "prompt_version": "grounded-draft-v3",
+    "settings": {
+      "model": "qwen2.5:1.5b",
+      "endpoint": "http://127.0.0.1:59298",
+      "timeout": 60.0,
+      "max_tokens": 512,
+      "seed": 29,
+      "local_only_confirmed": true,
+      "expected_digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b"
+    },
+    "identity_note": "Requested model/settings, not a served-weight attestation or semantic validation",
+    "model_identity": {
+      "version": 1,
+      "model": "qwen2.5:1.5b",
+      "digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+      "size_bytes": 986061892,
+      "runtime_version": "0.40.13",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "format": "gguf",
+        "family": "qwen2",
+        "parameter_size": "1.5B",
+        "quantization_level": "Q4_K_M"
+      },
+      "show_sha256": "936ae1b50dcafdf77b9ab5a2e407329ac407983cd4a42dcc4316d13eacc2ccee",
+      "local_only_confirmed": true,
+      "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+    }
+  },
+  "modes": [
+    "generic",
+    "context",
+    "personalized"
+  ],
+  "attempts": 12,
+  "provider_calls": 10,
+  "statuses": {
+    "provider_abstained": 6,
+    "needs_review": 4,
+    "needs_history": 2
+  },
+  "cases": [
+    {
+      "case_id": "alex-demo",
+      "split": "development",
+      "mode": "generic",
+      "reference_fact_for_human_review": "The demo is Thursday at 10.",
+      "provider_calls": 1,
+      "elapsed_seconds": 1.0732265419792384,
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "affc9e84852c533d6dd0223cff5b1fe03b5c31e4e7485865bcca985b19ff1c6e",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "alex-demo",
+      "split": "development",
+      "mode": "context",
+      "reference_fact_for_human_review": "The demo is Thursday at 10.",
+      "provider_calls": 1,
+      "elapsed_seconds": 1.95059050002601,
+      "status": "needs_review",
+      "draft_text": "I'm not sure if I should reply to this. The demo is on Thursday, but I'm not sure if I should bring the working version.",
+      "packet_sha256": "50a3441a94fb1584b82134132461379ce7a5f211f3a630ff73fd7ceb60dd9a24",
+      "citations": [
+        {
+          "label": 1,
+          "evidence_key": "message-1",
+          "kind": "message",
+          "quote": "hey alex, got the demo running :D",
+          "provenance": {
+            "id": "alex-1",
+            "source": "synthetic",
+            "thread": "development-alex",
+            "author": "owner@example.invalid",
+            "recipient": "alex@example.invalid",
+            "timestamp": "2026-09-01T11:00:00.000000+00:00",
+            "fingerprint": "76f37ef64cf42ce86bebe0c99e192df299aa90ce1aa900e6aff65b44c71034df"
+          }
+        },
+        {
+          "label": 2,
+          "evidence_key": "message-2",
+          "kind": "message",
+          "quote": "The demo is Thursday at 10. Bring the working version.",
+          "provenance": {
+            "id": "alex-2",
+            "source": "synthetic",
+            "thread": "development-alex",
+            "author": "alex@example.invalid",
+            "recipient": "owner@example.invalid",
+            "timestamp": "2026-09-01T12:00:00.000000+00:00",
+            "fingerprint": "01ec770c357c01cff1b185b5bc27bb4e431aa5b76beac07857022ea657dbb39d"
+          }
+        }
+      ],
+      "segments": [
+        {
+          "text": "I'm not sure if I should reply to this. The demo is on Thursday, but I'm not sure if I should bring the working version.",
+          "kind": "social",
+          "citation_labels": [
+            1,
+            2
+          ]
+        }
+      ],
+      "support_review_required": true
+    },
+    {
+      "case_id": "alex-demo",
+      "split": "development",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "The demo is Thursday at 10.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.8674020420294255,
+      "status": "needs_review",
+      "draft_text": "I'm not sure if I should reply to this message.\n\nI'm not sure if I should reply to this message.\n\nI'm not sure if I should reply to this message.\n\nI'm not sure if I should reply to this message.\n\nI'm not sure if I should reply to this message.\n\nI'm not sure if I should reply to this message.\n\nI'm not sure if I should reply to this message.\n\nI'm not sure if I should reply to this message.\n\nI'm not sure if I should reply to this message.\n\nI'm not sure if I should reply to this message.\n\nI'm not sure if I should reply to this message.\n\nI'm not sure if I should reply to this message.",
+      "packet_sha256": "d74acd46dfe742d082676ba6bc8373b3742db50a9777fd9fc23657e458b7822d",
+      "citations": [],
+      "segments": [
+        {
+          "text": "I'm not sure if I should reply to this message.",
+          "kind": "social",
+          "citation_labels": []
+        },
+        {
+          "text": "I'm not sure if I should reply to this message.",
+          "kind": "social",
+          "citation_labels": []
+        },
+        {
+          "text": "I'm not sure if I should reply to this message.",
+          "kind": "social",
+          "citation_labels": []
+        },
+        {
+          "text": "I'm not sure if I should reply to this message.",
+          "kind": "social",
+          "citation_labels": []
+        },
+        {
+          "text": "I'm not sure if I should reply to this message.",
+          "kind": "social",
+          "citation_labels": []
+        },
+        {
+          "text": "I'm not sure if I should reply to this message.",
+          "kind": "social",
+          "citation_labels": []
+        },
+        {
+          "text": "I'm not sure if I should reply to this message.",
+          "kind": "social",
+          "citation_labels": []
+        },
+        {
+          "text": "I'm not sure if I should reply to this message.",
+          "kind": "social",
+          "citation_labels": []
+        },
+        {
+          "text": "I'm not sure if I should reply to this message.",
+          "kind": "social",
+          "citation_labels": []
+        },
+        {
+          "text": "I'm not sure if I should reply to this message.",
+          "kind": "social",
+          "citation_labels": []
+        },
+        {
+          "text": "I'm not sure if I should reply to this message.",
+          "kind": "social",
+          "citation_labels": []
+        },
+        {
+          "text": "I'm not sure if I should reply to this message.",
+          "kind": "social",
+          "citation_labels": []
+        }
+      ],
+      "support_review_required": true
+    },
+    {
+      "case_id": "bea-import",
+      "split": "development",
+      "mode": "generic",
+      "reference_fact_for_human_review": "The importer expects CSV without attachments.",
+      "provider_calls": 1,
+      "elapsed_seconds": 1.0743183750892058,
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "2ee8a6118d5b0c724b1b686c450014fa8135122dd4615fdab0c31b5edb933d39",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "bea-import",
+      "split": "development",
+      "mode": "context",
+      "reference_fact_for_human_review": "The importer expects CSV without attachments.",
+      "provider_calls": 1,
+      "elapsed_seconds": 1.1242217500694096,
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "8c14ddfa08700787693dc49be459547e886c8a19113e73363b97991091ee8bb3",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "bea-import",
+      "split": "development",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "The importer expects CSV without attachments.",
+      "provider_calls": 1,
+      "elapsed_seconds": 1.6325972089543939,
+      "status": "needs_review",
+      "draft_text": "I'm not sure if I should follow the CSV export without attachments for the import.",
+      "packet_sha256": "813e90d929e0b2413c1c8b7d32b30b2e296d94e49d3b2a06dc4c6409ad18f224",
+      "citations": [
+        {
+          "label": 1,
+          "evidence_key": "message-1",
+          "kind": "message",
+          "quote": "For the import, use a CSV export without attachments.",
+          "provenance": {
+            "id": "bea-2",
+            "source": "synthetic",
+            "thread": "development-bea",
+            "author": "bea@example.invalid",
+            "recipient": "owner@example.invalid",
+            "timestamp": "2026-09-01T12:00:00.000000+00:00",
+            "fingerprint": "93635ded9e6f4886b6fae1835d06a291bff118fa40f5e849dd4bb7fdbd6432c7"
+          }
+        }
+      ],
+      "segments": [
+        {
+          "text": "I'm not sure if I should follow the CSV export without attachments for the import.",
+          "kind": "question",
+          "citation_labels": [
+            1
+          ]
+        }
+      ],
+      "support_review_required": true
+    },
+    {
+      "case_id": "cam-office-hours",
+      "split": "development",
+      "mode": "generic",
+      "reference_fact_for_human_review": "Office hours are in room 214.",
+      "provider_calls": 1,
+      "elapsed_seconds": 1.076037249993533,
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "ce5df819c69689ea290ab02d38bb20e2387437d6d6a97cb59e9533e99dfd9f76",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "cam-office-hours",
+      "split": "development",
+      "mode": "context",
+      "reference_fact_for_human_review": "Office hours are in room 214.",
+      "provider_calls": 1,
+      "elapsed_seconds": 1.145774209056981,
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "f51808c6177387b2f94eb1ba2214e44590534b69fbdb05b90b52ede5d9d6b4e2",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "cam-office-hours",
+      "split": "development",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "Office hours are in room 214.",
+      "provider_calls": 1,
+      "elapsed_seconds": 1.5492395419860259,
+      "status": "needs_review",
+      "draft_text": "I'm currently unavailable for office hours this week.",
+      "packet_sha256": "724f57408e17dbe8b167767401cd3097f2c3d1f9b7ed4d721d30a64e97a16aed",
+      "citations": [
+        {
+          "label": 1,
+          "evidence_key": "message-1",
+          "kind": "message",
+          "quote": "Office hours are in room 214 this week.",
+          "provenance": {
+            "id": "cam-2",
+            "source": "synthetic",
+            "thread": "development-cam",
+            "author": "cam@example.invalid",
+            "recipient": "owner@example.invalid",
+            "timestamp": "2026-09-01T12:00:00.000000+00:00",
+            "fingerprint": "131f21a88e7037e0d24b0dd8ea0a89b2917c62ebdfb0a2172b9cdfaab1430c64"
+          }
+        }
+      ],
+      "segments": [
+        {
+          "text": "I'm currently unavailable for office hours this week.",
+          "kind": "social",
+          "citation_labels": [
+            1
+          ]
+        }
+      ],
+      "support_review_required": true
+    },
+    {
+      "case_id": "dan-meeting",
+      "split": "development",
+      "mode": "generic",
+      "reference_fact_for_human_review": "There is no relevant factual history before the cutoff.",
+      "provider_calls": 1,
+      "elapsed_seconds": 1.073774000047706,
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "edcd88a26289fa6547b0bca084e00e48b6e222ad96c027360288c6e670b39a88",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "dan-meeting",
+      "split": "development",
+      "mode": "context",
+      "reference_fact_for_human_review": "There is no relevant factual history before the cutoff.",
+      "provider_calls": 0,
+      "elapsed_seconds": 0.0004652499919757247,
+      "status": "needs_history",
+      "draft_text": "",
+      "packet_sha256": "f6d9e406cb8460100169dc5110027dd9fefb29091dc8ade2a891865ae95a71d8",
+      "citations": []
+    },
+    {
+      "case_id": "dan-meeting",
+      "split": "development",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "There is no relevant factual history before the cutoff.",
+      "provider_calls": 0,
+      "elapsed_seconds": 0.0005561249563470483,
+      "status": "needs_history",
+      "draft_text": "",
+      "packet_sha256": "e9038d1f9bd4549daefdec6a653414551a7d630368c168a749f122c08ca75e07",
+      "citations": []
+    }
+  ],
+  "reply_quality_scored": false,
+  "semantic_entailment_automated": false,
+  "sending_performed": false,
+  "limitation": "Generated text and literal citation checks require human review. Provider rejection/abstention is retained, not hidden. Timing includes model loading and local infrastructure. Synthetic examples do not establish owner-style imitation or real-user preference."
+}

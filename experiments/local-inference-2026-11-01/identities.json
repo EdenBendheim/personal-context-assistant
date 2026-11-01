@@ -1,0 +1,105 @@
+{
+  "qwen2.5:1.5b": {
+    "version": 1,
+    "model": "qwen2.5:1.5b",
+    "digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+    "size_bytes": 986061892,
+    "runtime_version": "0.40.13",
+    "capabilities": [
+      "completion",
+      "tools"
+    ],
+    "details": {
+      "format": "gguf",
+      "family": "qwen2",
+      "parameter_size": "1.5B",
+      "quantization_level": "Q4_K_M"
+    },
+    "show_sha256": "936ae1b50dcafdf77b9ab5a2e407329ac407983cd4a42dcc4316d13eacc2ccee",
+    "local_only_confirmed": true,
+    "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality",
+    "file_verification": {
+      "manifest_sha256": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+      "manifest_file_sha256": "f2b0a490f661d58f20c4b98e5797ecf55e6e96293a88b71e96e7cc389f658f7e",
+      "digest_binding": "retained_registry_manifest",
+      "verified_blobs": [
+        {
+          "digest": "sha256:377ac4d7aeefd5b870c9fccff9a6d4df36901d99fe3277c2f755bc401601ba1c",
+          "size_bytes": 487
+        },
+        {
+          "digest": "sha256:183715c435899236895da3869489cc30ac241476b4971a20285b1a462818a5b4",
+          "size_bytes": 986048512
+        },
+        {
+          "digest": "sha256:66b9ea09bd5b7099cbb4fc820f31b575c0366fa439b08245566692c6784e281e",
+          "size_bytes": 68
+        },
+        {
+          "digest": "sha256:eb4402837c7829a690fa845de4d7f3fd842c2adee476d5341da8a46ea9255175",
+          "size_bytes": 1482
+        },
+        {
+          "digest": "sha256:832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e",
+          "size_bytes": 11343
+        },
+        {
+          "digest": "sha256:65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+          "size_bytes": 857
+        }
+      ],
+      "total_blob_bytes": 986062749,
+      "paths_omitted": true,
+      "limitation": "Verified local file bytes, not a signed producer or served-weight attestation"
+    }
+  },
+  "nomic-embed-text:v1.5": {
+    "version": 1,
+    "model": "nomic-embed-text:v1.5",
+    "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+    "size_bytes": 274302450,
+    "runtime_version": "0.40.13",
+    "capabilities": [
+      "embedding"
+    ],
+    "details": {
+      "format": "gguf",
+      "family": "nomic-bert",
+      "parameter_size": "137M",
+      "quantization_level": "F16"
+    },
+    "show_sha256": "41c94bc16035574698cc6d6bdf6faafae0eab6c9d1847c11b39c94437f65f81d",
+    "local_only_confirmed": true,
+    "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality",
+    "file_verification": {
+      "manifest_sha256": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+      "manifest_file_sha256": "8688dbc0926c1dfdc1b8b7489034e1fedb06f6ac66472dd2d7f0ed6d7d23ba29",
+      "digest_binding": "retained_registry_manifest",
+      "verified_blobs": [
+        {
+          "digest": "sha256:31df23ea7daa448f9ccdbbcecce6c14689c8552222b80defd3830707c0139d4f",
+          "size_bytes": 420
+        },
+        {
+          "digest": "sha256:970aa74c0a90ef7482477cf803618e776e173c007bf957f635f1015bfcfef0e6",
+          "size_bytes": 274290656
+        },
+        {
+          "digest": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+          "size_bytes": 11357
+        },
+        {
+          "digest": "sha256:ce4a164fc04605703b485251fe9f1a181688ba0eb6badb80cc6335c0de17ca0d",
+          "size_bytes": 17
+        },
+        {
+          "digest": "sha256:0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+          "size_bytes": 708
+        }
+      ],
+      "total_blob_bytes": 274303158,
+      "paths_omitted": true,
+      "limitation": "Verified local file bytes, not a signed producer or served-weight attestation"
+    }
+  }
+}

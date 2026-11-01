@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-01",
+  "runtime": "Ollama 0.40.13",
+  "runtime_archive_sha256": "bae29252232b9e1358cf5801a7d65a07442af18fb5467cb68c7fc3711f59c511",
+  "cloud_disabled": true,
+  "cloud_check": "Task-scoped OLLAMA_NO_CLOUD=1; startup log explicitly confirmed cloud disabled",
+  "runtime_source": "https://github.com/ollama/ollama/releases/download/v0.40.13/ollama-darwin.tgz",
+  "http_chat_responses": 42,
+  "http_embedding_responses": 37,
+  "paid_api_or_cloud_compute": false,
+  "private_messages_used": false,
+  "server_stopped": true,
+  "model_files_published": false,
+  "receipts": {
+    "development-diagnostic.json": "57400d9388fbf561a7db6b7f79134962e5e00161661dd4b57a7b009f89931774",
+    "identities.json": "2200e8e6874fd1836653d4fddebb60eeaa4ffbb1a21c2bf15ef4a067daf7bd04",
+    "reply-development-v2.json": "f942a1493e36eec1228f72997896bb6e9dea16d52e7e8fa636090de2f5001699",
+    "reply-development-v3.json": "cdd870d23eb572ff8edef709a023690d735b238df7b94b0a75734f80a2c02011",
+    "reply-development.json": "4dd1e64fd551b4b84a74c39a4c0d8c6cfd0c2dbe62dd13515faa241c1009d403",
+    "reply-evaluation.json": "4b6384cddd403545fd4fff4d5707c85dfe6e73a5d5cc67fd5c50205d722dc661",
+    "reply-freeze.json": "5853cb6a86f6d512b627680900786e3eef46b96ee357a8df4fbaf961787b5ae8",
+    "retrieval-evaluation.json": "8c7e3f821ecf507f72dddeb2003f6e354099b01a0d29a79aa0acc0c9aa917a75",
+    "retrieval-freeze.json": "27603c35bc0d4604792e30dfeeee10a4c9e7cf5746ac784ba340dc2ef99890fd"
+  }
+}

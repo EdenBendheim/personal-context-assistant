@@ -18,13 +18,13 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 
 - [x] Add an optional embedding search backend/CLI behind the same retrieval contract; retain lexical baseline.
 - [x] Add a paired fixed-case retrieval comparison with source boundaries, provider settings and visible regressions.
-- [ ] Verify an installed cloud-disabled embedding model, freeze settings on development cases and report held-out retrieval results.
-- [ ] Decide whether measured embedding results justify integration into drafting and the review UI.
+- [x] Verify an installed cloud-disabled embedding model, freeze settings on development cases and report held-out synthetic retrieval results.
+- [x] Decide whether measured embedding results justify integration into drafting and the review UI: retain lexical defaults after a tie on the small established benchmark.
 - [x] Add an extractive quote-provider contract and an inspectable draft packet with citations.
 - [x] Separate generic, context-only, and personalized context configurations.
 - [x] Reject unavailable/nonliteral quotes and stale context; abstain when factual history is insufficient.
 - [x] Add an opt-in local model adapter using retrieved citations and recipient examples, with strict response validation, abstention and revision-bound human support review.
-- [ ] Verify a real installed, cloud-disabled local model on synthetic reply cases (adapter has synthetic HTTP tests only).
+- [x] Verify a real installed, cloud-disabled local model on synthetic reply cases, with model/file receipts and failures retained.
 - [ ] Add semantic support checks for generated factual prose and evaluate style/reply quality.
 
 ## Milestone 3 — useful application
@@ -33,6 +33,7 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 - [x] Persist original draft packets and immutable wording revisions with owner isolation and stale-editor checks.
 - [x] Browse all saved reviews with bounded, owner/contact-scoped cursor pages and topic/revision labels.
 - [x] Browse memory and revision history with bounded, source-aware pages that preserve unsaved wording.
+- [x] Browse draft wording and revision-bound feedback with separate bounded pages, preserving unsaved editors.
 
 - [x] Build contact selection, source inspection, draft editing/reopening, and feedback in a local review interface.
 - [x] Add cited-memory creation/correction/withdrawal to that browser interface.
@@ -47,37 +48,33 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 
 - [ ] Approximately 50 held-out reply situations, subject to suitable data availability.
 - [ ] Blind style/preference comparison with generic drafting, factual support, edits, latency/cost.
-- [ ] Report failure examples and uncertainty, not only successful screenshots.
+- [x] Report initial real-model failure examples and uncertainty, not only successful screenshots; expand with the larger reply study.
 - [ ] Consider a style adapter only if retrieval/prompting plateau and the dataset supports a clean evaluation.
 
 ## Next session
 
-November 1: bounded draft-edit history now works in the core review store.
-Feedback pages, owner-fixed HTTP routes and the browser now work; real browser
-checks reached 30 revisions/ratings without losing unsaved fields. Next verify
-actual local-model identity and bounded inference.
+November 1: real cloud-disabled inference is unblocked. Exact runtime/model
+receipts and all local model blobs verify; pinned adapters detect metadata drift.
+Nomic at a development-selected cosine threshold of 0.6 ties lexical retrieval
+on all 14 established synthetic evaluation cases. Default drafting/UI retrieval
+stays lexical; no embedding improvement is claimed.
 
-The local generative path is implemented end to end: versioned prompts and JSON
-schema, bounded loopback Ollama client, saved original segments/support/config,
-explicit human support ratings, CLI/server opt-in and browser inspection. Default
-remains extractive. Thirteen scripted contract cases are distinct from unchanged
-retrieval evaluation; two intentionally false wordings remain for human review,
-so semantic entailment is not automated or demonstrated.
+Qwen2.5 1.5B runs through the CLI and browser. Development exposed mixed
+reply/abstention outputs; v3 constrains those shapes without weakening validation.
+Frozen evaluation produced seven abstentions and three drafts requiring review,
+plus two no-history skips across 12 mode attempts. The drafts are unhelpful or
+too vague; development also exposed an unsupported availability claim and
+repetition. This is a working inference path, not useful owner-style generation.
+See [the full study](experiments/LOCAL-INFERENCE-2026-11-01.md).
 
-No installed Ollama service/cloud-disabled setup was available on October 21.
-Next: use an already installed local model with cloud disabled, record its exact
-weights/runtime and run bounded synthetic inference. Build held-out reply
-situations and blind comparisons before claiming style imitation or improved
-reply quality. An opt-in embedding adapter, read-only search CLI and paired
-retrieval comparison now have synthetic contract/HTTP checks; no learned encoder
-has been run. Next, verify a local embedding model on development cases, freeze
-its exact weights/runtime/threshold, then report evaluation cases and failures.
-Drafting/UI retrieval remains lexical until measured results justify a change.
-The October 23 run added removal of current contact-scoped database records,
-including saved packets, all revisions and feedback, with preview and explicit
-confirmation. SQLite index rebuilding preserves current records. Real-model
-inference remains blocked by unavailable local setup; it was not replaced by
-a synthetic quality claim. Large-history embedding indexing, tracking/removing
-external exports and backups, automatic memory extraction, real-model identity tracking and
-real-user evaluation remain pending. No sending integration is planned for the
-current review-only milestone.
+Next prioritize a larger, source-complete fixed reply set and explicit evidence
+coverage diagnostics. The equipment case misses the incoming tripod detail in
+lexical retrieval; separate that omission from model failure. Compare a suitable
+local model using development only, then freeze before evaluation and collect
+human factual/usefulness ratings. Preserve the negative results and human gate.
+
+History APIs/browser now page memories, corrections, saved reviews, wording and
+feedback; a real browser reached 30 draft revisions/ratings without losing unsaved
+fields. Legacy full-history APIs remain. Large-history embedding indexing,
+external-export/backup tracking, automatic memory extraction and real-user
+evaluation remain pending. No sending integration is planned.

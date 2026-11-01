@@ -1,0 +1,17 @@
+{
+  "model": "qwen2.5:1.5b",
+  "created_at": "2026-11-01T16:55:10.527075Z",
+  "message": {
+    "role": "assistant",
+    "content": "{\n  \"abstain_reason\": \"The provided evidence does not contain any information related to the requested topic.\",\n  \"segments\": [\n    {\n      \"text\": \"Hey Alex, the demo is set for Thursday at 10. I'll bring the working version.\",\n      \"kind\": \"social\",\n      \"support\": [\n        {\n          \"evidence_key\": \"message-1\",\n          \"quote\": \"hey alex, got the demo running :D\"\n        },\n        {\n          \"evidence_key\": \"message-2\",\n          \"quote\": \"The demo is Thursday at 10. Bring the working version.\"\n        }\n      ]\n    }\n  ]\n}"
+  },
+  "done": true,
+  "done_reason": "stop",
+  "total_duration": 1892714459,
+  "load_duration": 531151334,
+  "prompt_eval_count": 904,
+  "prompt_eval_cached_count": 0,
+  "prompt_eval_duration": 392744000,
+  "eval_count": 140,
+  "eval_duration": 961845000
+}

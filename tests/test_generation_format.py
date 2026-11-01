@@ -40,3 +40,12 @@ class GenerationFormatTests(unittest.TestCase):
             data=wire();data['segments'][0][field]=value;bad.append(json.dumps(data))
         for content in bad:
             with self.subTest(content=content[:60]),self.assertRaises(ValueError):parse_proposal(content)
+
+    def test_real_model_mixed_abstention_is_not_repaired_into_an_accepted_reply(self):
+        # Development inference returned this combination. A valid citation does
+        # not permit dropping the model's contradictory abstention or guessing.
+        mixed = wire() | dict(abstain_reason='No relevant evidence.')
+        with self.assertRaisesRegex(ValueError, 'Abstention requires no segments'):
+            validate_proposal(parse_proposal(json.dumps(mixed)), self.packet)
+        empty = dict(segments=[], abstain_reason='Need more information.')
+        self.assertEqual('provider_abstained', validate_proposal(parse_proposal(json.dumps(empty)), self.packet)['status'])
