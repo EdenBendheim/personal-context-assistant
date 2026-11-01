@@ -166,6 +166,19 @@ Reports include per-case recall/precision, missing source IDs, outbound-example 
 
 The current lexical baseline retrieves all labeled context with no boundary violations on this small fixture. These are transparent regression cases, not a blind real-user study or evidence that generated replies sound like anyone. The conversation partitions are for future fitting/comparisons; this baseline performs no training. Growing a sufficiently diverse reply benchmark and evaluating drafting quality remain necessary.
 
+## Real-provider synthetic reply study
+
+`python -m personal_context.live_generation examples/local_reply/manifest.json
+--local-model EXACT_TAG --expected-model-digest SHA256 --confirm-local-only
+--split development` (one line) runs four invented situations in three modes.
+The evaluation conversations are disjoint and should be run after freezing model,
+prompt and generation settings. Inputs are bounded, use invented participants,
+and the command does not save reviews or send messages. Rejections, abstentions,
+provider-call counts and end-to-end latency remain visible; a rejected attempt
+makes the CLI exit 1. Reference facts support human inspection, not an automated
+semantic or style score. This separate study does not replace the 13 scripted
+contract cases or demonstrate owner-style imitation.
+
 ## Evaluation direction
 
 Compare generic drafting, lexical context, embedding context, and contact-specific examples on the same held-out reply situations. Split by thread and time. Track source support, recipient/style preference in blinded comparisons, useful edits, latency, and cost. A low retrieval loss alone does not establish that drafts are better.

@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "kind": "synthetic local reply study",
+  "messages": "messages.jsonl",
+  "cases": [
+    {
+      "id": "alex-demo",
+      "split": "development",
+      "reference_fact": "The demo is Thursday at 10.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "alex@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "demo"
+      }
+    },
+    {
+      "id": "bea-import",
+      "split": "development",
+      "reference_fact": "The importer expects CSV without attachments.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "bea@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "import"
+      }
+    },
+    {
+      "id": "cam-office-hours",
+      "split": "development",
+      "reference_fact": "Office hours are in room 214.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "cam@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "office hours"
+      }
+    },
+    {
+      "id": "dan-meeting",
+      "split": "development",
+      "reference_fact": "There is no relevant factual history before the cutoff.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "dan@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "meeting"
+      }
+    },
+    {
+      "id": "emi-poster",
+      "split": "evaluation",
+      "reference_fact": "The poster session is Tuesday in the library.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "emi@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "poster"
+      }
+    },
+    {
+      "id": "finn-debugging",
+      "split": "evaluation",
+      "reference_fact": "The debugging session moved from Thursday to Friday.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "finn@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "debugging"
+      }
+    },
+    {
+      "id": "hana-equipment",
+      "split": "evaluation",
+      "reference_fact": "Bring the tripod; the camera is already there.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "hana@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "equipment"
+      }
+    },
+    {
+      "id": "ivy-invoice",
+      "split": "evaluation",
+      "reference_fact": "There is no relevant invoice history before the cutoff.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "ivy@example.invalid",
+        "before": "2026-09-04T00:00:00Z",
+        "query": "invoice"
+      }
+    }
+  ]
+}

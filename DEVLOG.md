@@ -2,6 +2,8 @@
 
 ## November 1, 2026
 
+- Added a bounded provider reply-study runner and eight invented situations with four disjoint development/evaluation conversations each. It compares generic/context/personalized modes, retains rejected/abstained attempts and skips model calls when factual history is unavailable. Two synthetic tests pass for all modes, visible failures, split/participant safeguards and no automated quality/entailment claim. The original 13 scripted contract cases are unchanged.
+
 - Added optional digest-pinned chat/embedding providers and CLI options. Identity/capability/runtime/show receipts are checked before/after requests, and responses must name the pinned model. Two focused HTTP cases pass for wrong served names and identity drift; existing generation and embedding CLI checks pass. Defaults remain unpinned/extractive unless explicitly configured. Receipts bracket metadata, not cryptographic served-weight attestations.
 
 - Added read-only loopback runtime/tag/show identity receipts and explicit local manifest/blob verification. Four synthetic tests pass, including retained-registry-manifest equivalence, tampered blobs, cloud/remote metadata, invalid capabilities/status and oversized responses. A task-scoped official Ollama 0.40.13 daemon has cloud disabled and two public models installed locally; both manifests and all blobs verify. Metadata only so far, not inference/quality. The real runtime retains a registry-manifest layer, which the verifier binds exactly rather than treating wrapper bytes as the reported digest.
