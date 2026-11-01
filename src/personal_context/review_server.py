@@ -166,6 +166,19 @@ class Handler(BaseHTTPRequestHandler):
             elif method == "GET" and len(path) == 4 and path[:2] == ["api", "reviews"] and path[3] == "history":
                 fields(query, ())
                 result = reviews.history(path[2], owner=owner)
+            elif method == 'GET' and len(path) == 4 and path[:2] == ['api', 'reviews'] and path[3] == 'current':
+                fields(query, ())
+                result = reviews.get(path[2], owner=owner)
+            elif (method == 'GET' and len(path) == 5 and path[:2] == ['api', 'reviews']
+                    and path[3:] in (['history', 'page'], ['feedback', 'page'])):
+                fields(query, (), ('limit', 'cursor'))
+                for field in ('limit', 'cursor'):
+                    if field in query and (field == 'limit' or path[3] == 'history'):
+                        try:
+                            query[field] = int(query[field])
+                        except ValueError:
+                            raise ValueError('Page limit and wording revision cursor must be integers') from None
+                result = (reviews.history_page if path[3] == 'history' else reviews.feedback_page)(path[2], owner=owner, **query)
             elif method == "POST" and path == ["api", "reviews"]:
                 fields(query, ())
                 payload = fields(self.body(), ("contact", "before", "query"), ("mode", "limit"))
