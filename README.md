@@ -33,6 +33,19 @@ avoids eagerly returning all ratings; compatibility full-history APIs remain.
 
 This first retrieval baseline deliberately needs no API key, model download, or external service. It provides a measurable comparison for the embedding-based version.
 
+### Inspect an installed local model
+
+`python -m personal_context.local_identity --model EXACT_INSTALLED_TAG
+--confirm-local-only --capability completion` (one line) records the loopback
+runtime version, exact inventory digest, capabilities and a hash of show metadata.
+Use `--expected-digest SHA256` to refuse a changed tag. Optional paired
+`--model-directory DIR --manifest FILE` verifies every local blob and binds either
+a direct manifest or an exactly equivalent retained registry manifest. Paths and
+model bytes are omitted from the receipt. No model is pulled or inference run by
+this command; no redirects/proxies/cloud fallback. Cloud-disabled configuration
+still needs independent confirmation ([Ollama FAQ](https://docs.ollama.com/faq)).
+These are integrity receipts, not producer authentication or model-quality scores.
+
 ### Optional embedding search
 
 `embeddings.EmbeddingProvider` defines an explicit batch encoder interface.

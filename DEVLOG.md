@@ -2,6 +2,8 @@
 
 ## November 1, 2026
 
+- Added read-only loopback runtime/tag/show identity receipts and explicit local manifest/blob verification. Four synthetic tests pass, including retained-registry-manifest equivalence, tampered blobs, cloud/remote metadata, invalid capabilities/status and oversized responses. A task-scoped official Ollama 0.40.13 daemon has cloud disabled and two public models installed locally; both manifests and all blobs verify. Metadata only so far, not inference/quality. The real runtime retains a registry-manifest layer, which the verifier binds exactly rather than treating wrapper bytes as the reported digest.
+
 - Migrated the browser to current-only review inspection and separate 25-item wording/feedback pages. A real synthetic browser reached all 30 wording revisions and 30 ratings, retained unsaved draft/memory/review notes, produced no injected images or console errors, and cleared both histories on contact change. JS syntax and HTTP checks passed; temporary tab/server closed. Proof remains local/ignored.
 
 - Exposed current-only review inspection and separate wording/feedback page routes behind launch-token and fixed-owner checks. Two new HTTP tests and all seven existing server tests pass for completeness, malformed/repeated/forged parameters, cross-owner denial and uncached current inspection without eager feedback. Browser migration is next.
