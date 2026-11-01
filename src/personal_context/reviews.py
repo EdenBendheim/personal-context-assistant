@@ -48,6 +48,18 @@ class Reviews:
                 self.connection.execute("ALTER TABLE draft_feedback ADD COLUMN support TEXT NOT NULL DEFAULT 'not_rated'")
 
     @contextmanager
+    def _read(self):
+        """Keep scope and content in one snapshot without owning caller writes."""
+        own = not self.connection.in_transaction
+        if own:
+            self.connection.execute('BEGIN')
+        try:
+            yield
+        finally:
+            if own:
+                self.connection.rollback()
+
+    @contextmanager
     def _write(self):
         if self.connection.in_transaction:
             raise ValueError("Finish the pending store transaction before editing a review")
@@ -116,6 +128,24 @@ class Reviews:
         self._row(review_id, owner)
         return [dict(row) for row in self.connection.execute(
             "SELECT revision, text, saved_at FROM draft_edits WHERE review_id = ? ORDER BY revision", (review_id,))]
+
+    def history_page(self, review_id: str, *, owner: str, limit: int = 25,
+                     cursor: int | None = None) -> dict:
+        """Read immutable wording revisions newest first without eager history."""
+        if type(limit) is not int or not 1 <= limit <= 100:
+            raise ValueError('Page limit must be an integer between 1 and 100')
+        if cursor is not None:
+            revision_number(cursor)
+        with self._read():
+            self._row(review_id, owner)
+            if cursor is not None and self.connection.execute(
+                    'SELECT 1 FROM draft_edits WHERE review_id = ? AND revision = ?', (review_id, cursor)).fetchone() is None:
+                raise ValueError('Review revision cursor is unavailable; reload the history')
+            rows = self.connection.execute('''SELECT revision, text, saved_at FROM draft_edits
+                WHERE review_id = ? AND (? IS NULL OR revision < ?) ORDER BY revision DESC LIMIT ?''',
+                (review_id, cursor, cursor, limit+1)).fetchall()
+            items = [dict(row) for row in rows[:limit]]
+            return dict(items=items, next_cursor=items[-1]['revision'] if len(rows) > limit else None)
 
     def list(self, *, owner: str, contact: str) -> list[dict]:
         request = DraftRequest(owner, contact, now(), "list")

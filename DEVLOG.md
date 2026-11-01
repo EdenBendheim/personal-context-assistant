@@ -1,5 +1,9 @@
 # Development log
 
+## November 1, 2026
+
+- Added bounded newest-first draft-edit history pages using immutable revision cursors and a shared read snapshot. Two synthetic tests reach 105 old revisions despite a new edit, reject wrong-owner/invalid cursors and preserve pending caller writes. Full history remains a compatibility API.
+
 ## October 28, 2026
 
 - Final local verification: all **120 tests passed**, all 20 unchanged retrieval

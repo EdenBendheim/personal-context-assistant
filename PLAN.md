@@ -52,6 +52,9 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 
 ## Next session
 
+November 1: bounded draft-edit history now works in the core review store.
+Next page feedback history, expose owner-fixed routes and connect the browser.
+
 The local generative path is implemented end to end: versioned prompts and JSON
 schema, bounded loopback Ollama client, saved original segments/support/config,
 explicit human support ratings, CLI/server opt-in and browser inspection. Default
