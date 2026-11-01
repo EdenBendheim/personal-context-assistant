@@ -53,7 +53,9 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 ## Next session
 
 November 1: bounded draft-edit history now works in the core review store.
-Next page feedback history, expose owner-fixed routes and connect the browser.
+Feedback pages, owner-fixed HTTP routes and the browser now work; real browser
+checks reached 30 revisions/ratings without losing unsaved fields. Next verify
+actual local-model identity and bounded inference.
 
 The local generative path is implemented end to end: versioned prompts and JSON
 schema, bounded loopback Ollama client, saved original segments/support/config,
@@ -76,6 +78,6 @@ including saved packets, all revisions and feedback, with preview and explicit
 confirmation. SQLite index rebuilding preserves current records. Real-model
 inference remains blocked by unavailable local setup; it was not replaced by
 a synthetic quality claim. Large-history embedding indexing, tracking/removing
-external exports and backups, automatic memory extraction, paginated draft-edit history and
+external exports and backups, automatic memory extraction, real-model identity tracking and
 real-user evaluation remain pending. No sending integration is planned for the
 current review-only milestone.

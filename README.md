@@ -14,6 +14,11 @@ synthetically checked only; real inference and reply quality are unverified.
 cursor pages. The browser loads 25 at a time and preserves unsaved wording when
 loading more; current memory inspection retains source and cutoff annotations.
 
+**November 1 history update:** draft wording and feedback now have separate
+owner-scoped cursor pages. The browser loads 25 at a time, preserving unsaved
+draft/memory wording and review notes when loading more. Current inspection
+avoids eagerly returning all ratings; compatibility full-history APIs remain.
+
 ## Working now
 
 - Normalized JSONL, plain-text Gmail/standard MBOX, and outbound Discord export CSV ingestion.

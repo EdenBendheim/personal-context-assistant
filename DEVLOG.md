@@ -2,6 +2,8 @@
 
 ## November 1, 2026
 
+- Migrated the browser to current-only review inspection and separate 25-item wording/feedback pages. A real synthetic browser reached all 30 wording revisions and 30 ratings, retained unsaved draft/memory/review notes, produced no injected images or console errors, and cleared both histories on contact change. JS syntax and HTTP checks passed; temporary tab/server closed. Proof remains local/ignored.
+
 - Exposed current-only review inspection and separate wording/feedback page routes behind launch-token and fixed-owner checks. Two new HTTP tests and all seven existing server tests pass for completeness, malformed/repeated/forged parameters, cross-owner denial and uncached current inspection without eager feedback. Browser migration is next.
 
 - Added indexed newest-first feedback pages with owner/review-scoped immutable time/ID cursors. Four history tests and seven privacy tests pass, including 105 tied ratings, a new revision/rating during browsing, wrong-review refusal and pending-write preservation. Legacy complete feedback remains available.

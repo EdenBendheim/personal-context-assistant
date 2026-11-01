@@ -11,6 +11,8 @@ let reviewCursor = null;
 let memoryCursor = null;
 let memoryHistoryCursor = null;
 let memoryHistory = [];
+let draftHistory = [], draftHistoryCursor = null;
+let feedbackItems = [], feedbackCursor = null;
 
 function notice(text, error = false) {
   $("notice").textContent = text;
@@ -23,6 +25,8 @@ function controls() {
   $("older-reviews").disabled = busy || !reviewCursor;
   $("older-memories").disabled = busy || !memoryCursor;
   $("older-memory-history").disabled = busy || !memoryHistoryCursor;
+  $("older-draft-history").disabled = busy || !draftHistoryCursor;
+  $("older-feedback").disabled = busy || !feedbackCursor;
   const supportNeeded = review && review.original.support_review_required && $("support").value !== "supported";
   const usable = $("decision").querySelector('[value="usable"]');
   usable.disabled = Boolean(review && (!review.context_current || supportNeeded));
@@ -107,10 +111,34 @@ function render(result) {
   $("decision").value = "needs_work"; $("retrieval").value = "not_rated"; $("style").value = "not_rated";
   $("support").value = "not_rated";
   $("feedback-notes").value = "";
-  $("feedback-history").replaceChildren();
-  for (const item of result.feedback || []) {
+}
+function renderDraftHistory() {
+  $("history").replaceChildren();
+  for (const item of draftHistory) {
+    const details = document.createElement('details');
+    addText(details, 'summary', `Revision ${item.revision} · ${item.saved_at}`);
+    addText(details, 'pre', item.text); $('history').append(details);
+  }
+  $('draft-history-count').textContent = `${draftHistory.length} wording revision${draftHistory.length === 1 ? '' : 's'} loaded.`;
+}
+function renderFeedbackHistory() {
+  $('feedback-history').replaceChildren();
+  for (const item of feedbackItems) {
     addText($("feedback-history"), "p", `Revision ${item.revision}: ${item.decision} · ${item.retrieval} · ${item.style} · support: ${item.support || "not_rated"}${item.notes ? " — "+item.notes : ""}`, "muted");
   }
+  $('feedback-count').textContent = `${feedbackItems.length} rating${feedbackItems.length === 1 ? '' : 's'} loaded.`;
+}
+function resetDraftHistories() {
+  draftHistory = []; draftHistoryCursor = null; feedbackItems = []; feedbackCursor = null;
+  renderDraftHistory(); renderFeedbackHistory();
+}
+function appendDraftHistory(page) {
+  for (const item of page.items) if (!draftHistory.some(old => old.revision === item.revision)) draftHistory.push(item);
+  draftHistoryCursor = page.next_cursor; renderDraftHistory();
+}
+function appendFeedback(page) {
+  for (const item of page.items) if (!feedbackItems.some(old => old.id === item.id)) feedbackItems.push(item);
+  feedbackCursor = page.next_cursor; renderFeedbackHistory();
 }
 function addSavedReviews(items) {
   for (const item of items) {
@@ -142,15 +170,13 @@ async function refreshMetrics() {
   $("metrics").textContent = `${stats.reviews} saved · ${stats.context_current_reviews} with current context · ${stats.stale_context_reviews} with changed context · ${stats.rated_current_revisions} current revisions rated · ${stats.changed_drafts} edited. Decisions: ${JSON.stringify(stats.decisions)}. ${stats.metric_note}`;
 }
 async function load(id, {resetSaved = false} = {}) {
-  const result = await api(`/api/reviews/${encodeURIComponent(id)}`);
+  const result = await api(`/api/reviews/${encodeURIComponent(id)}/current`);
   render(result);
-  const history = await api(`/api/reviews/${encodeURIComponent(id)}/history`);
-  $("history").replaceChildren();
-  history.forEach(item => {
-    const details = document.createElement("details");
-    addText(details, "summary", `Revision ${item.revision} · ${item.saved_at}`);
-    addText(details, "pre", item.text); $("history").append(details);
-  });
+  resetDraftHistories();
+  const [wording, feedback] = await Promise.all([
+    api(`/api/reviews/${encodeURIComponent(id)}/history/page`),
+    api(`/api/reviews/${encodeURIComponent(id)}/feedback/page`)]);
+  appendDraftHistory(wording); appendFeedback(feedback);
   await refreshContact({resetSaved});
 }
 function memoryValues() {
@@ -175,6 +201,7 @@ $("contact").addEventListener("change", () => {
   if (!discardAllowed(true)) { $("contact").value = selectedContact; return; }
   resetPrivacy();
   selectedContact = $("contact").value; review = null; memoryItem = null; memoryBaseline = ""; $("workspace").hidden = true;
+  resetDraftHistories();
   memoryItems = []; memoryCursor = null; renderMemory(null); addMemoryItems([]);
   perform(async () => { await refreshContact(); notice("Choose a topic or open a saved review."); });
 });
@@ -189,6 +216,16 @@ $("older-reviews").addEventListener("click", () => perform(async () => {
   addSavedReviews(page.reviews); reviewCursor = page.next_cursor;
   $("saved").value = selected;
   notice("Older reviews loaded. Your open draft and unsaved wording are unchanged.");
+}));
+$("older-draft-history").addEventListener('click', () => perform(async () => {
+  if (!review || !draftHistoryCursor) return;
+  appendDraftHistory(await api(`/api/reviews/${encodeURIComponent(review.review_id)}/history/page?cursor=${draftHistoryCursor}`));
+  notice('Older wording loaded. Unsaved draft, memory and review notes are unchanged.');
+}));
+$("older-feedback").addEventListener('click', () => perform(async () => {
+  if (!review || !feedbackCursor) return;
+  appendFeedback(await api(`/api/reviews/${encodeURIComponent(review.review_id)}/feedback/page?cursor=${encodeURIComponent(feedbackCursor)}`));
+  notice('Older feedback loaded. Unsaved draft, memory and review notes are unchanged.');
 }));
 $("support").addEventListener("change", controls);
 $("draft").addEventListener("input", () => { controls(); notice(dirty() ? "Unsaved wording — save before rating." : "Wording matches the saved revision."); });

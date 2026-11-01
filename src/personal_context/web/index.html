@@ -40,7 +40,10 @@
           </section>
           <label>Draft wording<textarea id="draft" rows="15" maxlength="100000"></textarea></label>
           <button id="save" type="button">Save wording</button>
-          <details><summary>Original draft and edit history</summary><pre id="original"></pre><div id="history"></div></details>
+          <details><summary>Original draft and edit history</summary><pre id="original"></pre>
+            <p id="draft-history-count" class="muted">No wording revisions loaded.</p><div id="history"></div>
+            <button type="button" id="older-draft-history" class="secondary" disabled>Load older wording revisions</button>
+          </details>
           <hr><h2>How useful was this?</h2>
           <form id="feedback-form"><div class="grid">
             <label>Decision<select id="decision"><option value="needs_work">Needs more work</option><option value="usable">Usable after my review</option><option value="rejected">Rejected</option></select></label>
@@ -51,6 +54,8 @@
           <button type="submit" id="record">Record feedback</button></form>
           <p class="muted">Ratings refer to saved wording. Edited prose needs your factual review. This interface has no sending action.</p>
           <div id="feedback-history"></div>
+          <p id="feedback-count" class="muted">No ratings loaded.</p>
+          <button type="button" id="older-feedback" class="secondary" disabled>Load older feedback</button>
         </div>
       </div>
     </section>
