@@ -2,6 +2,8 @@
 
 ## November 1, 2026
 
+- Added development-only threshold selection over a declared 0.2/0.4/0.6/0.8 grid and frozen evaluation with exact provider, benchmark and source receipts. Two synthetic tests verify development-only selection, deterministic tie breaking, frozen evaluation settings and refusal before encoding when inputs drift. Candidate failures remain in the receipt. The protocol is committed before actual embedding outcomes are inspected; the old synthetic benchmark is unchanged.
+
 - Added a bounded provider reply-study runner and eight invented situations with four disjoint development/evaluation conversations each. It compares generic/context/personalized modes, retains rejected/abstained attempts and skips model calls when factual history is unavailable. Two synthetic tests pass for all modes, visible failures, split/participant safeguards and no automated quality/entailment claim. The original 13 scripted contract cases are unchanged.
 
 - Added optional digest-pinned chat/embedding providers and CLI options. Identity/capability/runtime/show receipts are checked before/after requests, and responses must name the pinned model. Two focused HTTP cases pass for wrong served names and identity drift; existing generation and embedding CLI checks pass. Defaults remain unpinned/extractive unless explicitly configured. Receipts bracket metadata, not cryptographic served-weight attestations.

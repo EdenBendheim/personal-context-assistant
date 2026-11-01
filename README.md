@@ -53,6 +53,17 @@ behavior is retained; pinning does not automate factual or style review.
 
 ### Optional embedding search
 
+`python -m personal_context.frozen_retrieval select examples/benchmark/manifest.json
+runs/development-freeze.json --model TAG --expected-model-digest SHA256
+--confirm-local-only` selects from cosine thresholds 0.2/0.4/0.6/0.8 using only
+development cases (one line). It requires zero boundary violations and maximizes
+the harmonic mean of macro precision/recall, then precision, then threshold.
+The exclusive-create receipt records every candidate, exact provider settings,
+benchmark and Python source hashes. Run the same command with `evaluate` to use
+the frozen threshold on evaluation cases; changed setup or receipts are refused.
+The receipt detects accidental changes, not malicious rewriting. These established
+synthetic cases are regression evidence, not fresh real-user reply evaluation.
+
 `embeddings.EmbeddingProvider` defines an explicit batch encoder interface.
 `embed_validated` bounds inputs and checks one nonzero finite vector per text,
 consistent dimensions and normalized cosine scoring. It preserves the caller's
