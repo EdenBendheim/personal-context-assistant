@@ -210,6 +210,12 @@ contract cases or demonstrate owner-style imitation.
 
 ## Evaluation direction
 
+[A separate twelve-case followup stress set](examples/reply_followups/PROTOCOL.md)
+declares a fixed window-0/window-1 comparison, intentional no-seed/time-gap/thread
+limits and a larger local model before inspecting outcomes. `--validate-only` on
+the evidence audit checks source labels and fixture hashes without running
+retrieval or inference; CI validates these inputs. It is not a broad real-user set.
+
 `python -m personal_context.evidence_coverage examples/local_reply/manifest.json
 examples/local_reply/coverage.json --split all` (one line) audits whether each
 reply packet contains its author-labeled required source IDs. The annotations

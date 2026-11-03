@@ -87,11 +87,18 @@ def main():
     parser.add_argument('manifest', type=Path)
     parser.add_argument('annotations', type=Path)
     parser.add_argument('--split', choices=('development', 'evaluation', 'all'), default='development')
+    parser.add_argument('--validate-only', action='store_true', help='Validate fixed inputs without inspecting retrieval outcomes')
     add_retrieval_options(parser)
     args = parser.parse_args()
     try:
         inputs = load_study(args.manifest)
-        report = coverage(inputs, load_annotations(args.annotations, inputs), split=args.split, neighbor_window=args.neighbor_window)
+        annotations = load_annotations(args.annotations, inputs)
+        if args.validate_only:
+            print(json.dumps(dict(valid=True, study_sha256=inputs['fingerprint'],
+                                  annotations_sha256=annotations['fingerprint'],
+                                  case_count=len(inputs['document']['cases']), retrieval_performed=False)))
+            return
+        report = coverage(inputs, annotations, split=args.split, neighbor_window=args.neighbor_window)
     except (OSError, ValueError, KeyError, TypeError) as exc:
         parser.exit(2, f'Evidence audit failed: {exc}\n')
     print(json.dumps(report, indent=2))

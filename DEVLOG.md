@@ -2,6 +2,8 @@
 
 ## November 2, 2026
 
+- Fixed twelve new invented followup situations (six contacts per split, 24 messages), required-source labels and a declared window-0/window-1 / local 7B generation protocol before outcomes. Cases include missing topic seeds, distant/separate-thread details, corrections, negation, equal timestamps and distractors. Added validation-only CLI/CI, with a test ensuring it does not run retrieval. The earlier eight-case study remains unchanged.
+
 - Wired explicit neighbor-window opt-in through the draft CLI, coverage audit and real-provider study. Reports retain retrieval policy and actual selected source IDs even when the provider rejects; neighbor packet provenance points back to its lexical seed. Four new integration tests and three existing entrypoint tests pass. All historical default evaluation-packet hashes still match. The old eight-case study improves from 10/12 to 12/12 complete contextual source cases with window 1; no reply-quality claim. UI and saved-review defaults remain lexical.
 
 - Added an opt-in bounded lexical thread-neighbor adapter to recover followups without the topic word. Four tests pass for incoming details, explicit seed provenance, source/thread/contact/cutoff/time-gap boundaries, lexical seed priority, ties, deduplication, bounds and mutation refusal. This library step does not change default drafting or UI retrieval; neighbor relevance is not guaranteed.

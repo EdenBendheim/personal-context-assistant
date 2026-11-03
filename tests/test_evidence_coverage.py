@@ -3,6 +3,9 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
+from contextlib import redirect_stdout
+from io import StringIO
 
 from personal_context.evidence_coverage import coverage, load_annotations
 from personal_context.live_generation import load_study
@@ -39,3 +42,12 @@ class EvidenceCoverageTests(unittest.TestCase):
             for doc in bad:
                 path.write_text(json.dumps(doc))
                 with self.assertRaises(ValueError): load_annotations(path, self.inputs)
+
+    def test_new_followup_inputs_validate_without_evaluation_or_model_calls(self):
+        from personal_context.evidence_coverage import main
+        root=ROOT/'examples/reply_followups';out=StringIO()
+        args=['audit',str(root/'manifest.json'),str(root/'coverage.json'),'--validate-only']
+        with patch('sys.argv',args),patch('personal_context.evidence_coverage.coverage',side_effect=AssertionError('evaluated')),redirect_stdout(out):
+            main()
+        result=json.loads(out.getvalue())
+        self.assertTrue(result['valid']);self.assertEqual(12,result['case_count']);self.assertFalse(result['retrieval_performed'])

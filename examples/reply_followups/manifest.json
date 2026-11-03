@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "kind": "synthetic local reply study",
+  "messages": "messages.jsonl",
+  "cases": [
+    {
+      "id": "workshop",
+      "split": "development",
+      "reference_fact": "Starts at 2 pm in room 12.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "workshop@example.invalid",
+        "before": "2026-09-05T00:00:00Z",
+        "query": "workshop"
+      }
+    },
+    {
+      "id": "export",
+      "split": "development",
+      "reference_fact": "Use the second JSONL file, not CSV.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "export@example.invalid",
+        "before": "2026-09-05T00:00:00Z",
+        "query": "export"
+      }
+    },
+    {
+      "id": "ticket",
+      "split": "development",
+      "reference_fact": "Use repair/cache rather than main.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "ticket@example.invalid",
+        "before": "2026-09-05T00:00:00Z",
+        "query": "ticket"
+      }
+    },
+    {
+      "id": "receipt",
+      "split": "development",
+      "reference_fact": "Paid yesterday; no action needed. There is no lexical seed for receipt.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "receipt@example.invalid",
+        "before": "2026-09-05T00:00:00Z",
+        "query": "receipt"
+      }
+    },
+    {
+      "id": "reservation",
+      "split": "development",
+      "reference_fact": "Friday 6 pm for four. The confirmation is outside the 24-hour neighbor gap.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "reservation@example.invalid",
+        "before": "2026-09-05T00:00:00Z",
+        "query": "reservation"
+      }
+    },
+    {
+      "id": "invoice",
+      "split": "development",
+      "reference_fact": "No invoice information exists before the cutoff.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "invoice@example.invalid",
+        "before": "2026-09-05T00:00:00Z",
+        "query": "invoice"
+      }
+    },
+    {
+      "id": "train",
+      "split": "evaluation",
+      "reference_fact": "08:40 from platform 3.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "train@example.invalid",
+        "before": "2026-09-05T00:00:00Z",
+        "query": "train"
+      }
+    },
+    {
+      "id": "volunteering",
+      "split": "evaluation",
+      "reference_fact": "Cancelled; do not come Sunday.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "volunteering@example.invalid",
+        "before": "2026-09-05T00:00:00Z",
+        "query": "volunteering"
+      }
+    },
+    {
+      "id": "book",
+      "split": "evaluation",
+      "reference_fact": "Return Wednesday to the library desk.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "book@example.invalid",
+        "before": "2026-09-05T00:00:00Z",
+        "query": "book"
+      }
+    },
+    {
+      "id": "deadline",
+      "split": "evaluation",
+      "reference_fact": "Submit by Tuesday. There is no lexical seed for deadline.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "deadline@example.invalid",
+        "before": "2026-09-05T00:00:00Z",
+        "query": "deadline"
+      }
+    },
+    {
+      "id": "rental",
+      "split": "evaluation",
+      "reference_fact": "Collect Monday morning. The detail is in a separate thread.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "rental@example.invalid",
+        "before": "2026-09-05T00:00:00Z",
+        "query": "rental"
+      }
+    },
+    {
+      "id": "build",
+      "split": "evaluation",
+      "reference_fact": "Send to staging, not production. Both timestamps tie.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "build@example.invalid",
+        "before": "2026-09-05T00:00:00Z",
+        "query": "build"
+      }
+    }
+  ]
+}

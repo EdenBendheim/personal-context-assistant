@@ -22,6 +22,8 @@ jobs:
         run: python -m personal_context.evaluation examples/benchmark/manifest.json --split all
       - name: Scripted generation contract regression (not model quality)
         run: python -m personal_context.generation_evaluation examples/drafting/manifest.json
+      - name: Validate fixed followup study and source labels without evaluation
+        run: python -m personal_context.evidence_coverage examples/reply_followups/manifest.json examples/reply_followups/coverage.json --validate-only
       - name: Synthetic memory correction and withdrawal
         run: python -m personal_context.memory_demo
       - name: Synthetic draft modes and insufficient history

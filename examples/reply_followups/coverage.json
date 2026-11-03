@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "study_sha256": "aad654c13cfddd1ce0d3bf780ff5f479f5adebf6160fb55c1cbffdad88252a55",
+  "required_sources": {
+    "workshop": [
+      {
+        "source": "synthetic",
+        "id": "workshop-2"
+      }
+    ],
+    "export": [
+      {
+        "source": "synthetic",
+        "id": "export-2"
+      }
+    ],
+    "ticket": [
+      {
+        "source": "synthetic",
+        "id": "ticket-2"
+      }
+    ],
+    "receipt": [
+      {
+        "source": "synthetic",
+        "id": "receipt-1"
+      }
+    ],
+    "reservation": [
+      {
+        "source": "synthetic",
+        "id": "reservation-2"
+      }
+    ],
+    "invoice": [],
+    "train": [
+      {
+        "source": "synthetic",
+        "id": "train-2"
+      }
+    ],
+    "volunteering": [
+      {
+        "source": "synthetic",
+        "id": "volunteering-2"
+      }
+    ],
+    "book": [
+      {
+        "source": "synthetic",
+        "id": "book-2"
+      }
+    ],
+    "deadline": [
+      {
+        "source": "synthetic",
+        "id": "deadline-1"
+      }
+    ],
+    "rental": [
+      {
+        "source": "synthetic",
+        "id": "rental-2"
+      }
+    ],
+    "build": [
+      {
+        "source": "synthetic",
+        "id": "build-2"
+      }
+    ]
+  }
+}
