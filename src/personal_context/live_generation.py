@@ -14,6 +14,7 @@ from .generation_format import PROMPT_VERSION
 from .messages import Message
 from .model_options import add_model_options, configured_provider
 from .store import Store
+from .retrieval_options import add_retrieval_options, retrieval_for, description
 
 MODES = ('generic', 'context', 'personalized')
 
@@ -59,10 +60,11 @@ class CountingProvider:
         return self.provider.generate(packet)
 
 
-def study(study_inputs, provider, *, split='development'):
+def study(study_inputs, provider, *, split='development', neighbor_window=0):
     if split not in ('development', 'evaluation', 'all'):
         raise ValueError('Choose a declared study split')
     configuration = deepcopy(provider.describe())
+    retrieval_configuration = description(neighbor_window)
     rows = []
     for case in study_inputs['document']['cases']:
         if split != 'all' and case['split'] != split:
@@ -71,10 +73,16 @@ def study(study_inputs, provider, *, split='development'):
         for mode in MODES:
             store = Store()
             counted = CountingProvider(provider)
+            retrieved_sources = []
             started = perf_counter()
             try:
                 store.ingest(study_inputs['messages'])
-                result = generate(DraftEngine(store), replace(request, mode=mode), counted)
+                engine = DraftEngine(store, retrieval=retrieval_for(store, neighbor_window))
+                selected = replace(request, mode=mode)
+                packet = engine.prepare(selected)
+                retrieved_sources = [dict(source=e.provenance['source'], id=e.provenance['id'])
+                                     for e in packet.evidence if e.kind == 'message']
+                result = generate(engine, selected, counted)
                 row = {k: result[k] for k in ('status', 'draft_text', 'packet_sha256', 'citations', 'segments',
                                              'support_review_required') if k in result}
             except ValueError as exc:
@@ -83,13 +91,14 @@ def study(study_inputs, provider, *, split='development'):
                 store.close()
             rows.append(dict(case_id=case['id'], split=case['split'], mode=mode,
                 reference_fact_for_human_review=case['reference_fact'], provider_calls=counted.calls,
-                elapsed_seconds=perf_counter()-started, **row))
+                elapsed_seconds=perf_counter()-started, retrieved_sources=retrieved_sources, **row))
     if not rows:
         raise ValueError('The selected reply split has no cases')
     if configuration != provider.describe():
         raise ValueError('Provider configuration changed during reply study')
     return dict(version=1, kind='synthetic provider reply study', benchmark_sha256=study_inputs['fingerprint'],
-        prompt_version=PROMPT_VERSION, split=split, configuration=configuration, modes=list(MODES),
+        prompt_version=PROMPT_VERSION, split=split, configuration=configuration,
+        retrieval_configuration=retrieval_configuration, modes=list(MODES),
         attempts=len(rows), provider_calls=sum(r['provider_calls'] for r in rows),
         statuses=dict(Counter(r['status'] for r in rows)), cases=rows,
         reply_quality_scored=False, semantic_entailment_automated=False, sending_performed=False,
@@ -103,12 +112,13 @@ def main():
     parser.add_argument('manifest', type=Path)
     parser.add_argument('--split', choices=('development', 'evaluation', 'all'), default='development')
     add_model_options(parser)
+    add_retrieval_options(parser)
     args = parser.parse_args()
     try:
         inputs = load_study(args.manifest)
         if not args.local_model or not args.expected_model_digest:
             raise ValueError('Live reply study requires an explicit local model and expected digest')
-        result = study(inputs, configured_provider(args), split=args.split)
+        result = study(inputs, configured_provider(args), split=args.split, neighbor_window=args.neighbor_window)
     except (ValueError, KeyError, TypeError, OSError) as exc:
         parser.exit(2, f'Local reply study failed: {exc}\n')
     print(json.dumps(result, indent=2, allow_nan=False))

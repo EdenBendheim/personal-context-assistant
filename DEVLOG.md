@@ -2,6 +2,8 @@
 
 ## November 2, 2026
 
+- Wired explicit neighbor-window opt-in through the draft CLI, coverage audit and real-provider study. Reports retain retrieval policy and actual selected source IDs even when the provider rejects; neighbor packet provenance points back to its lexical seed. Four new integration tests and three existing entrypoint tests pass. All historical default evaluation-packet hashes still match. The old eight-case study improves from 10/12 to 12/12 complete contextual source cases with window 1; no reply-quality claim. UI and saved-review defaults remain lexical.
+
 - Added an opt-in bounded lexical thread-neighbor adapter to recover followups without the topic word. Four tests pass for incoming details, explicit seed provenance, source/thread/contact/cutoff/time-gap boundaries, lexical seed priority, ties, deduplication, bounds and mutation refusal. This library step does not change default drafting or UI retrieval; neighbor relevance is not guaranteed.
 
 - Added exact-source annotations and a no-inference evidence-coverage audit for the unchanged eight-case reply study. Ten of twelve contextual source cases are complete; both equipment variants miss the incoming tripod detail. Two tests pass for visible omissions, empty labels, report redaction and invalid/foreign/future/changed-fixture labels. These are coverage labels, not semantic/style scores.

@@ -9,6 +9,7 @@ from .drafts import DraftEngine, DraftRequest
 from .generation import generate
 from .model_options import add_model_options,configured_provider
 from .store import Store
+from .retrieval_options import add_retrieval_options, retrieval_for, description
 
 
 def main():
@@ -20,6 +21,7 @@ def main():
     parser.add_argument("--query", required=True, help="Reply topic and lexical retrieval query")
     parser.add_argument("--mode", choices=("generic", "context", "personalized"), default="personalized")
     parser.add_argument("--limit", type=int, default=5)
+    add_retrieval_options(parser)
     add_model_options(parser)
     args = parser.parse_args()
     if not args.db.is_file():
@@ -28,8 +30,9 @@ def main():
     try:
         request = DraftRequest(args.owner, args.contact, args.before, args.query, args.mode, args.limit)
         provider = configured_provider(args)
-        engine = DraftEngine(store)
+        engine = DraftEngine(store, retrieval=retrieval_for(store, args.neighbor_window))
         result = engine.draft(request) if provider is None else generate(engine, request, provider)
+        result['retrieval_configuration'] = description(args.neighbor_window)
         print(json.dumps(result, indent=2))
     except (ValueError, sqlite3.Error) as exc:
         parser.error(str(exc))

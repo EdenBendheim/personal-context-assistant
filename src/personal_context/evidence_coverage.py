@@ -8,6 +8,7 @@ from pathlib import Path
 from .drafts import DraftEngine, DraftRequest
 from .live_generation import load_study, MODES
 from .store import Store
+from .retrieval_options import add_retrieval_options, retrieval_for, description
 
 
 def load_annotations(path, inputs):
@@ -46,13 +47,13 @@ def load_annotations(path, inputs):
     return dict(document=doc, fingerprint=hashlib.sha256(raw).hexdigest())
 
 
-def coverage(inputs, annotations, *, split='development'):
+def coverage(inputs, annotations, *, split='development', neighbor_window=0):
     if split not in ('development', 'evaluation', 'all'):
         raise ValueError('Choose a declared study split')
     store = Store()
     try:
         store.ingest(inputs['messages'])
-        engine = DraftEngine(store)
+        engine = DraftEngine(store, retrieval=retrieval_for(store, neighbor_window))
         rows = []
         for case in inputs['document']['cases']:
             if split != 'all' and case['split'] != split:
@@ -71,7 +72,7 @@ def coverage(inputs, annotations, *, split='development'):
             raise ValueError('The selected split has no cases')
         contextual = [r for r in rows if r['mode'] != 'generic' and not r['no_required_sources']]
         return dict(version=1, study_sha256=inputs['fingerprint'], annotations_sha256=annotations['fingerprint'],
-            split=split, cases=rows, contextual_source_cases=len(contextual),
+            split=split, retrieval_configuration=description(neighbor_window), cases=rows, contextual_source_cases=len(contextual),
             complete_contextual_source_cases=sum(r['complete'] for r in contextual),
             contextual_macro_source_recall=sum(r['required_source_recall'] for r in contextual)/len(contextual) if contextual else None,
             limitation='Author-labeled required-source coverage only; extra sources are not scored as wrong. '
@@ -86,10 +87,11 @@ def main():
     parser.add_argument('manifest', type=Path)
     parser.add_argument('annotations', type=Path)
     parser.add_argument('--split', choices=('development', 'evaluation', 'all'), default='development')
+    add_retrieval_options(parser)
     args = parser.parse_args()
     try:
         inputs = load_study(args.manifest)
-        report = coverage(inputs, load_annotations(args.annotations, inputs), split=args.split)
+        report = coverage(inputs, load_annotations(args.annotations, inputs), split=args.split, neighbor_window=args.neighbor_window)
     except (OSError, ValueError, KeyError, TypeError) as exc:
         parser.exit(2, f'Evidence audit failed: {exc}\n')
     print(json.dumps(report, indent=2))

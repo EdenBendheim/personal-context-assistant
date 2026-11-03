@@ -73,8 +73,9 @@ class ExtractiveProvider:
 
 
 class DraftEngine:
-    def __init__(self, store: Store, memory: Memory | None = None):
+    def __init__(self, store: Store, memory: Memory | None = None, *, retrieval=None):
         self.store = store
+        self.retrieval = store if retrieval is None else retrieval
         self.memory = memory if memory is not None else Memory(store)
 
     def _check_message(self, row: dict, request: DraftRequest):
@@ -95,18 +96,22 @@ class DraftEngine:
             return ReviewPacket(request, (), ())
         parameters = dict(owner=request.owner, contact=request.contact, before=request.before, limit=request.limit)
         evidence = []
-        messages = self.store.search(request.query, **parameters)
+        messages = self.retrieval.search(request.query, **parameters)
         for index, row in enumerate(messages, 1):
             self._check_message(row, request)
             provenance = {key:row[key] for key in Message.__dataclass_fields__ if key != "body"}
             provenance["fingerprint"] = Message(**{key:row[key] for key in Message.__dataclass_fields__}).fingerprint
+            if row.get('retrieval_origin') in ('lexical_seed', 'thread_neighbor'):
+                provenance['retrieval'] = dict(origin=row['retrieval_origin'])
+                if 'neighbor_seed' in row:
+                    provenance['retrieval']['seed'] = deepcopy(row['neighbor_seed'])
             evidence.append(Evidence(f"message-{index}", "message", row["body"], provenance))
         examples = ()
         if request.mode == "personalized":
             for index, item in enumerate(self.memory.context(**parameters), 1):
                 evidence.append(Evidence(f"memory-{index}", "memory", item["text"],
                                          {key:value for key,value in item.items() if key != "text"}))
-            examples = tuple(self.store.style_examples(**parameters))
+            examples = tuple(self.retrieval.style_examples(**parameters))
             for row in examples:
                 self._check_message(row, request)
                 if row["author"] != request.owner:

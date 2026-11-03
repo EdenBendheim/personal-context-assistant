@@ -63,6 +63,12 @@ cap fails explicitly. Results keep source IDs and identify the originating seed.
 The total result limit still applies, so seeds can consume the entire budget.
 Neighbor scores are inherited seed scores, not relevance or factual confidence.
 No unmatched conversation is added, and outbound style selection stays unchanged.
+The draft CLI, evidence audit and live reply-study CLI accept
+`--neighbor-window 1` (or 2) to use it explicitly. The result records the retrieval
+policy, and neighbor evidence retains the exact originating seed in provenance.
+`0` preserves the original lexical packet fingerprints. Saved reviews and the
+browser keep their current retrieval policy; no stored packet is migrated.
+The draft CLI can initialize memory schema as before; it is not a read-only tool.
 
 `python -m personal_context.frozen_retrieval select examples/benchmark/manifest.json
 runs/development-freeze.json --model TAG --expected-model-digest SHA256
@@ -208,7 +214,7 @@ contract cases or demonstrate owner-style imitation.
 examples/local_reply/coverage.json --split all` (one line) audits whether each
 reply packet contains its author-labeled required source IDs. The annotations
 bind the unchanged study bytes and reject foreign, future, unknown or duplicate
-sources. This exposes the equipment/​tripod retrieval omission separately from
+sources. This exposes the equipment/tripod retrieval omission separately from
 model output. Exit 1 means missing contextual evidence; no model is run, message
 bodies are omitted, and coverage is not reply quality or precision over extra sources.
 
