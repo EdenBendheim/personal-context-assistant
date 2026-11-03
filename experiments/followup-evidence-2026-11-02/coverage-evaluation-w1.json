@@ -1,0 +1,440 @@
+{
+  "version": 1,
+  "study_sha256": "aad654c13cfddd1ce0d3bf780ff5f479f5adebf6160fb55c1cbffdad88252a55",
+  "annotations_sha256": "c61c5ce76c6129360aba1310d69f0c6f3f264e3aca232dcee1dfa8f1745a4907",
+  "split": "evaluation",
+  "retrieval_configuration": {
+    "backend": "lexical_thread_neighbors",
+    "window": 1,
+    "max_gap_seconds": 86400,
+    "max_candidates": 128,
+    "ordering": "All lexical seeds first; round-robin nearest neighbors in the same source/thread",
+    "limitation": "Neighbors can be unrelated or outdated. Their score is inherited from a lexical seed, not evidence of relevance, factual support or reply quality."
+  },
+  "cases": [
+    {
+      "case_id": "train",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "train-2"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "train-2"
+        ]
+      ],
+      "packet_sha256": "86212ecb4b60952a564f34fec2d470323f664eb4e6c3daad403af9de2315590a",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "train",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "train-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "train-1"
+        ],
+        [
+          "synthetic",
+          "train-2"
+        ]
+      ],
+      "missing": [],
+      "packet_sha256": "028e7e73a0b8c88d26226a2369704f4182758091a531a18371203508fdb1eeac",
+      "required_source_recall": 1.0,
+      "complete": true,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "train",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "train-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "train-1"
+        ],
+        [
+          "synthetic",
+          "train-2"
+        ]
+      ],
+      "missing": [],
+      "packet_sha256": "e7cffc78157d864f1db7cf3c6139ae341b17569c09a117f95b0203f7d493468f",
+      "required_source_recall": 1.0,
+      "complete": true,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "volunteering",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "volunteering-2"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "volunteering-2"
+        ]
+      ],
+      "packet_sha256": "a2e2a4ce6d81f12703e1d18fd9a3f6d1dbc5f351e71cd5ce81bece7b453a97eb",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "volunteering",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "volunteering-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "volunteering-1"
+        ],
+        [
+          "synthetic",
+          "volunteering-2"
+        ]
+      ],
+      "missing": [],
+      "packet_sha256": "19127fe974af47a35c79b560ef7753c68f4c3df4615e0262edfd9084ec062b83",
+      "required_source_recall": 1.0,
+      "complete": true,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "volunteering",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "volunteering-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "volunteering-1"
+        ],
+        [
+          "synthetic",
+          "volunteering-2"
+        ]
+      ],
+      "missing": [],
+      "packet_sha256": "9af9f370c743da4f60e44cc9521d1d37f306de35a05bd679cb4de5f643496e82",
+      "required_source_recall": 1.0,
+      "complete": true,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "book",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "book-2"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "book-2"
+        ]
+      ],
+      "packet_sha256": "8ef5997e0053f945d207985053c04fe1a4ca1d68afde6aa78d47869f0eb859d0",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "book",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "book-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "book-1"
+        ],
+        [
+          "synthetic",
+          "book-2"
+        ]
+      ],
+      "missing": [],
+      "packet_sha256": "c9584ad0868896ce2f9b93b4e073612a573802e3cb9846fec8f7ad79f3c68282",
+      "required_source_recall": 1.0,
+      "complete": true,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "book",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "book-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "book-1"
+        ],
+        [
+          "synthetic",
+          "book-2"
+        ]
+      ],
+      "missing": [],
+      "packet_sha256": "d267994bcc9f2517b8f531166748f7f610ec6e85655af8bd7dec842c5ffd66f9",
+      "required_source_recall": 1.0,
+      "complete": true,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "deadline",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "deadline-1"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "deadline-1"
+        ]
+      ],
+      "packet_sha256": "7cdf3e4d7d6b59153b8a254d05ad6f83f195372d90fea3c02cec2595e7041ec6",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "deadline",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "deadline-1"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "deadline-1"
+        ]
+      ],
+      "packet_sha256": "b34603b07cfcaddb6d7f6a4ae1f49104bdb5489e1e56a34d2bed953168d4083e",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "deadline",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "deadline-1"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "deadline-1"
+        ]
+      ],
+      "packet_sha256": "c705e5c3483ff55eab9ddb826db59c54ebfc304ea8930dbb31330955e5e0aa7e",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "rental",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "rental-2"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "rental-2"
+        ]
+      ],
+      "packet_sha256": "a54c785cdb5b13388811391610ce0e59ef4c95aec509251dccaca6b8221f0f40",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "rental",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "rental-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "rental-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "rental-2"
+        ]
+      ],
+      "packet_sha256": "e235bd42eced4946e6050596be5c1fa679037ef353cc62a3c69817263c33a27f",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "rental",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "rental-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "rental-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "rental-2"
+        ]
+      ],
+      "packet_sha256": "220cba4b0797110eb989d5ba84845280be5f5dd53129de88456d7891f875e0e7",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "build",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "build-2"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "build-2"
+        ]
+      ],
+      "packet_sha256": "64a378938266e4f75e345d96c78948ce6e3d112f06c40770059621fc1502355d",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "build",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "build-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "build-1"
+        ],
+        [
+          "synthetic",
+          "build-2"
+        ]
+      ],
+      "missing": [],
+      "packet_sha256": "09568fc172fe7bca1a8ac5e85403547c2cd830a18b9e4294462eff317fa6fcff",
+      "required_source_recall": 1.0,
+      "complete": true,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "build",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "build-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "build-1"
+        ],
+        [
+          "synthetic",
+          "build-2"
+        ]
+      ],
+      "missing": [],
+      "packet_sha256": "dcb5f35623a55983a04a9343705ec33a9a9efae5f9e35f0daedb927e57633550",
+      "required_source_recall": 1.0,
+      "complete": true,
+      "no_required_sources": false
+    }
+  ],
+  "contextual_source_cases": 12,
+  "complete_contextual_source_cases": 8,
+  "contextual_macro_source_recall": 0.6666666666666666,
+  "limitation": "Author-labeled required-source coverage only; extra sources are not scored as wrong. Generic mode intentionally omits evidence. Complete retrieval does not establish factual entailment, a useful reply, up-to-date facts, or style preference. No inference or sending."
+}

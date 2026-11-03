@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "created_at": "2026-11-03T01:14:15.377404+00:00",
+  "study_sha256": "aad654c13cfddd1ce0d3bf780ff5f479f5adebf6160fb55c1cbffdad88252a55",
+  "annotations_sha256": "c61c5ce76c6129360aba1310d69f0c6f3f264e3aca232dcee1dfa8f1745a4907",
+  "source_sha256": "3a7ab0b372abf870d643fa395b0b2092c81bcb7388aeca76bbf7c1cd5b9f01c3",
+  "protocol_sha256": "40bd5baa1a98690e4d17e76ef4b06a2424986feb54c15490d28b252fa0f759fb",
+  "configuration": {
+    "backend": "ollama_chat",
+    "prompt_version": "grounded-draft-v3",
+    "settings": {
+      "model": "qwen2.5:7b",
+      "endpoint": "http://127.0.0.1:49604",
+      "timeout": 60,
+      "max_tokens": 512,
+      "seed": 29,
+      "local_only_confirmed": true,
+      "expected_digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    },
+    "identity_note": "Requested model/settings, not a served-weight attestation or semantic validation",
+    "model_identity": {
+      "version": 1,
+      "model": "qwen2.5:7b",
+      "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+      "size_bytes": 4683087332,
+      "runtime_version": "0.40.13",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "format": "gguf",
+        "family": "qwen2",
+        "parameter_size": "7.6B",
+        "quantization_level": "Q4_K_M"
+      },
+      "show_sha256": "bef4e60dde0f24b602417c53fa0d9ef4d7d90f482917c6006bce9e8a383bfaf1",
+      "local_only_confirmed": true,
+      "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+    }
+  },
+  "windows": [
+    0,
+    1
+  ],
+  "development_report_sha256": [
+    "a59a736995f19ad847f37c14a26ad84622f9ad754cc0119f17f65144ccd4034c",
+    "2b083dd6d09a12960fee55aff493a65018c0e3a5805490fb93987c8da6234cd9"
+  ],
+  "small_diagnostic_sha256": "6adbb26ed6b975ba447479dcb97377bab760b61175e1852d42a64aa8c030f0e7",
+  "evaluation_inspected": false,
+  "rule": "Paired fixed lexical/window-1 comparison with 7B; no selection or prompt changes on evaluation",
+  "freeze_sha256": "24f19616948d0eeb7bb263a6a2cca3fdc7dec7bbc3b39792c807e94a6d8eeedd"
+}

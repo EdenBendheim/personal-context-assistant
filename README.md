@@ -2,7 +2,7 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
-**Status — November 1, 2026:** working ingestion, contact-scoped retrieval,
+**Status — November 2, 2026:** working ingestion, contact-scoped retrieval,
 editable memory and persistent draft review. Bounded histories preserve unsaved
 edits. Real local Qwen chat and Nomic embedding inference now run with pinned
 identity/file receipts. Nomic ties the lexical baseline on 14 established
@@ -11,6 +11,13 @@ weak or unsupported drafts. Human review remains required. See the
 [measured results and failures](experiments/LOCAL-INFERENCE-2026-11-01.md).
 Contact removal is snapshot-bound and atomic; external exports, backups and
 physical storage remnants remain outside database removal.
+
+**November 2 evidence update:** opt-in CLI thread neighbors recover missing
+followup details while retaining owner/source/thread/time boundaries and exact
+seed provenance. On a separate fixed stress set, required-source coverage rises
+from 0/6 to 4/6 evaluation contacts. A paired local 7B run still abstains on every
+request: better source coverage has not demonstrated better replies. The browser
+and saved-review defaults stay lexical. [Results and limitations](experiments/FOLLOWUP-EVIDENCE-2026-11-02.md).
 
 **October 28 update:** memory summaries and correction histories now have bounded
 cursor pages. The browser loads 25 at a time and preserves unsaved wording when

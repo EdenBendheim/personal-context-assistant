@@ -1,0 +1,362 @@
+{
+  "version": 1,
+  "kind": "synthetic provider reply study",
+  "benchmark_sha256": "aad654c13cfddd1ce0d3bf780ff5f479f5adebf6160fb55c1cbffdad88252a55",
+  "prompt_version": "grounded-draft-v3",
+  "split": "evaluation",
+  "configuration": {
+    "backend": "ollama_chat",
+    "prompt_version": "grounded-draft-v3",
+    "settings": {
+      "model": "qwen2.5:7b",
+      "endpoint": "http://127.0.0.1:49604",
+      "timeout": 60,
+      "max_tokens": 512,
+      "seed": 29,
+      "local_only_confirmed": true,
+      "expected_digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    },
+    "identity_note": "Requested model/settings, not a served-weight attestation or semantic validation",
+    "model_identity": {
+      "version": 1,
+      "model": "qwen2.5:7b",
+      "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+      "size_bytes": 4683087332,
+      "runtime_version": "0.40.13",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "format": "gguf",
+        "family": "qwen2",
+        "parameter_size": "7.6B",
+        "quantization_level": "Q4_K_M"
+      },
+      "show_sha256": "bef4e60dde0f24b602417c53fa0d9ef4d7d90f482917c6006bce9e8a383bfaf1",
+      "local_only_confirmed": true,
+      "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+    }
+  },
+  "retrieval_configuration": {
+    "backend": "lexical"
+  },
+  "modes": [
+    "generic",
+    "context",
+    "personalized"
+  ],
+  "attempts": 18,
+  "provider_calls": 16,
+  "statuses": {
+    "provider_abstained": 16,
+    "needs_history": 2
+  },
+  "cases": [
+    {
+      "case_id": "train",
+      "split": "evaluation",
+      "mode": "generic",
+      "reference_fact_for_human_review": "08:40 from platform 3.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.00706633401569,
+      "retrieved_sources": [],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "86212ecb4b60952a564f34fec2d470323f664eb4e6c3daad403af9de2315590a",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "train",
+      "split": "evaluation",
+      "mode": "context",
+      "reference_fact_for_human_review": "08:40 from platform 3.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.367493791040033,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "train-1"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "6974fa09691edf0312eafc15a5f2990ff35600ffc0c86eea1b5a9cbb066561cc",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "train",
+      "split": "evaluation",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "08:40 from platform 3.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.544820874929428,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "train-1"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "c68aa65966062fff0ce934994d3811450f9538c381f5d7c671c3e36119c6733b",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "volunteering",
+      "split": "evaluation",
+      "mode": "generic",
+      "reference_fact_for_human_review": "Cancelled; do not come Sunday.",
+      "provider_calls": 1,
+      "elapsed_seconds": 4.8310469589196146,
+      "retrieved_sources": [],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "a2e2a4ce6d81f12703e1d18fd9a3f6d1dbc5f351e71cd5ce81bece7b453a97eb",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "volunteering",
+      "split": "evaluation",
+      "mode": "context",
+      "reference_fact_for_human_review": "Cancelled; do not come Sunday.",
+      "provider_calls": 1,
+      "elapsed_seconds": 4.612187792081386,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "volunteering-1"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "44089c0b36431df07e5d88ae0175bbe6c04b200e9801eaa41fb4e83cdedca147",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "volunteering",
+      "split": "evaluation",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "Cancelled; do not come Sunday.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.8497344999341294,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "volunteering-1"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "63415801dd3ca39bc9ae37c066f11446c2711c39a98ef3e493be183e7de6c9d2",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "book",
+      "split": "evaluation",
+      "mode": "generic",
+      "reference_fact_for_human_review": "Return Wednesday to the library desk.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.2860897090286016,
+      "retrieved_sources": [],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "8ef5997e0053f945d207985053c04fe1a4ca1d68afde6aa78d47869f0eb859d0",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "book",
+      "split": "evaluation",
+      "mode": "context",
+      "reference_fact_for_human_review": "Return Wednesday to the library desk.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.1498217090265825,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "book-1"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "42d8f68c23d88beabe53a125aa1844717d1069438f5eae0f6def23f88e66154e",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "book",
+      "split": "evaluation",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "Return Wednesday to the library desk.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.936246291967109,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "book-1"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "a60af2fbac2ab2ab0ea81862242a0e38a206549e18428bfbbdf9f3693ffc6f24",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "deadline",
+      "split": "evaluation",
+      "mode": "generic",
+      "reference_fact_for_human_review": "Submit by Tuesday. There is no lexical seed for deadline.",
+      "provider_calls": 1,
+      "elapsed_seconds": 2.674778457963839,
+      "retrieved_sources": [],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "7cdf3e4d7d6b59153b8a254d05ad6f83f195372d90fea3c02cec2595e7041ec6",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "deadline",
+      "split": "evaluation",
+      "mode": "context",
+      "reference_fact_for_human_review": "Submit by Tuesday. There is no lexical seed for deadline.",
+      "provider_calls": 0,
+      "elapsed_seconds": 0.0006328329909592867,
+      "retrieved_sources": [],
+      "status": "needs_history",
+      "draft_text": "",
+      "packet_sha256": "b34603b07cfcaddb6d7f6a4ae1f49104bdb5489e1e56a34d2bed953168d4083e",
+      "citations": []
+    },
+    {
+      "case_id": "deadline",
+      "split": "evaluation",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "Submit by Tuesday. There is no lexical seed for deadline.",
+      "provider_calls": 0,
+      "elapsed_seconds": 0.0007389580132439733,
+      "retrieved_sources": [],
+      "status": "needs_history",
+      "draft_text": "",
+      "packet_sha256": "c705e5c3483ff55eab9ddb826db59c54ebfc304ea8930dbb31330955e5e0aa7e",
+      "citations": []
+    },
+    {
+      "case_id": "rental",
+      "split": "evaluation",
+      "mode": "generic",
+      "reference_fact_for_human_review": "Collect Monday morning. The detail is in a separate thread.",
+      "provider_calls": 1,
+      "elapsed_seconds": 2.793347792001441,
+      "retrieved_sources": [],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "a54c785cdb5b13388811391610ce0e59ef4c95aec509251dccaca6b8221f0f40",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "rental",
+      "split": "evaluation",
+      "mode": "context",
+      "reference_fact_for_human_review": "Collect Monday morning. The detail is in a separate thread.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.216700499993749,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "rental-1"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "ca74c21545ff35f76b2ed5b5811218e32ed9b024065efc3801617c51e848b22f",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "rental",
+      "split": "evaluation",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "Collect Monday morning. The detail is in a separate thread.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.2242217080201954,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "rental-1"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "9cf3f997b7b01c1a5dc4b6a731d3693304ee495d5322f17ad9d24dd326d02229",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "build",
+      "split": "evaluation",
+      "mode": "generic",
+      "reference_fact_for_human_review": "Send to staging, not production. Both timestamps tie.",
+      "provider_calls": 1,
+      "elapsed_seconds": 2.7599709579953924,
+      "retrieved_sources": [],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "64a378938266e4f75e345d96c78948ce6e3d112f06c40770059621fc1502355d",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "build",
+      "split": "evaluation",
+      "mode": "context",
+      "reference_fact_for_human_review": "Send to staging, not production. Both timestamps tie.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.223914249916561,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "build-1"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "d28281d997941f2f1a3e1363f5af7328baf31f0b0deb5da99344f51bc6533245",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "build",
+      "split": "evaluation",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "Send to staging, not production. Both timestamps tie.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.302482374943793,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "build-1"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "5f2fb6637b4be9ec2dbf460bc8a2d8ed79a15805ab2bfd4463f0ab9adcf13877",
+      "citations": [],
+      "segments": []
+    }
+  ],
+  "reply_quality_scored": false,
+  "semantic_entailment_automated": false,
+  "sending_performed": false,
+  "limitation": "Generated text and literal citation checks require human review. Provider rejection/abstention is retained, not hidden. Timing includes model loading and local infrastructure. Synthetic examples do not establish owner-style imitation or real-user preference.",
+  "evaluation_freeze_sha256": "24f19616948d0eeb7bb263a6a2cca3fdc7dec7bbc3b39792c807e94a6d8eeedd"
+}

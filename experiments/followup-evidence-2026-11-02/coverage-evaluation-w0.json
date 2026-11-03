@@ -1,0 +1,443 @@
+{
+  "version": 1,
+  "study_sha256": "aad654c13cfddd1ce0d3bf780ff5f479f5adebf6160fb55c1cbffdad88252a55",
+  "annotations_sha256": "c61c5ce76c6129360aba1310d69f0c6f3f264e3aca232dcee1dfa8f1745a4907",
+  "split": "evaluation",
+  "retrieval_configuration": {
+    "backend": "lexical"
+  },
+  "cases": [
+    {
+      "case_id": "train",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "train-2"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "train-2"
+        ]
+      ],
+      "packet_sha256": "86212ecb4b60952a564f34fec2d470323f664eb4e6c3daad403af9de2315590a",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "train",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "train-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "train-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "train-2"
+        ]
+      ],
+      "packet_sha256": "6974fa09691edf0312eafc15a5f2990ff35600ffc0c86eea1b5a9cbb066561cc",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "train",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "train-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "train-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "train-2"
+        ]
+      ],
+      "packet_sha256": "c68aa65966062fff0ce934994d3811450f9538c381f5d7c671c3e36119c6733b",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "volunteering",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "volunteering-2"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "volunteering-2"
+        ]
+      ],
+      "packet_sha256": "a2e2a4ce6d81f12703e1d18fd9a3f6d1dbc5f351e71cd5ce81bece7b453a97eb",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "volunteering",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "volunteering-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "volunteering-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "volunteering-2"
+        ]
+      ],
+      "packet_sha256": "44089c0b36431df07e5d88ae0175bbe6c04b200e9801eaa41fb4e83cdedca147",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "volunteering",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "volunteering-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "volunteering-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "volunteering-2"
+        ]
+      ],
+      "packet_sha256": "63415801dd3ca39bc9ae37c066f11446c2711c39a98ef3e493be183e7de6c9d2",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "book",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "book-2"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "book-2"
+        ]
+      ],
+      "packet_sha256": "8ef5997e0053f945d207985053c04fe1a4ca1d68afde6aa78d47869f0eb859d0",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "book",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "book-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "book-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "book-2"
+        ]
+      ],
+      "packet_sha256": "42d8f68c23d88beabe53a125aa1844717d1069438f5eae0f6def23f88e66154e",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "book",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "book-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "book-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "book-2"
+        ]
+      ],
+      "packet_sha256": "a60af2fbac2ab2ab0ea81862242a0e38a206549e18428bfbbdf9f3693ffc6f24",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "deadline",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "deadline-1"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "deadline-1"
+        ]
+      ],
+      "packet_sha256": "7cdf3e4d7d6b59153b8a254d05ad6f83f195372d90fea3c02cec2595e7041ec6",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "deadline",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "deadline-1"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "deadline-1"
+        ]
+      ],
+      "packet_sha256": "b34603b07cfcaddb6d7f6a4ae1f49104bdb5489e1e56a34d2bed953168d4083e",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "deadline",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "deadline-1"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "deadline-1"
+        ]
+      ],
+      "packet_sha256": "c705e5c3483ff55eab9ddb826db59c54ebfc304ea8930dbb31330955e5e0aa7e",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "rental",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "rental-2"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "rental-2"
+        ]
+      ],
+      "packet_sha256": "a54c785cdb5b13388811391610ce0e59ef4c95aec509251dccaca6b8221f0f40",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "rental",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "rental-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "rental-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "rental-2"
+        ]
+      ],
+      "packet_sha256": "ca74c21545ff35f76b2ed5b5811218e32ed9b024065efc3801617c51e848b22f",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "rental",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "rental-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "rental-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "rental-2"
+        ]
+      ],
+      "packet_sha256": "9cf3f997b7b01c1a5dc4b6a731d3693304ee495d5322f17ad9d24dd326d02229",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "build",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "build-2"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "build-2"
+        ]
+      ],
+      "packet_sha256": "64a378938266e4f75e345d96c78948ce6e3d112f06c40770059621fc1502355d",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "build",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "build-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "build-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "build-2"
+        ]
+      ],
+      "packet_sha256": "d28281d997941f2f1a3e1363f5af7328baf31f0b0deb5da99344f51bc6533245",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "build",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "build-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "build-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "build-2"
+        ]
+      ],
+      "packet_sha256": "5f2fb6637b4be9ec2dbf460bc8a2d8ed79a15805ab2bfd4463f0ab9adcf13877",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    }
+  ],
+  "contextual_source_cases": 12,
+  "complete_contextual_source_cases": 0,
+  "contextual_macro_source_recall": 0.0,
+  "limitation": "Author-labeled required-source coverage only; extra sources are not scored as wrong. Generic mode intentionally omits evidence. Complete retrieval does not establish factual entailment, a useful reply, up-to-date facts, or style preference. No inference or sending."
+}

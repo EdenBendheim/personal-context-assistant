@@ -1,0 +1,403 @@
+{
+  "version": 1,
+  "study_sha256": "aad654c13cfddd1ce0d3bf780ff5f479f5adebf6160fb55c1cbffdad88252a55",
+  "annotations_sha256": "c61c5ce76c6129360aba1310d69f0c6f3f264e3aca232dcee1dfa8f1745a4907",
+  "split": "development",
+  "retrieval_configuration": {
+    "backend": "lexical"
+  },
+  "cases": [
+    {
+      "case_id": "workshop",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "workshop-2"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "workshop-2"
+        ]
+      ],
+      "packet_sha256": "e4c7309de5bc9644eb925dafa50938daee9737293237d8dbd734752529e06a5e",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "workshop",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "workshop-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "workshop-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "workshop-2"
+        ]
+      ],
+      "packet_sha256": "c7a2a1c4aaf03ef44f27ba969b27b146bf6ed000bc943bf58668b8f94558ffbe",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "workshop",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "workshop-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "workshop-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "workshop-2"
+        ]
+      ],
+      "packet_sha256": "2531185dffe384274ca00177282b82687c36b27310fdb1052c09cde2fb51868b",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "export",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "export-2"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "export-2"
+        ]
+      ],
+      "packet_sha256": "3078ab1a4e4a4315cbb48ae6422bdfcd0ef0bcd1500a0dca274bfa000289ea23",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "export",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "export-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "export-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "export-2"
+        ]
+      ],
+      "packet_sha256": "7dc44b8c88370903fbc25cf182e8557651a0da1f738a9ff03aef8775d3064249",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "export",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "export-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "export-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "export-2"
+        ]
+      ],
+      "packet_sha256": "5cca2d69d036523ba2689248fda562a3d120630c08ac154041814a53f87e94cc",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "ticket",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "ticket-2"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "ticket-2"
+        ]
+      ],
+      "packet_sha256": "ec85f50b900f0d829fe0aea97853c7821f764e7b316c039369a6abed291d9f5a",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "ticket",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "ticket-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "ticket-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "ticket-2"
+        ]
+      ],
+      "packet_sha256": "61dab8c07e9714c527d5b822d9663f6016725329a53a9c1343babe75e29bfa16",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "ticket",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "ticket-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "ticket-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "ticket-2"
+        ]
+      ],
+      "packet_sha256": "3be163fdb3ec061eea01631f37dee65a1eeb596f117b44e9b5c99a156db403e8",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "receipt",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "receipt-1"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "receipt-1"
+        ]
+      ],
+      "packet_sha256": "e2bfa680f787e7244a770fe231a4ec5c0b07e007c4c9e29130558955e97c2fdc",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "receipt",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "receipt-1"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "receipt-1"
+        ]
+      ],
+      "packet_sha256": "364088d5d27b80f7259da60a2459130a49267da0714775418f46a0f7d02c95b0",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "receipt",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "receipt-1"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "receipt-1"
+        ]
+      ],
+      "packet_sha256": "78ef251f36a79ab66ce4646b2772c8e77ae869b99d68c47bd0376770adf9a1ea",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "reservation",
+      "mode": "generic",
+      "required": [
+        [
+          "synthetic",
+          "reservation-2"
+        ]
+      ],
+      "retrieved": [],
+      "missing": [
+        [
+          "synthetic",
+          "reservation-2"
+        ]
+      ],
+      "packet_sha256": "24ddb5794d6e984dfd4887b5710da90d2e19f7c604eed80b0310be69dd1d3d09",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "reservation",
+      "mode": "context",
+      "required": [
+        [
+          "synthetic",
+          "reservation-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "reservation-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "reservation-2"
+        ]
+      ],
+      "packet_sha256": "20127be9bee3abc94ba2c07d1e824aee71449a823c8770113f5abb485ca7bc77",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "reservation",
+      "mode": "personalized",
+      "required": [
+        [
+          "synthetic",
+          "reservation-2"
+        ]
+      ],
+      "retrieved": [
+        [
+          "synthetic",
+          "reservation-1"
+        ]
+      ],
+      "missing": [
+        [
+          "synthetic",
+          "reservation-2"
+        ]
+      ],
+      "packet_sha256": "3b85937cd15899d76c2f53a8fa16c51ace1b38556f1905a60302800e5d464cf2",
+      "required_source_recall": 0.0,
+      "complete": false,
+      "no_required_sources": false
+    },
+    {
+      "case_id": "invoice",
+      "mode": "generic",
+      "required": [],
+      "retrieved": [],
+      "missing": [],
+      "packet_sha256": "63f9a615350bb10f6363bfa20bee4c08f405ca98912998449f847807353edcb5",
+      "required_source_recall": null,
+      "complete": true,
+      "no_required_sources": true
+    },
+    {
+      "case_id": "invoice",
+      "mode": "context",
+      "required": [],
+      "retrieved": [],
+      "missing": [],
+      "packet_sha256": "250ec5dd057622e7e3d8c31634558ae5e6f80fe586f323c47aec9fa48e7a2fda",
+      "required_source_recall": null,
+      "complete": true,
+      "no_required_sources": true
+    },
+    {
+      "case_id": "invoice",
+      "mode": "personalized",
+      "required": [],
+      "retrieved": [],
+      "missing": [],
+      "packet_sha256": "866822a536f60527796b8e1da5ee9f76fc302e35def00390d163b2abf2914b4d",
+      "required_source_recall": null,
+      "complete": true,
+      "no_required_sources": true
+    }
+  ],
+  "contextual_source_cases": 10,
+  "complete_contextual_source_cases": 0,
+  "contextual_macro_source_recall": 0.0,
+  "limitation": "Author-labeled required-source coverage only; extra sources are not scored as wrong. Generic mode intentionally omits evidence. Complete retrieval does not establish factual entailment, a useful reply, up-to-date facts, or style preference. No inference or sending."
+}

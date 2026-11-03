@@ -1,0 +1,27 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "42e9a3fc48342d4247655ea61a9d32ad01aad895",
+  "runtime": "Ollama 0.40.13",
+  "runtime_archive_sha256": "bae29252232b9e1358cf5801a7d65a07442af18fb5467cb68c7fc3711f59c511",
+  "cloud_disabled": true,
+  "cloud_check": "Task-scoped OLLAMA_NO_CLOUD=1; startup log confirms cloud disabled",
+  "chat_http_responses": 75,
+  "private_messages_used": false,
+  "paid_api_or_cloud_compute": false,
+  "model_files_published": false,
+  "server_stopped": true,
+  "receipts": {
+    "coverage-development-w0.json": "e7e35c0d79544630e018c06ebb0a0d8ebb4ce10d5b3123864f5835f5b7342c1f",
+    "coverage-development-w1.json": "22c40372ca35e1f0d4a0e61b79a406ae56321c3b1e8722718fc859199f0be99a",
+    "coverage-evaluation-w0.json": "1c81386f581176b1ff358acfc49f6fa55a60e19c4c09821928743c2cef32021d",
+    "coverage-evaluation-w1.json": "8a9b57b661f6616618b67e2c53d87a2241cba1aca90a60fd343ea6a1b9620f57",
+    "evaluation-freeze.json": "04e32d1545fd81e7a8401cad089e73cd815b402a9ccc3f1dd34427c5e945cca9",
+    "generation-development-1.5b-w1.json": "12b4582e39f3105928edcf7f3bcaff9f3f4c504557dc6ff85330a5d2bf5896d0",
+    "generation-development-7b-w0.json": "b62c01117b0fcbc425ff122884bb9718f85f8bd5db43dbdaee0aff3156dc95ee",
+    "generation-development-7b-w1.json": "833eb3cdbd0a831df644c504bbd604658d91d4bd44886d241d1677cafd67fa12",
+    "generation-evaluation-7b-w0.json": "989e6b3aacf837976d567601f60ca264af9fc5542d6d0b27c11d05d7b35027af",
+    "generation-evaluation-7b-w1.json": "6357d26da03d50f81a559e66dad2cb69741ac25725a30bdae396af3d4d5e721a",
+    "identities.json": "395a88390976b3eb910d0acef0f1335c9914bce58e853a53407f09cd62fd20cc",
+    "poststudy-development-diagnostic.json": "9c2dcc425eecc4419b17d9baeca3d72005d9e2f3abe233342dee66a182adf6ee"
+  }
+}

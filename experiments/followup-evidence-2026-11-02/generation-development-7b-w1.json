@@ -1,0 +1,378 @@
+{
+  "version": 1,
+  "kind": "synthetic provider reply study",
+  "benchmark_sha256": "aad654c13cfddd1ce0d3bf780ff5f479f5adebf6160fb55c1cbffdad88252a55",
+  "prompt_version": "grounded-draft-v3",
+  "split": "development",
+  "configuration": {
+    "backend": "ollama_chat",
+    "prompt_version": "grounded-draft-v3",
+    "settings": {
+      "model": "qwen2.5:7b",
+      "endpoint": "http://127.0.0.1:49604",
+      "timeout": 60,
+      "max_tokens": 512,
+      "seed": 29,
+      "local_only_confirmed": true,
+      "expected_digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    },
+    "identity_note": "Requested model/settings, not a served-weight attestation or semantic validation",
+    "model_identity": {
+      "version": 1,
+      "model": "qwen2.5:7b",
+      "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+      "size_bytes": 4683087332,
+      "runtime_version": "0.40.13",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "format": "gguf",
+        "family": "qwen2",
+        "parameter_size": "7.6B",
+        "quantization_level": "Q4_K_M"
+      },
+      "show_sha256": "bef4e60dde0f24b602417c53fa0d9ef4d7d90f482917c6006bce9e8a383bfaf1",
+      "local_only_confirmed": true,
+      "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+    }
+  },
+  "retrieval_configuration": {
+    "backend": "lexical_thread_neighbors",
+    "window": 1,
+    "max_gap_seconds": 86400,
+    "max_candidates": 128,
+    "ordering": "All lexical seeds first; round-robin nearest neighbors in the same source/thread",
+    "limitation": "Neighbors can be unrelated or outdated. Their score is inherited from a lexical seed, not evidence of relevance, factual support or reply quality."
+  },
+  "modes": [
+    "generic",
+    "context",
+    "personalized"
+  ],
+  "attempts": 18,
+  "provider_calls": 14,
+  "statuses": {
+    "provider_abstained": 14,
+    "needs_history": 4
+  },
+  "cases": [
+    {
+      "case_id": "workshop",
+      "split": "development",
+      "mode": "generic",
+      "reference_fact_for_human_review": "Starts at 2 pm in room 12.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.067152416915633,
+      "retrieved_sources": [],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "e4c7309de5bc9644eb925dafa50938daee9737293237d8dbd734752529e06a5e",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "workshop",
+      "split": "development",
+      "mode": "context",
+      "reference_fact_for_human_review": "Starts at 2 pm in room 12.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.833749958081171,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "workshop-1"
+        },
+        {
+          "source": "synthetic",
+          "id": "workshop-2"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "e4f0f0c6e09eee051e0f83bbfef2f3e8d8723a7c49904e1a095831840686a811",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "workshop",
+      "split": "development",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "Starts at 2 pm in room 12.",
+      "provider_calls": 1,
+      "elapsed_seconds": 4.035382625064813,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "workshop-1"
+        },
+        {
+          "source": "synthetic",
+          "id": "workshop-2"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "35b515c4818e3527862d849a7e4fa64ca3adfd9f211085950d05676c7a7fa82e",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "export",
+      "split": "development",
+      "mode": "generic",
+      "reference_fact_for_human_review": "Use the second JSONL file, not CSV.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.0342293330468237,
+      "retrieved_sources": [],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "3078ab1a4e4a4315cbb48ae6422bdfcd0ef0bcd1500a0dca274bfa000289ea23",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "export",
+      "split": "development",
+      "mode": "context",
+      "reference_fact_for_human_review": "Use the second JSONL file, not CSV.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.8132127500139177,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "export-1"
+        },
+        {
+          "source": "synthetic",
+          "id": "export-2"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "2a3fbd84e72c671aa7252a376202fd660be2f3ef7a23af2e7510bc8091e82295",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "export",
+      "split": "development",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "Use the second JSONL file, not CSV.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.821011915919371,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "export-1"
+        },
+        {
+          "source": "synthetic",
+          "id": "export-2"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "4194eb401d9720fb1f191d1e8d8252fcb695649c5a1f67b4ecb6bded49cefa77",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "ticket",
+      "split": "development",
+      "mode": "generic",
+      "reference_fact_for_human_review": "Use repair/cache rather than main.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.0280905830441043,
+      "retrieved_sources": [],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "ec85f50b900f0d829fe0aea97853c7821f764e7b316c039369a6abed291d9f5a",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "ticket",
+      "split": "development",
+      "mode": "context",
+      "reference_fact_for_human_review": "Use repair/cache rather than main.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.8293937920825556,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "ticket-1"
+        },
+        {
+          "source": "synthetic",
+          "id": "ticket-2"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "ab32cf872fa13fe198fd233366f09298a9c4c72977e4c9d8a23a86a8d6bc04d1",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "ticket",
+      "split": "development",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "Use repair/cache rather than main.",
+      "provider_calls": 1,
+      "elapsed_seconds": 4.1525802499381825,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "ticket-1"
+        },
+        {
+          "source": "synthetic",
+          "id": "ticket-2"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "f9a8516d2ef7da762bb683dc35fd4b536d7f54408e1b9edae8f2b32046fb7222",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "receipt",
+      "split": "development",
+      "mode": "generic",
+      "reference_fact_for_human_review": "Paid yesterday; no action needed. There is no lexical seed for receipt.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.006442000041716,
+      "retrieved_sources": [],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "e2bfa680f787e7244a770fe231a4ec5c0b07e007c4c9e29130558955e97c2fdc",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "receipt",
+      "split": "development",
+      "mode": "context",
+      "reference_fact_for_human_review": "Paid yesterday; no action needed. There is no lexical seed for receipt.",
+      "provider_calls": 0,
+      "elapsed_seconds": 0.0006412500515580177,
+      "retrieved_sources": [],
+      "status": "needs_history",
+      "draft_text": "",
+      "packet_sha256": "364088d5d27b80f7259da60a2459130a49267da0714775418f46a0f7d02c95b0",
+      "citations": []
+    },
+    {
+      "case_id": "receipt",
+      "split": "development",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "Paid yesterday; no action needed. There is no lexical seed for receipt.",
+      "provider_calls": 0,
+      "elapsed_seconds": 0.0006429580971598625,
+      "retrieved_sources": [],
+      "status": "needs_history",
+      "draft_text": "",
+      "packet_sha256": "78ef251f36a79ab66ce4646b2772c8e77ae869b99d68c47bd0376770adf9a1ea",
+      "citations": []
+    },
+    {
+      "case_id": "reservation",
+      "split": "development",
+      "mode": "generic",
+      "reference_fact_for_human_review": "Friday 6 pm for four. The confirmation is outside the 24-hour neighbor gap.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.0409682081080973,
+      "retrieved_sources": [],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "24ddb5794d6e984dfd4887b5710da90d2e19f7c604eed80b0310be69dd1d3d09",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "reservation",
+      "split": "development",
+      "mode": "context",
+      "reference_fact_for_human_review": "Friday 6 pm for four. The confirmation is outside the 24-hour neighbor gap.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.3428821249399334,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "reservation-1"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "8af5f87266cd7695f04eed7fd66e2a34bc2f4f72cb202f28be6cd91877436354",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "reservation",
+      "split": "development",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "Friday 6 pm for four. The confirmation is outside the 24-hour neighbor gap.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.341891791904345,
+      "retrieved_sources": [
+        {
+          "source": "synthetic",
+          "id": "reservation-1"
+        }
+      ],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "862b85b7cec373b65c71d3e5b29a15acd404c70e95934c4449528e60f22473c8",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "invoice",
+      "split": "development",
+      "mode": "generic",
+      "reference_fact_for_human_review": "No invoice information exists before the cutoff.",
+      "provider_calls": 1,
+      "elapsed_seconds": 3.0312612920533866,
+      "retrieved_sources": [],
+      "status": "provider_abstained",
+      "draft_text": "",
+      "packet_sha256": "63f9a615350bb10f6363bfa20bee4c08f405ca98912998449f847807353edcb5",
+      "citations": [],
+      "segments": []
+    },
+    {
+      "case_id": "invoice",
+      "split": "development",
+      "mode": "context",
+      "reference_fact_for_human_review": "No invoice information exists before the cutoff.",
+      "provider_calls": 0,
+      "elapsed_seconds": 0.0006448749918490648,
+      "retrieved_sources": [],
+      "status": "needs_history",
+      "draft_text": "",
+      "packet_sha256": "250ec5dd057622e7e3d8c31634558ae5e6f80fe586f323c47aec9fa48e7a2fda",
+      "citations": []
+    },
+    {
+      "case_id": "invoice",
+      "split": "development",
+      "mode": "personalized",
+      "reference_fact_for_human_review": "No invoice information exists before the cutoff.",
+      "provider_calls": 0,
+      "elapsed_seconds": 0.0006399999838322401,
+      "retrieved_sources": [],
+      "status": "needs_history",
+      "draft_text": "",
+      "packet_sha256": "866822a536f60527796b8e1da5ee9f76fc302e35def00390d163b2abf2914b4d",
+      "citations": []
+    }
+  ],
+  "reply_quality_scored": false,
+  "semantic_entailment_automated": false,
+  "sending_performed": false,
+  "limitation": "Generated text and literal citation checks require human review. Provider rejection/abstention is retained, not hidden. Timing includes model loading and local infrastructure. Synthetic examples do not establish owner-style imitation or real-user preference."
+}
