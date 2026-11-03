@@ -55,6 +55,15 @@ behavior is retained; pinning does not automate factual or style review.
 
 ### Optional embedding search
 
+`neighbors.NeighborSearch(store, window=1)` is a separate opt-in lexical adapter.
+It keeps lexical hits first, then adds up to one preceding/following message per
+hit in the same provider/thread, within 24 hours. All messages are filtered by
+the owner/contact pair and exclusive cutoff before expansion; a 128-candidate
+cap fails explicitly. Results keep source IDs and identify the originating seed.
+The total result limit still applies, so seeds can consume the entire budget.
+Neighbor scores are inherited seed scores, not relevance or factual confidence.
+No unmatched conversation is added, and outbound style selection stays unchanged.
+
 `python -m personal_context.frozen_retrieval select examples/benchmark/manifest.json
 runs/development-freeze.json --model TAG --expected-model-digest SHA256
 --confirm-local-only` selects from cosine thresholds 0.2/0.4/0.6/0.8 using only

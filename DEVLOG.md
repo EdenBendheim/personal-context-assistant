@@ -2,6 +2,8 @@
 
 ## November 2, 2026
 
+- Added an opt-in bounded lexical thread-neighbor adapter to recover followups without the topic word. Four tests pass for incoming details, explicit seed provenance, source/thread/contact/cutoff/time-gap boundaries, lexical seed priority, ties, deduplication, bounds and mutation refusal. This library step does not change default drafting or UI retrieval; neighbor relevance is not guaranteed.
+
 - Added exact-source annotations and a no-inference evidence-coverage audit for the unchanged eight-case reply study. Ten of twelve contextual source cases are complete; both equipment variants miss the incoming tripod detail. Two tests pass for visible omissions, empty labels, report redaction and invalid/foreign/future/changed-fixture labels. These are coverage labels, not semantic/style scores.
 
 ## November 1, 2026
