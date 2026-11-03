@@ -195,6 +195,14 @@ contract cases or demonstrate owner-style imitation.
 
 ## Evaluation direction
 
+`python -m personal_context.evidence_coverage examples/local_reply/manifest.json
+examples/local_reply/coverage.json --split all` (one line) audits whether each
+reply packet contains its author-labeled required source IDs. The annotations
+bind the unchanged study bytes and reject foreign, future, unknown or duplicate
+sources. This exposes the equipment/​tripod retrieval omission separately from
+model output. Exit 1 means missing contextual evidence; no model is run, message
+bodies are omitted, and coverage is not reply quality or precision over extra sources.
+
 Compare generic drafting, lexical context, embedding context, and contact-specific examples on the same held-out reply situations. Split by thread and time. Track source support, recipient/style preference in blinded comparisons, useful edits, latency, and cost. A low retrieval loss alone does not establish that drafts are better.
 
 ## Review and edit cited memory

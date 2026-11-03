@@ -1,5 +1,9 @@
 # Development log
 
+## November 2, 2026
+
+- Added exact-source annotations and a no-inference evidence-coverage audit for the unchanged eight-case reply study. Ten of twelve contextual source cases are complete; both equipment variants miss the incoming tripod detail. Two tests pass for visible omissions, empty labels, report redaction and invalid/foreign/future/changed-fixture labels. These are coverage labels, not semantic/style scores.
+
 ## November 1, 2026
 
 - Completed first real local inference using an isolated official Ollama 0.40.13 daemon with cloud disabled and verified Qwen2.5 1.5B/Nomic v1.5 blobs. Development exposed mixed reply/abstention output; v2 prose alone failed, while v3 separate schema branches fixed the shape without dropping validation. Frozen evaluation has seven abstentions, three weak drafts requiring review and two no-history skips; no usable/style-quality claim. Development includes unsupported availability and repetition. All earlier outcomes are retained in public synthetic receipts.

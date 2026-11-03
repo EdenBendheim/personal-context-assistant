@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "study_sha256": "2c0e651707f2b0470289b4f69ec6f3fd802fe449473eef208a624d9031418c88",
+  "required_sources": {
+    "alex-demo": [
+      {
+        "source": "synthetic",
+        "id": "alex-2"
+      }
+    ],
+    "bea-import": [
+      {
+        "source": "synthetic",
+        "id": "bea-2"
+      }
+    ],
+    "cam-office-hours": [
+      {
+        "source": "synthetic",
+        "id": "cam-2"
+      }
+    ],
+    "dan-meeting": [],
+    "emi-poster": [
+      {
+        "source": "synthetic",
+        "id": "emi-2"
+      }
+    ],
+    "finn-debugging": [
+      {
+        "source": "synthetic",
+        "id": "finn-2"
+      }
+    ],
+    "hana-equipment": [
+      {
+        "source": "synthetic",
+        "id": "hana-2"
+      }
+    ],
+    "ivy-invoice": []
+  }
+}
