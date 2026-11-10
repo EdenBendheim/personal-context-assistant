@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "kind": "development_only_reply_intent",
+  "benchmark_sha256": "beac55f03c903b0e020b2bc4e14be2076f6d650c90815f2af9894e01283b2696",
+  "variant_sha256": {
+    "topic_only": "13750936eeff21c8bd5e432589e1bad1537238d3116102df096bf9ac1f5c4ac4",
+    "explicit_task": "477f52846d1ff9e698b59044681ba34de048d507d9ae92af3fdb389616a90fe5"
+  },
+  "source_sha256": "555eed0cca2e9eb71fe71f2a7c54e2cccf28dd8766a4e15726fef75f573e316f",
+  "prompt_version": "grounded-draft-v4",
+  "configuration": {
+    "backend": "ollama_chat",
+    "prompt_version": "grounded-draft-v4",
+    "settings": {
+      "model": "qwen2.5:7b",
+      "endpoint": "http://127.0.0.1:59836",
+      "timeout": 60.0,
+      "max_tokens": 512,
+      "seed": 29,
+      "local_only_confirmed": true,
+      "expected_digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    },
+    "identity_note": "Requested model/settings, not a served-weight attestation or semantic validation",
+    "model_identity": {
+      "version": 1,
+      "model": "qwen2.5:7b",
+      "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+      "size_bytes": 4683087332,
+      "runtime_version": "0.40.13",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "format": "gguf",
+        "family": "qwen2",
+        "parameter_size": "7.6B",
+        "quantization_level": "Q4_K_M"
+      },
+      "show_sha256": "bef4e60dde0f24b602417c53fa0d9ef4d7d90f482917c6006bce9e8a383bfaf1",
+      "local_only_confirmed": true,
+      "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+    }
+  },
+  "retrieval_configuration": {
+    "backend": "lexical_thread_neighbors",
+    "window": 1,
+    "max_gap_seconds": 86400,
+    "max_candidates": 128,
+    "ordering": "All lexical seeds first; round-robin nearest neighbors in the same source/thread",
+    "limitation": "Neighbors can be unrelated or outdated. Their score is inherited from a lexical seed, not evidence of relevance, factual support or reply quality."
+  },
+  "rule": "Same prompt/model/history; vary only current_message and intent. Development only, no setting selection."
+}

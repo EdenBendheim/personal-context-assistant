@@ -76,11 +76,16 @@ variants still abstain on all 16 evaluation model calls each. Source coverage is
 not reply usefulness, and a larger model did not resolve this run's behavior.
 See [the paired study](experiments/FOLLOWUP-EVIDENCE-2026-11-02.md).
 
-Next retain abstention reasons and add explicit communication intent/current
-message to the request rather than relying on a topic word. Keep compatibility
-with saved packets, test development-only prompt changes, then freeze a new
-evaluation version. Collect human factual/usefulness ratings before style claims
-or fine-tuning. Missing lexical seeds, distant and separate-thread facts remain
+November 9: bounded current-message and reply-intent fields now round-trip through
+CLI/API/browser and saved reviews, with unchanged legacy packet hashes.
+Abstention reasons are retained. The v4 paired development diagnostic has
+0/9 topic-only versus 1/9 explicit-task drafts requiring review; eight still
+abstain. The one draft repeats source time/place but adds "confirmed" and omits
+the requested thanks. [Full results](experiments/REPLY-INTENT-2026-11-09.md).
+Next investigate persistent refusal on development cases, separating prompt
+interpretation from constrained-output behavior without weakening acceptance
+rules. Collect human factual/usefulness ratings, then freeze a separate held-out
+evaluation before style claims or fine-tuning. Missing lexical seeds, distant and separate-thread facts remain
 outside the new neighbor adapter. UI and saved-review defaults stay lexical;
 the CLI option is deliberate and source-traceable. Grow beyond the small authored
 stress sets while preserving these failures and the human review gate.

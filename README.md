@@ -2,6 +2,14 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
+**November 9 reply-task update:** the CLI and review browser accept an incoming
+message and reply goal, saved with the packet while preserving legacy hashes.
+Abstention reasons now survive in study reports. A paired local 7B development
+diagnostic produced one draft requiring review out of nine explicit-task attempts,
+versus none for topic-only input. Eight still abstained; the lone draft adds
+assurance beyond its source. Useful personalized replies remain unproven.
+[Inputs, outcomes, commands and limitations](experiments/REPLY-INTENT-2026-11-09.md).
+
 **Status — November 2, 2026:** working ingestion, contact-scoped retrieval,
 editable memory and persistent draft review. Bounded histories preserve unsaved
 edits. Real local Qwen chat and Nomic embedding inference now run with pinned

@@ -1,5 +1,33 @@
 # Development log
 
+## November 9, 2026
+
+- Retained bounded provider abstention reasons and review notes in study rows,
+  with exact reason counts. Added optional current-message/intent fields to
+  requests, canonical serialization and fingerprints. Old default packet hashes
+  and saved-review currentness reproduce; task text is not factual evidence.
+- Exposed tasks through the CLI, authenticated API and browser and added the v4
+  prompt contract. HTTP tests retain owner isolation and the human support gate.
+  A real synthetic browser created/reopened a saved task after reload, restored
+  both fields and cleared them on contact change. Unsaved task edits participate
+  in contact/review-switch confirmation; the temporary UI server was stopped.
+- Committed a development-only paired diagnostic before outcomes. A verified,
+  cloud-disabled installed Qwen2.5 7B made 18 actual requests on three authored
+  conversations. Topic-only abstained 9/9; explicit tasks abstained 8/9 with one
+  structural draft requiring review. It cites the correct workshop time/place
+  but adds "confirmed" and misses the requested thanks. No quality/style gain
+  or human approval is claimed. All reasons, synthetic reports, source/model
+  receipts and 18 local raw proposals are retained; the daemon was stopped.
+  [Methods, outcomes and next work](experiments/REPLY-INTENT-2026-11-09.md)
+- All 155 tests passed on Python 3.14.3 (18.609 s), plus the unchanged 20-case
+  retrieval regression (zero boundary violations), 13 scripted generation cases,
+  source-label validation, memory/draft demos, JavaScript and whitespace checks.
+  No private messages, paid APIs, weights or vectors published. Remote CI is
+  checked after push; the account billing lock blocked recent other-repo runs.
+- Interview explanation: “I added explicit reply tasks, preserved compatibility
+  with old reviews and retained the model's abstention reasons. I measured the
+  change on identical source packets and kept the weak generated draft unapproved.”
+
 ## November 2, 2026
 
 - Completed the declared real local comparison with verified Qwen2.5 7B files/runtime and source/model/config freeze before evaluation. Neighbor evidence raises complete required-source coverage from 0/6 to 4/6 evaluation contacts; deadline/no-seed and rental/separate-thread omissions remain. Both 7B variants abstain on all 16 actual evaluation requests each, so no reply-quality benefit is established. A post-study development diagnostic reports “No new information to provide”; explicit reply intent and retained abstention reasons are next investigations. The 1.5B development-only diagnostic produces four weak drafts requiring review, not a controlled evaluation-model improvement.

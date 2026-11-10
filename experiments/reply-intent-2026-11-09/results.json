@@ -1,0 +1,697 @@
+{
+  "version": 1,
+  "kind": "development_only_reply_intent_results",
+  "declaration_sha256": "e1d9333a9cbdc562aa72f65b16b65e18553b8b6559a5fc411762b1d77bb563ad",
+  "reports": {
+    "topic_only": {
+      "version": 1,
+      "kind": "synthetic provider reply study",
+      "benchmark_sha256": "13750936eeff21c8bd5e432589e1bad1537238d3116102df096bf9ac1f5c4ac4",
+      "prompt_version": "grounded-draft-v4",
+      "split": "development",
+      "configuration": {
+        "backend": "ollama_chat",
+        "prompt_version": "grounded-draft-v4",
+        "settings": {
+          "model": "qwen2.5:7b",
+          "endpoint": "http://127.0.0.1:59836",
+          "timeout": 60.0,
+          "max_tokens": 512,
+          "seed": 29,
+          "local_only_confirmed": true,
+          "expected_digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+        },
+        "identity_note": "Requested model/settings, not a served-weight attestation or semantic validation",
+        "model_identity": {
+          "version": 1,
+          "model": "qwen2.5:7b",
+          "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+          "size_bytes": 4683087332,
+          "runtime_version": "0.40.13",
+          "capabilities": [
+            "completion",
+            "tools"
+          ],
+          "details": {
+            "format": "gguf",
+            "family": "qwen2",
+            "parameter_size": "7.6B",
+            "quantization_level": "Q4_K_M"
+          },
+          "show_sha256": "bef4e60dde0f24b602417c53fa0d9ef4d7d90f482917c6006bce9e8a383bfaf1",
+          "local_only_confirmed": true,
+          "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+        }
+      },
+      "retrieval_configuration": {
+        "backend": "lexical_thread_neighbors",
+        "window": 1,
+        "max_gap_seconds": 86400,
+        "max_candidates": 128,
+        "ordering": "All lexical seeds first; round-robin nearest neighbors in the same source/thread",
+        "limitation": "Neighbors can be unrelated or outdated. Their score is inherited from a lexical seed, not evidence of relevance, factual support or reply quality."
+      },
+      "modes": [
+        "generic",
+        "context",
+        "personalized"
+      ],
+      "attempts": 9,
+      "provider_calls": 9,
+      "statuses": {
+        "provider_abstained": 9
+      },
+      "cases": [
+        {
+          "case_id": "workshop",
+          "split": "development",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Starts at 2 pm in room 12.",
+          "provider_calls": 1,
+          "elapsed_seconds": 4.077457166975364,
+          "retrieved_sources": [],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "e4c7309de5bc9644eb925dafa50938daee9737293237d8dbd734752529e06a5e",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No relevant evidence provided.",
+          "review_notes": [
+            "No relevant evidence provided."
+          ]
+        },
+        {
+          "case_id": "workshop",
+          "split": "development",
+          "mode": "context",
+          "reference_fact_for_human_review": "Starts at 2 pm in room 12.",
+          "provider_calls": 1,
+          "elapsed_seconds": 4.695332958130166,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "workshop-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "workshop-2"
+            }
+          ],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "e4f0f0c6e09eee051e0f83bbfef2f3e8d8723a7c49904e1a095831840686a811",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No new facts to share.",
+          "review_notes": [
+            "No new facts to share."
+          ]
+        },
+        {
+          "case_id": "workshop",
+          "split": "development",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Starts at 2 pm in room 12.",
+          "provider_calls": 1,
+          "elapsed_seconds": 4.825529625173658,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "workshop-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "workshop-2"
+            }
+          ],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "35b515c4818e3527862d849a7e4fa64ca3adfd9f211085950d05676c7a7fa82e",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No new information to provide.",
+          "review_notes": [
+            "No new information to provide."
+          ]
+        },
+        {
+          "case_id": "export",
+          "split": "development",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Use the second JSONL file, not CSV.",
+          "provider_calls": 1,
+          "elapsed_seconds": 3.868411290924996,
+          "retrieved_sources": [],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "3078ab1a4e4a4315cbb48ae6422bdfcd0ef0bcd1500a0dca274bfa000289ea23",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No relevant evidence provided.",
+          "review_notes": [
+            "No relevant evidence provided."
+          ]
+        },
+        {
+          "case_id": "export",
+          "split": "development",
+          "mode": "context",
+          "reference_fact_for_human_review": "Use the second JSONL file, not CSV.",
+          "provider_calls": 1,
+          "elapsed_seconds": 4.644272542092949,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "export-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "export-2"
+            }
+          ],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "2a3fbd84e72c671aa7252a376202fd660be2f3ef7a23af2e7510bc8091e82295",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No new facts to share.",
+          "review_notes": [
+            "No new facts to share."
+          ]
+        },
+        {
+          "case_id": "export",
+          "split": "development",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Use the second JSONL file, not CSV.",
+          "provider_calls": 1,
+          "elapsed_seconds": 4.688713541952893,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "export-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "export-2"
+            }
+          ],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "4194eb401d9720fb1f191d1e8d8252fcb695649c5a1f67b4ecb6bded49cefa77",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No new facts to share.",
+          "review_notes": [
+            "No new facts to share."
+          ]
+        },
+        {
+          "case_id": "ticket",
+          "split": "development",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Use repair/cache rather than main.",
+          "provider_calls": 1,
+          "elapsed_seconds": 3.865921291988343,
+          "retrieved_sources": [],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "ec85f50b900f0d829fe0aea97853c7821f764e7b316c039369a6abed291d9f5a",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No relevant evidence provided.",
+          "review_notes": [
+            "No relevant evidence provided."
+          ]
+        },
+        {
+          "case_id": "ticket",
+          "split": "development",
+          "mode": "context",
+          "reference_fact_for_human_review": "Use repair/cache rather than main.",
+          "provider_calls": 1,
+          "elapsed_seconds": 4.753906082827598,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "ticket-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "ticket-2"
+            }
+          ],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "ab32cf872fa13fe198fd233366f09298a9c4c72977e4c9d8a23a86a8d6bc04d1",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No new facts to share based on the provided evidence.",
+          "review_notes": [
+            "No new facts to share based on the provided evidence."
+          ]
+        },
+        {
+          "case_id": "ticket",
+          "split": "development",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Use repair/cache rather than main.",
+          "provider_calls": 1,
+          "elapsed_seconds": 4.8252790831029415,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "ticket-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "ticket-2"
+            }
+          ],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "f9a8516d2ef7da762bb683dc35fd4b536d7f54408e1b9edae8f2b32046fb7222",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No new information to provide.",
+          "review_notes": [
+            "No new information to provide."
+          ]
+        }
+      ],
+      "abstention_reasons": {
+        "No relevant evidence provided.": 3,
+        "No new facts to share.": 3,
+        "No new information to provide.": 2,
+        "No new facts to share based on the provided evidence.": 1
+      },
+      "reply_quality_scored": false,
+      "semantic_entailment_automated": false,
+      "sending_performed": false,
+      "limitation": "Generated text and literal citation checks require human review. Provider rejection/abstention is retained, not hidden. Timing includes model loading and local infrastructure. Synthetic examples do not establish owner-style imitation or real-user preference."
+    },
+    "explicit_task": {
+      "version": 1,
+      "kind": "synthetic provider reply study",
+      "benchmark_sha256": "477f52846d1ff9e698b59044681ba34de048d507d9ae92af3fdb389616a90fe5",
+      "prompt_version": "grounded-draft-v4",
+      "split": "development",
+      "configuration": {
+        "backend": "ollama_chat",
+        "prompt_version": "grounded-draft-v4",
+        "settings": {
+          "model": "qwen2.5:7b",
+          "endpoint": "http://127.0.0.1:59836",
+          "timeout": 60.0,
+          "max_tokens": 512,
+          "seed": 29,
+          "local_only_confirmed": true,
+          "expected_digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+        },
+        "identity_note": "Requested model/settings, not a served-weight attestation or semantic validation",
+        "model_identity": {
+          "version": 1,
+          "model": "qwen2.5:7b",
+          "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+          "size_bytes": 4683087332,
+          "runtime_version": "0.40.13",
+          "capabilities": [
+            "completion",
+            "tools"
+          ],
+          "details": {
+            "format": "gguf",
+            "family": "qwen2",
+            "parameter_size": "7.6B",
+            "quantization_level": "Q4_K_M"
+          },
+          "show_sha256": "bef4e60dde0f24b602417c53fa0d9ef4d7d90f482917c6006bce9e8a383bfaf1",
+          "local_only_confirmed": true,
+          "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+        }
+      },
+      "retrieval_configuration": {
+        "backend": "lexical_thread_neighbors",
+        "window": 1,
+        "max_gap_seconds": 86400,
+        "max_candidates": 128,
+        "ordering": "All lexical seeds first; round-robin nearest neighbors in the same source/thread",
+        "limitation": "Neighbors can be unrelated or outdated. Their score is inherited from a lexical seed, not evidence of relevance, factual support or reply quality."
+      },
+      "modes": [
+        "generic",
+        "context",
+        "personalized"
+      ],
+      "attempts": 9,
+      "provider_calls": 9,
+      "statuses": {
+        "provider_abstained": 8,
+        "needs_review": 1
+      },
+      "cases": [
+        {
+          "case_id": "workshop",
+          "split": "development",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Starts at 2 pm in room 12.",
+          "provider_calls": 1,
+          "elapsed_seconds": 4.056835625087842,
+          "retrieved_sources": [],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "23fa71f291fc25e46d10fef3b66a8a990ff0d2ff3bfb15dbea8935deb154c677",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No historical evidence provided to confirm workshop details.",
+          "review_notes": [
+            "No historical evidence provided to confirm workshop details."
+          ]
+        },
+        {
+          "case_id": "workshop",
+          "split": "development",
+          "mode": "context",
+          "reference_fact_for_human_review": "Starts at 2 pm in room 12.",
+          "provider_calls": 1,
+          "elapsed_seconds": 6.350914250127971,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "workshop-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "workshop-2"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Of course, the workshop is confirmed for 2 pm in room 12.",
+          "packet_sha256": "e2bac59df3f38af958b80306673a4a60ba5534ff6734dee6392eb5ee4332fe38",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "It starts at 2 pm in room 12.",
+              "provenance": {
+                "id": "workshop-2",
+                "source": "synthetic",
+                "thread": "workshop",
+                "author": "workshop@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-09-01T10:20:00.000000+00:00",
+                "fingerprint": "76b4ba8e65e62c23cc817ef224f76f8f00df987139205cd0a33836b25f027607",
+                "retrieval": {
+                  "origin": "thread_neighbor",
+                  "seed": {
+                    "source": "synthetic",
+                    "id": "workshop-1"
+                  }
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Of course, the workshop is confirmed for 2 pm in room 12.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "workshop",
+          "split": "development",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Starts at 2 pm in room 12.",
+          "provider_calls": 1,
+          "elapsed_seconds": 4.606467500096187,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "workshop-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "workshop-2"
+            }
+          ],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "7bf1c15672d5bac005c970053fc177271860a6aed99f0a675a65446d62a34c44",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No new facts to confirm.",
+          "review_notes": [
+            "No new facts to confirm."
+          ]
+        },
+        {
+          "case_id": "export",
+          "split": "development",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Use the second JSONL file, not CSV.",
+          "provider_calls": 1,
+          "elapsed_seconds": 4.065679499879479,
+          "retrieved_sources": [],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "d55404842581eb0858efdbf4679fd6c6798afb74122d75a0f74f6de22c0f5d9d",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No evidence provided for the correction or second file.",
+          "review_notes": [
+            "No evidence provided for the correction or second file."
+          ]
+        },
+        {
+          "case_id": "export",
+          "split": "development",
+          "mode": "context",
+          "reference_fact_for_human_review": "Use the second JSONL file, not CSV.",
+          "provider_calls": 1,
+          "elapsed_seconds": 4.814493709011003,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "export-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "export-2"
+            }
+          ],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "0abdb7e3c63a7fec551ce3c2dddfb97aab199b57129df0a71ffa23ca41ba92e4",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No new facts available.",
+          "review_notes": [
+            "No new facts available."
+          ]
+        },
+        {
+          "case_id": "export",
+          "split": "development",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Use the second JSONL file, not CSV.",
+          "provider_calls": 1,
+          "elapsed_seconds": 4.839742832817137,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "export-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "export-2"
+            }
+          ],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "cf76bbce80e2576c4839fd4a6106421444e96922ee8af444c8a790c4a56dc752",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No new facts available.",
+          "review_notes": [
+            "No new facts available."
+          ]
+        },
+        {
+          "case_id": "ticket",
+          "split": "development",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Use repair/cache rather than main.",
+          "provider_calls": 1,
+          "elapsed_seconds": 4.0217049170751125,
+          "retrieved_sources": [],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "3e0ec66dfe6bce1d0388bd7ad4fbc73d87dfff62f104a98a7ef7fa2020090fdf",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No relevant evidence provided.",
+          "review_notes": [
+            "No relevant evidence provided."
+          ]
+        },
+        {
+          "case_id": "ticket",
+          "split": "development",
+          "mode": "context",
+          "reference_fact_for_human_review": "Use repair/cache rather than main.",
+          "provider_calls": 1,
+          "elapsed_seconds": 4.982716667000204,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "ticket-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "ticket-2"
+            }
+          ],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "24adece5ad24055039e71ec8d6705fc564243a35c25b13ec3020307b888ecb8d",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No new facts to share based on the current evidence.",
+          "review_notes": [
+            "No new facts to share based on the current evidence."
+          ]
+        },
+        {
+          "case_id": "ticket",
+          "split": "development",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Use repair/cache rather than main.",
+          "provider_calls": 1,
+          "elapsed_seconds": 5.1517808749340475,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "ticket-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "ticket-2"
+            }
+          ],
+          "status": "provider_abstained",
+          "draft_text": "",
+          "packet_sha256": "49025b4161ff613cd643cea24f1caeae7394892024a3ce2528ce7e19a536f14e",
+          "citations": [],
+          "segments": [],
+          "abstain_reason": "No new facts to share based on the current message and intent.",
+          "review_notes": [
+            "No new facts to share based on the current message and intent."
+          ]
+        }
+      ],
+      "abstention_reasons": {
+        "No historical evidence provided to confirm workshop details.": 1,
+        "No new facts to confirm.": 1,
+        "No evidence provided for the correction or second file.": 1,
+        "No new facts available.": 2,
+        "No relevant evidence provided.": 1,
+        "No new facts to share based on the current evidence.": 1,
+        "No new facts to share based on the current message and intent.": 1
+      },
+      "reply_quality_scored": false,
+      "semantic_entailment_automated": false,
+      "sending_performed": false,
+      "limitation": "Generated text and literal citation checks require human review. Provider rejection/abstention is retained, not hidden. Timing includes model loading and local infrastructure. Synthetic examples do not establish owner-style imitation or real-user preference."
+    }
+  },
+  "paired": [
+    {
+      "case_id": "workshop",
+      "mode": "generic",
+      "topic_only_status": "provider_abstained",
+      "explicit_task_status": "provider_abstained",
+      "topic_only_reason": "No relevant evidence provided.",
+      "explicit_task_reason": "No historical evidence provided to confirm workshop details."
+    },
+    {
+      "case_id": "workshop",
+      "mode": "context",
+      "topic_only_status": "provider_abstained",
+      "explicit_task_status": "needs_review",
+      "topic_only_reason": "No new facts to share.",
+      "explicit_task_reason": null
+    },
+    {
+      "case_id": "workshop",
+      "mode": "personalized",
+      "topic_only_status": "provider_abstained",
+      "explicit_task_status": "provider_abstained",
+      "topic_only_reason": "No new information to provide.",
+      "explicit_task_reason": "No new facts to confirm."
+    },
+    {
+      "case_id": "export",
+      "mode": "generic",
+      "topic_only_status": "provider_abstained",
+      "explicit_task_status": "provider_abstained",
+      "topic_only_reason": "No relevant evidence provided.",
+      "explicit_task_reason": "No evidence provided for the correction or second file."
+    },
+    {
+      "case_id": "export",
+      "mode": "context",
+      "topic_only_status": "provider_abstained",
+      "explicit_task_status": "provider_abstained",
+      "topic_only_reason": "No new facts to share.",
+      "explicit_task_reason": "No new facts available."
+    },
+    {
+      "case_id": "export",
+      "mode": "personalized",
+      "topic_only_status": "provider_abstained",
+      "explicit_task_status": "provider_abstained",
+      "topic_only_reason": "No new facts to share.",
+      "explicit_task_reason": "No new facts available."
+    },
+    {
+      "case_id": "ticket",
+      "mode": "generic",
+      "topic_only_status": "provider_abstained",
+      "explicit_task_status": "provider_abstained",
+      "topic_only_reason": "No relevant evidence provided.",
+      "explicit_task_reason": "No relevant evidence provided."
+    },
+    {
+      "case_id": "ticket",
+      "mode": "context",
+      "topic_only_status": "provider_abstained",
+      "explicit_task_status": "provider_abstained",
+      "topic_only_reason": "No new facts to share based on the provided evidence.",
+      "explicit_task_reason": "No new facts to share based on the current evidence."
+    },
+    {
+      "case_id": "ticket",
+      "mode": "personalized",
+      "topic_only_status": "provider_abstained",
+      "explicit_task_status": "provider_abstained",
+      "topic_only_reason": "No new information to provide.",
+      "explicit_task_reason": "No new facts to share based on the current message and intent."
+    }
+  ],
+  "evaluation_cases_inspected": false,
+  "reply_quality_scored": false,
+  "sending_performed": false,
+  "limitation": "Small authored development diagnostic. A changed draft/abstention count does not establish factual support, usefulness, style or held-out improvement. Human review remains required."
+}
