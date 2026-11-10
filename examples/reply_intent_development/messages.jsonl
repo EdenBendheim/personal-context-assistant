@@ -1,0 +1,6 @@
+{"id": "workshop-1", "source": "synthetic", "thread": "workshop", "author": "owner@example.invalid", "recipient": "workshop@example.invalid", "timestamp": "2026-09-01T10:00:00Z", "body": "looking forward to the workshop!"}
+{"id": "workshop-2", "source": "synthetic", "thread": "workshop", "author": "workshop@example.invalid", "recipient": "owner@example.invalid", "timestamp": "2026-09-01T10:20:00Z", "body": "It starts at 2 pm in room 12."}
+{"id": "export-1", "source": "synthetic", "thread": "export", "author": "export@example.invalid", "recipient": "owner@example.invalid", "timestamp": "2026-09-01T10:00:00Z", "body": "The export is ready for your importer."}
+{"id": "export-2", "source": "synthetic", "thread": "export", "author": "export@example.invalid", "recipient": "owner@example.invalid", "timestamp": "2026-09-01T10:20:00Z", "body": "Correction: use JSONL, not CSV. The second file is the right one."}
+{"id": "ticket-1", "source": "synthetic", "thread": "ticket", "author": "owner@example.invalid", "recipient": "ticket@example.invalid", "timestamp": "2026-09-01T10:00:00Z", "body": "thanks, I can look into the ticket"}
+{"id": "ticket-2", "source": "synthetic", "thread": "ticket", "author": "ticket@example.invalid", "recipient": "owner@example.invalid", "timestamp": "2026-09-01T10:20:00Z", "body": "Use the repair/cache branch; main does not have the fix."}

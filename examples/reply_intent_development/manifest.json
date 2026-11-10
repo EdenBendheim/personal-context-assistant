@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "kind": "synthetic local reply study",
+  "messages": "messages.jsonl",
+  "cases": [
+    {
+      "id": "workshop",
+      "split": "development",
+      "reference_fact": "Starts at 2 pm in room 12.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "workshop@example.invalid",
+        "before": "2026-09-05T00:00:00Z",
+        "query": "workshop",
+        "current_message": "Can you confirm the workshop details before you come?",
+        "intent": "Thank them and confirm the time and room from the history."
+      }
+    },
+    {
+      "id": "export",
+      "split": "development",
+      "reference_fact": "Use the second JSONL file, not CSV.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "export@example.invalid",
+        "before": "2026-09-05T00:00:00Z",
+        "query": "export",
+        "current_message": "Did you see the correction for the export?",
+        "intent": "Acknowledge the correction and ask where to get the second file."
+      }
+    },
+    {
+      "id": "ticket",
+      "split": "development",
+      "reference_fact": "Use repair/cache rather than main.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "ticket@example.invalid",
+        "before": "2026-09-05T00:00:00Z",
+        "query": "ticket",
+        "current_message": "Does the ticket update make sense?",
+        "intent": "Acknowledge the branch information and ask whether there is a test I should run."
+      }
+    }
+  ]
+}
