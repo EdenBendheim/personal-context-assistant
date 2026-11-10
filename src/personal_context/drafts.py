@@ -19,6 +19,8 @@ class DraftRequest:
     query: str
     mode: str = "personalized"
     limit: int = 5
+    current_message: str | None = None
+    intent: str | None = None
 
     def __post_init__(self):
         owner, contact = scope(self.owner, self.contact)
@@ -30,6 +32,13 @@ class DraftRequest:
             raise ValueError("Mode must be generic, context, or personalized")
         if type(self.limit) is not int or not 1 <= self.limit <= 20:
             raise ValueError("Context limit must be an integer from 1 to 20")
+        for field, bound in (('current_message', 2000), ('intent', 500)):
+            value = getattr(self, field)
+            if value is not None:
+                value = nonempty(value, field)
+                if len(value) > bound:
+                    raise ValueError(f'{field} exceeds {bound} characters')
+                object.__setattr__(self, field, value)
 
 
 @dataclass(frozen=True)
@@ -48,7 +57,16 @@ class ReviewPacket:
 
     @property
     def fingerprint(self) -> str:
-        return hashlib.sha256(json.dumps(asdict(self), sort_keys=True).encode()).hexdigest()
+        return hashlib.sha256(json.dumps(packet_dict(self), sort_keys=True).encode()).hexdigest()
+
+
+def packet_dict(packet: ReviewPacket) -> dict:
+    """Keep legacy wire bytes/hashes when optional reply-task fields are absent."""
+    result = asdict(packet)
+    for field in ('current_message', 'intent'):
+        if result['request'][field] is None:
+            result['request'].pop(field)
+    return result
 
 
 @dataclass(frozen=True)
@@ -121,7 +139,7 @@ class DraftEngine:
     def draft(self, request: DraftRequest, provider: QuoteProvider | None = None) -> dict:
         packet = self.prepare(request)
         if request.mode != "generic" and not packet.evidence:
-            return dict(status="needs_history", draft_text="", citations=[], packet=asdict(packet),
+            return dict(status="needs_history", draft_text="", citations=[], packet=packet_dict(packet),
                         packet_sha256=packet.fingerprint,
                         review_notes=["Add relevant messages or reviewed memory before drafting factual context."])
         provider = provider if provider is not None else ExtractiveProvider()
@@ -155,7 +173,7 @@ class DraftEngine:
             lines.append("")
         lines += ["[Add your response or proposed next step here.]", "", "Thanks!"]
         return dict(status="needs_review", draft_text="\n".join(lines), citations=citations,
-                    packet=asdict(packet), packet_sha256=packet.fingerprint, provider=type(provider).__name__,
+                    packet=packet_dict(packet), packet_sha256=packet.fingerprint, provider=type(provider).__name__,
                     review_notes=["Quoted history may be outdated; review the wording and citations.",
                                   "This extractive template does not generate or imitate your writing style.",
                                   "Source citations establish quote provenance, not automatic factual entailment."])

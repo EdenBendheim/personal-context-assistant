@@ -1,10 +1,9 @@
 """Versioned prompt and strict JSON boundary for generative draft providers."""
 from copy import deepcopy
-from dataclasses import asdict
 import hashlib
 import json
 
-from .drafts import CitedQuote, ReviewPacket
+from .drafts import CitedQuote, ReviewPacket, packet_dict
 from .generation import GeneratedProposal, GeneratedSegment
 
 PROMPT_VERSION = 'grounded-draft-v3'
@@ -47,7 +46,7 @@ SCHEMA = dict(anyOf=[_reply, _abstention])
 
 def prompt_messages(packet: ReviewPacket) -> list[dict]:
     if not isinstance(packet, ReviewPacket): raise ValueError('Expected an isolated review packet')
-    content = json.dumps(dict(prompt_version=PROMPT_VERSION, schema=SCHEMA, packet=asdict(packet)),
+    content = json.dumps(dict(prompt_version=PROMPT_VERSION, schema=SCHEMA, packet=packet_dict(packet)),
                          ensure_ascii=True,allow_nan=False)
     if len(content.encode()) > 120_000: raise ValueError('Context exceeds 120,000 prompt bytes; reduce retrieval limit')
     return [dict(role='system',content=SYSTEM),dict(role='user',content=content)]

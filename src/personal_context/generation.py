@@ -1,10 +1,10 @@
 """Generated wording with inspectable support, never automatic factual approval."""
 from copy import deepcopy
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from typing import Protocol
 import json
 
-from .drafts import CitedQuote, DraftRequest, ReviewPacket
+from .drafts import CitedQuote, DraftRequest, ReviewPacket, packet_dict
 from .memory import nonempty
 
 
@@ -80,7 +80,7 @@ def validate_proposal(proposal: GeneratedProposal, packet: ReviewPacket) -> dict
 def generate(engine, request: DraftRequest, provider: GenerationProvider) -> dict:
     packet = engine.prepare(request)
     if request.mode != 'generic' and not packet.evidence:
-        return dict(status='needs_history', draft_text='', citations=[], packet=asdict(packet),
+        return dict(status='needs_history', draft_text='', citations=[], packet=packet_dict(packet),
             packet_sha256=packet.fingerprint, review_notes=['Add relevant factual history before generation.'])
     metadata = deepcopy(provider.describe()) if hasattr(provider, "describe") else {}
     if not isinstance(metadata, dict) or len(json.dumps(metadata, allow_nan=False)) > 4000:
@@ -89,4 +89,4 @@ def generate(engine, request: DraftRequest, provider: GenerationProvider) -> dic
     result = validate_proposal(proposal, packet)
     if engine.prepare(request).fingerprint != packet.fingerprint:
         raise ValueError('Context changed during generation; rebuild the draft')
-    return result | dict(packet=asdict(packet), packet_sha256=packet.fingerprint, provider=type(provider).__name__, generation_provenance=metadata)
+    return result | dict(packet=packet_dict(packet), packet_sha256=packet.fingerprint, provider=type(provider).__name__, generation_provenance=metadata)
