@@ -101,6 +101,7 @@ function render(result) {
   $("contact").value = result.contact; selectedContact = result.contact;
   const request = result.original.packet.request;
   $("topic").value = request.query; $("cutoff").value = request.before; $("mode").value = request.mode;
+  $('current-message').value = request.current_message || ''; $('reply-intent').value = request.intent || '';
   $("draft").value = result.text; $("original").textContent = result.original.draft_text;
   $("review-state").textContent = `Saved revision ${result.revision} · ${result.context_current ? "context unchanged" : "context changed — rebuild before marking usable"}`;
   $("review-notes").replaceChildren();
@@ -184,29 +185,39 @@ function memoryValues() {
     sources: [...document.querySelectorAll("#memory-sources input:checked")].map(el => JSON.parse(el.value)) };
 }
 function memoryDirty() { return memoryBaseline && JSON.stringify(memoryValues()) !== memoryBaseline; }
-function discardAllowed(includeMemory = false) {
-  return (!dirty() && (!includeMemory || !memoryDirty())) || window.confirm(includeMemory ? "Discard unsaved draft or memory wording?" : "Discard unsaved draft wording?");
+function taskDirty() {
+  const original = review ? review.original.packet.request : {};
+  return $('current-message').value !== (original.current_message || '') || $('reply-intent').value !== (original.intent || '');
+}
+function discardAllowed(includeMemory = false, includeTask = false) {
+  return (!dirty() && (!includeMemory || !memoryDirty()) && (!includeTask || !taskDirty())) ||
+    window.confirm(includeTask ? 'Discard unsaved draft, reply task or memory wording?' :
+      includeMemory ? "Discard unsaved draft or memory wording?" : "Discard unsaved draft wording?");
 }
 $("create-form").addEventListener("submit", event => {
   event.preventDefault(); if (!discardAllowed()) return;
   perform(async () => {
+    const task = {};
+    if ($('current-message').value.trim()) task.current_message = $('current-message').value;
+    if ($('reply-intent').value.trim()) task.intent = $('reply-intent').value;
     const result = await api("/api/reviews", { contact: $("contact").value, before: $("cutoff").value,
-      query: $("topic").value, mode: $("mode").value });
+      query: $("topic").value, mode: $("mode").value, ...task });
     if (result.status === "needs_history") { notice("No matching history. Try another topic, import messages, or select the generic template.", true); return; }
     if (result.status === "provider_abstained") { notice(`No draft saved: ${result.review_notes[0]}`, true); return; }
     await load(result.review_id, {resetSaved:true}); notice("Review saved. Inspect the sources and edit your reply.");
   });
 });
 $("contact").addEventListener("change", () => {
-  if (!discardAllowed(true)) { $("contact").value = selectedContact; return; }
+  if (!discardAllowed(true, true)) { $("contact").value = selectedContact; return; }
   resetPrivacy();
   selectedContact = $("contact").value; review = null; memoryItem = null; memoryBaseline = ""; $("workspace").hidden = true;
+  $('current-message').value = ''; $('reply-intent').value = '';
   resetDraftHistories();
   memoryItems = []; memoryCursor = null; renderMemory(null); addMemoryItems([]);
   perform(async () => { await refreshContact(); notice("Choose a topic or open a saved review."); });
 });
 $("load").addEventListener("click", () => {
-  if (!discardAllowed()) return;
+  if (!discardAllowed(false, true)) return;
   perform(async () => { if (!$("saved").value) throw new Error("Choose a saved review first"); await load($("saved").value); notice("Saved review reopened."); });
 });
 $("older-reviews").addEventListener("click", () => perform(async () => {

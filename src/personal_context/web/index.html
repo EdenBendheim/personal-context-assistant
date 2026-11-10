@@ -22,6 +22,9 @@
         <label>Draft mode<select id="mode"><option value="personalized">History + memory + writing examples</option>
           <option value="context">History only</option><option value="generic">Topic only (no history)</option></select></label>
       </div>
+      <label>Incoming message (optional)<textarea id="current-message" rows="3" maxlength="2000" placeholder="What are you replying to?"></textarea></label>
+      <label>Your reply goal (optional)<textarea id="reply-intent" rows="2" maxlength="500" placeholder="e.g. Thank them and ask where to pick it up"></textarea></label>
+      <p class="muted">For local model drafts: explain what you're replying to and what you want to say. Check factual claims against the sources below.</p>
       <button type="submit">Create review</button>
       <div class="saved"><label>Saved reviews<select id="saved"><option value="">Choose a saved review</option></select></label>
         <button type="button" id="load">Open saved review</button>

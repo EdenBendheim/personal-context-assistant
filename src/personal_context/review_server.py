@@ -181,7 +181,7 @@ class Handler(BaseHTTPRequestHandler):
                 result = (reviews.history_page if path[3] == 'history' else reviews.feedback_page)(path[2], owner=owner, **query)
             elif method == "POST" and path == ["api", "reviews"]:
                 fields(query, ())
-                payload = fields(self.body(), ("contact", "before", "query"), ("mode", "limit"))
+                payload = fields(self.body(), ("contact", "before", "query"), ("mode", "limit", 'current_message', 'intent'))
                 result = reviews.create(DraftRequest(owner=owner, **payload), provider=self.server.provider)
             elif method == "POST" and len(path) == 4 and path[:2] == ["api", "reviews"]:
                 fields(query, ())

@@ -21,6 +21,8 @@ def main():
     parser.add_argument("--query", required=True, help="Reply topic and lexical retrieval query")
     parser.add_argument("--mode", choices=("generic", "context", "personalized"), default="personalized")
     parser.add_argument("--limit", type=int, default=5)
+    parser.add_argument('--current-message', help='Incoming message to respond to (optional, max 2000 characters)')
+    parser.add_argument('--intent', help='Your reply goal (optional, max 500 characters; not factual evidence)')
     add_retrieval_options(parser)
     add_model_options(parser)
     args = parser.parse_args()
@@ -28,7 +30,8 @@ def main():
         parser.error("Import messages into an existing database first")
     store = Store(str(args.db))
     try:
-        request = DraftRequest(args.owner, args.contact, args.before, args.query, args.mode, args.limit)
+        request = DraftRequest(args.owner, args.contact, args.before, args.query, args.mode, args.limit,
+                               current_message=args.current_message, intent=args.intent)
         provider = configured_provider(args)
         engine = DraftEngine(store, retrieval=retrieval_for(store, args.neighbor_window))
         result = engine.draft(request) if provider is None else generate(engine, request, provider)

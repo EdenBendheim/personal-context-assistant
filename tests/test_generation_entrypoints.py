@@ -68,3 +68,22 @@ class GenerationEntrypointTests(unittest.TestCase):
                 patch('personal_context.local_model.OllamaProvider.generate',side_effect=LocalModelError('Unavailable')),\
                 contextlib.redirect_stderr(io.StringIO()),contextlib.redirect_stdout(io.StringIO()) as out,self.assertRaises(SystemExit):main()
         self.assertEqual('',out.getvalue())
+
+    def test_reply_task_round_trips_cli_http_and_saved_review_with_support_gate(self):
+        task = dict(current_message='Could you confirm the demo topic?', intent='Thank them and ask about the agenda.')
+        payload = dict(contact=CONTACT, before='2026-09-04T00:00:00Z', query='demo', **task)
+        status, saved, _ = self.call('/api/reviews', payload)
+        self.assertEqual(200, status)
+        reopened = self.call('/api/reviews/'+saved['review_id'])[1]
+        self.assertTrue(reopened['context_current'])
+        for key, value in task.items():
+            self.assertEqual(value, reopened['original']['packet']['request'][key])
+        self.assertEqual(400, self.call('/api/reviews/'+saved['review_id']+'/feedback',
+            dict(expected_revision=1, decision='usable'))[0])
+        self.assertEqual(400, self.call('/api/reviews', payload | dict(intent='x'*501))[0])
+        args = ['draft', '--db', str(self.db), '--owner', OWNER, '--contact', CONTACT,
+            '--before', payload['before'], '--query', 'demo', '--current-message', task['current_message'], '--intent', task['intent']]
+        with patch('sys.argv', args), contextlib.redirect_stdout(io.StringIO()) as output:
+            main()
+        request = json.loads(output.getvalue())['packet']['request']
+        self.assertTrue(all(request[key] == value for key, value in task.items()))
