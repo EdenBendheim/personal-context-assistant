@@ -51,6 +51,7 @@ class GenerationTests(unittest.TestCase):
         self.assertEqual('needs_history',result['status'])
         result=generate(self.engine,self.request,Provider(GeneratedProposal(abstain_reason='Need a confirmed date.')))
         self.assertEqual('provider_abstained',result['status']);self.assertEqual('',result['draft_text'])
+        self.assertEqual('Need a confirmed date.', result['abstain_reason'])
 
     def test_provider_mutation_and_source_changes_cannot_replace_validation_snapshot(self):
         engine=self.engine

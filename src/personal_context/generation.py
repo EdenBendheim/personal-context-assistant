@@ -34,7 +34,8 @@ def validate_proposal(proposal: GeneratedProposal, packet: ReviewPacket) -> dict
         reason = nonempty(proposal.abstain_reason, 'Abstention reason')
         if proposal.segments or len(reason) > 500:
             raise ValueError('Abstention requires no segments and a bounded reason')
-        return dict(status='provider_abstained', draft_text='', citations=[], segments=[], review_notes=[reason])
+        return dict(status='provider_abstained', draft_text='', citations=[], segments=[],
+                    abstain_reason=reason, review_notes=[reason])
     if not proposal.segments:
         raise ValueError('Provide wording or an explicit abstention')
     known = {item.key:item for item in packet.evidence}

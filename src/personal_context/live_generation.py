@@ -84,7 +84,7 @@ def study(study_inputs, provider, *, split='development', neighbor_window=0):
                                      for e in packet.evidence if e.kind == 'message']
                 result = generate(engine, selected, counted)
                 row = {k: result[k] for k in ('status', 'draft_text', 'packet_sha256', 'citations', 'segments',
-                                             'support_review_required') if k in result}
+                                             'support_review_required', 'abstain_reason', 'review_notes') if k in result}
             except ValueError as exc:
                 row = dict(status='rejected', draft_text='', error=str(exc))
             finally:
@@ -101,6 +101,7 @@ def study(study_inputs, provider, *, split='development', neighbor_window=0):
         retrieval_configuration=retrieval_configuration, modes=list(MODES),
         attempts=len(rows), provider_calls=sum(r['provider_calls'] for r in rows),
         statuses=dict(Counter(r['status'] for r in rows)), cases=rows,
+        abstention_reasons=dict(Counter(r['abstain_reason'] for r in rows if r['status'] == 'provider_abstained')),
         reply_quality_scored=False, semantic_entailment_automated=False, sending_performed=False,
         limitation='Generated text and literal citation checks require human review. Provider rejection/abstention '
                    'is retained, not hidden. Timing includes model loading and local infrastructure. '

@@ -45,3 +45,18 @@ class LiveGenerationTests(unittest.TestCase):
             else:d['cases'][1]['request']['contact']=CONTACT
             self.path.write_text(json.dumps(d))
             with self.assertRaises(ValueError):load_study(self.path)
+
+    def test_abstention_reasons_and_no_history_notes_survive_the_study_report(self):
+        class Abstaining(Provider):
+            def generate(self, packet):
+                return GeneratedProposal(abstain_reason='Need the owner to say what response they want.')
+        report = study(load_study(self.path), Abstaining(), split='all')
+        reason = 'Need the owner to say what response they want.'
+        self.assertEqual({reason: 4}, report['abstention_reasons'])
+        for row in report['cases']:
+            if row['status'] == 'provider_abstained':
+                self.assertEqual(reason, row['abstain_reason'])
+                self.assertEqual([reason], row['review_notes'])
+            else:
+                self.assertNotIn('abstain_reason', row)
+                self.assertIn('relevant factual history', row['review_notes'][0])
