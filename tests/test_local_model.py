@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from personal_context.drafts import DraftEngine,DraftRequest
 from personal_context.generation import generate
+from personal_context.generation_format import SCHEMA, prompt_messages
 from personal_context.local_model import LocalModelConfig,LocalModelError,OllamaProvider
 from personal_context.store import Store
 from test_drafts import OWNER,CONTACT,BEFORE,message
@@ -47,6 +48,17 @@ class LocalModelTests(unittest.TestCase):
             with self.subTest(changes=changes),self.assertRaises(ValueError):LocalModelConfig(**(self.config.__dict__|changes))
         self.assertEqual([],self.requests)
 
+    def test_chat_without_format_uses_identical_prompt_and_options(self):
+        provider = OllamaProvider(self.config)
+        messages = prompt_messages(self.engine.prepare(self.request))
+        constrained = provider._chat(messages, schema=SCHEMA)
+        unconstrained = provider._chat(messages, schema=None)
+        self.assertEqual(constrained, unconstrained)
+        constrained_request, unconstrained_request = (body for _, body in self.requests)
+        self.assertEqual(SCHEMA, constrained_request.pop('format'))
+        self.assertEqual(constrained_request, unconstrained_request)
+        self.assertEqual(messages, unconstrained_request['messages'])
+
     def test_status_redirect_invalid_truncated_tool_and_oversized_responses_fail_closed(self):
         for status in (302,404,500):
             self.status=status
@@ -61,6 +73,17 @@ class LocalModelTests(unittest.TestCase):
             with self.assertRaises(ValueError):generate(self.engine,self.request,OllamaProvider(self.config))
         self.payload=original;self.content_type='text/plain'
         with self.assertRaises(LocalModelError):generate(self.engine,self.request,OllamaProvider(self.config))
+
+    def test_chat_without_format_still_rejects_incomplete_and_tool_responses(self):
+        provider = OllamaProvider(self.config)
+        messages = prompt_messages(self.engine.prepare(self.request))
+        self.payload['done_reason'] = 'length'
+        with self.assertRaisesRegex(LocalModelError, 'incomplete'):
+            provider._chat(messages, schema=None)
+        self.payload['done_reason'] = 'stop'
+        self.payload['message']['tool_calls'] = [{}]
+        with self.assertRaisesRegex(LocalModelError, 'unsupported tools'):
+            provider._chat(messages, schema=None)
 
     def test_transport_timeout_is_redacted_and_prompt_budget_prevents_network(self):
         with patch('personal_context.local_model.HTTPConnection.request',side_effect=TimeoutError('secret diagnostic')):

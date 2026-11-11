@@ -59,13 +59,17 @@ class OllamaProvider:
         return result
 
     def generate(self,packet):
-        messages=prompt_messages(packet)
+        return parse_proposal(self._chat(prompt_messages(packet), schema=SCHEMA))
+
+    def _chat(self, messages, *, schema):
         # Conservatively bound prompt bytes, not an estimated tokenizer count.
         if sum(len(m['content'].encode()) for m in messages)>6000:
             raise LocalModelError('Prompt exceeds local 6,000-byte budget; reduce retrieval limit/history')
         self.identity.capture()
-        payload=dict(model=self.config.model,messages=messages,format=deepcopy(SCHEMA),stream=False,keep_alive=0,
+        payload=dict(model=self.config.model,messages=messages,stream=False,keep_alive=0,
             options=dict(temperature=0,seed=self.config.seed,num_predict=self.config.max_tokens,num_ctx=8192))
+        if schema is not None:
+            payload['format'] = deepcopy(schema)
         url=urlsplit(self.config.endpoint);connection=HTTPConnection('127.0.0.1',url.port,timeout=self.config.timeout)
         try:
             connection.request('POST','/api/chat',json.dumps(payload).encode(),{'Content-Type':'application/json'})
@@ -82,6 +86,6 @@ class OllamaProvider:
                     or not isinstance(result.get('message'),dict) or result['message'].get('role')!='assistant'
                     or result['message'].get('tool_calls')):
                 raise LocalModelError('Local model response is incomplete or requests unsupported tools')
-            return parse_proposal(result['message'].get('content'))
+            return result['message'].get('content')
         except (OSError,HTTPException):raise LocalModelError('Local model unavailable or timed out; no fallback or draft saved') from None
         finally:connection.close()
