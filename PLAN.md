@@ -82,9 +82,14 @@ Abstention reasons are retained. The v4 paired development diagnostic has
 0/9 topic-only versus 1/9 explicit-task drafts requiring review; eight still
 abstain. The one draft repeats source time/place but adds "confirmed" and omits
 the requested thanks. [Full results](experiments/REPLY-INTENT-2026-11-09.md).
-Next investigate persistent refusal on development cases, separating prompt
-interpretation from constrained-output behavior without weakening acceptance
-rules. Collect human factual/usefulness ratings, then freeze a separate held-out
+November 10: paired decoder-format development runs used identical prompt hashes,
+sources and model settings. Schema-constrained output abstained 8/9 times.
+Prompt-only output yielded seven drafts requiring review and two literal-citation
+rejections. Inspection found unsupported claims and missed tasks.
+[Full diagnostic](experiments/REPLY-FORMAT-2026-11-10.md).
+Next isolate the union-schema behavior on these development cases, preserving
+strict parsing and support review. Collect human factual/usefulness ratings,
+then freeze a separate held-out
 evaluation before style claims or fine-tuning. Missing lexical seeds, distant and separate-thread facts remain
 outside the new neighbor adapter. UI and saved-review defaults stay lexical;
 the CLI option is deliberate and source-traceable. Grow beyond the small authored

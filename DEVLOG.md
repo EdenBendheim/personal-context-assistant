@@ -1,5 +1,26 @@
 # Development log
 
+## November 10, 2026
+
+- Separated bounded loopback chat transport from proposal parsing. Added regression
+  checks for identical prompts/options and incomplete/tool-response rejection.
+- Committed a frozen development-only schema-versus-prompt-only diagnostic before
+  outcomes. Both arms retain strict parsing, source checks and human support review.
+- Verified the installed Qwen2.5 7B blobs and made 18 actual cloud-disabled local
+  requests on three invented conversations. The constrained arm abstained 8/9
+  times with one draft requiring review. The prompt-only arm yielded seven drafts
+  requiring review and two citation rejections. All paired prompt hashes and
+  source lists matched. Inspection found unsupported claims and missed goals.
+  Raw outputs remain local, and the temporary daemon was stopped.
+  [Results, inspected failures and next work](experiments/REPLY-FORMAT-2026-11-10.md)
+- All 159 tests passed on Python 3.14.3 and 3.11.0. The 20-case retrieval regression
+  had zero boundary violations. All 13 scripted generation cases, source-label
+  validation, memory/draft/CLI demos and JavaScript syntax checks passed.
+  GitHub CI is verified after push.
+- Interview explanation — “I isolated the decoder constraint with identical
+  prompts and evidence. Refusals dropped, while source validation and inspection
+  exposed the remaining factual and task-following problems.”
+
 ## November 9, 2026
 
 - Retained bounded provider abstention reasons and review notes in study rows,

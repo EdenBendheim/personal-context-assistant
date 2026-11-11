@@ -2,6 +2,13 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
+**November 10 decoder diagnostic:** a paired local 7B development run isolated
+Ollama's response-format constraint with identical prompts and sources. With
+the constraint, eight of nine attempts abstained. With the schema only in the
+prompt, seven drafts reached review and two failed citation checks. Inspection
+found unsupported claims and missed reply goals. Human quality ratings remain
+pending. [Protocol, evidence and next experiment](experiments/REPLY-FORMAT-2026-11-10.md).
+
 **November 9 reply-task update:** the CLI and review browser accept an incoming
 message and reply goal, saved with the packet while preserving legacy hashes.
 Abstention reasons now survive in study reports. A paired local 7B development
