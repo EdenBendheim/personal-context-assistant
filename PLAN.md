@@ -87,10 +87,13 @@ sources and model settings. Schema-constrained output abstained 8/9 times.
 Prompt-only output yielded seven drafts requiring review and two literal-citation
 rejections. Inspection found unsupported claims and missed tasks.
 [Full diagnostic](experiments/REPLY-FORMAT-2026-11-10.md).
-Next isolate the union-schema behavior on these development cases, preserving
-strict parsing and support review. Collect human factual/usefulness ratings,
-then freeze a separate held-out
-evaluation before style claims or fine-tuning. Missing lexical seeds, distant and separate-thread facts remain
+November 13: the [matched union and flat schema comparison](experiments/REPLY-UNION-2026-11-13.md)
+produced one draft for review under each constraint. The flat schema turned
+two refusals into mixed outputs that the validator rejected. Prompt-only
+reproduced seven drafts for review and two citation rejections. Next define
+separate support and task-completion criteria, rate the development drafts,
+and freeze a separate held-out evaluation before style claims or fine-tuning.
+Missing lexical seeds, distant and separate-thread facts remain
 outside the new neighbor adapter. UI and saved-review defaults stay lexical;
 the CLI option is deliberate and source-traceable. Grow beyond the small authored
 stress sets while preserving these failures and the human review gate.

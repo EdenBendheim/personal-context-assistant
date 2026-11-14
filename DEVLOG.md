@@ -1,5 +1,25 @@
 # Development log
 
+## November 13, 2026
+
+- Bound format study declarations to the loaded requests and evidence. Tests
+  reject edits after loading before any provider call.
+- Added a three-arm diagnostic that keeps v4 prompts fixed and changes only
+  the decoder schema. The flat arm retains strict parsing, citation checks
+  and human review.
+- Ran all 27 declared requests locally with verified Qwen2.5 7B files. The
+  union and flat schema each produced one draft for review. The flat schema
+  replaced two abstentions with contradictory replies, both rejected.
+  Prompt-only produced seven drafts for review and two citation rejections.
+  All prompt hashes and source lists matched. The temporary daemon stopped.
+  [Outcomes and inspected failures](experiments/REPLY-UNION-2026-11-13.md)
+- All 161 tests passed on Python 3.14.3 and 3.11.0. The 20-case retrieval
+  benchmark had zero boundary violations. All 13 scripted generation cases,
+  source-label validation, demos, JavaScript and whitespace checks passed.
+- Interview explanation — “I isolated the decoder schema with identical
+  inputs. The flat schema yielded two invalid replies, so I preserved the
+  review gate and kept reply quality separate from generation counts.”
+
 ## November 10, 2026
 
 - Separated bounded loopback chat transport from proposal parsing. Added regression

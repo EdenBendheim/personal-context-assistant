@@ -2,6 +2,12 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
+**November 13 decoder comparison:** a flat schema and the union schema each
+produced one draft for review in nine requests. The flat schema also produced
+two mixed reply and abstention responses that the validator rejected.
+Prompt-only output yielded seven drafts for review, with factual support and
+task completion still open. [Results and examples](experiments/REPLY-UNION-2026-11-13.md).
+
 **November 10 decoder diagnostic:** a paired local 7B development run isolated
 Ollama's response-format constraint with identical prompts and sources. With
 the constraint, eight of nine attempts abstained. With the schema only in the

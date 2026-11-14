@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "kind": "development_only_response_format",
+  "benchmark_sha256": "beac55f03c903b0e020b2bc4e14be2076f6d650c90815f2af9894e01283b2696",
+  "inputs_sha256": "634018c52c1167327800f901085e1124b468710a9856133037477addeae9ba59",
+  "source_sha256": "16256e000744b80056d4e64e5d0ae35525a1caeb7023eaa778ebd3937c71e216",
+  "prompt_version": "grounded-draft-v4",
+  "configuration": {
+    "backend": "ollama_chat",
+    "prompt_version": "grounded-draft-v4",
+    "settings": {
+      "model": "qwen2.5:7b",
+      "endpoint": "http://127.0.0.1:52915",
+      "timeout": 60.0,
+      "max_tokens": 512,
+      "seed": 29,
+      "local_only_confirmed": true,
+      "expected_digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    },
+    "identity_note": "Requested model/settings, not a served-weight attestation or semantic validation",
+    "model_identity": {
+      "version": 1,
+      "model": "qwen2.5:7b",
+      "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+      "size_bytes": 4683087332,
+      "runtime_version": "0.40.13",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "format": "gguf",
+        "family": "qwen2",
+        "parameter_size": "7.6B",
+        "quantization_level": "Q4_K_M"
+      },
+      "show_sha256": "bef4e60dde0f24b602417c53fa0d9ef4d7d90f482917c6006bce9e8a383bfaf1",
+      "local_only_confirmed": true,
+      "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+    }
+  },
+  "retrieval_configuration": {
+    "backend": "lexical_thread_neighbors",
+    "window": 1,
+    "max_gap_seconds": 86400,
+    "max_candidates": 128,
+    "ordering": "All lexical seeds first; round-robin nearest neighbors in the same source/thread",
+    "limitation": "Neighbors can be unrelated or outdated. Their score is inherited from a lexical seed, not evidence of relevance, factual support or reply quality."
+  },
+  "comparison": "union",
+  "response_formats": [
+    "schema",
+    "flat_schema",
+    "prompt_only"
+  ],
+  "decoder_schema_sha256": {
+    "schema": "a34d03a50a802d91a366f81b1645591f156008ea7a2aee977b41fa0bd912ac12",
+    "flat_schema": "bdc11508f13098cdd203e65f5b25362a7f714d851cbbe0a3f195cae8905aa278",
+    "prompt_only": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
+  }
+}
