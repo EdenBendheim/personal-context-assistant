@@ -7,13 +7,14 @@ import json
 from pathlib import Path
 
 from .frozen_retrieval import digest, source_fingerprint
-from .generation_format import PROMPT_VERSION, SCHEMA, parse_proposal, prompt_messages
+from .generation_format import FLAT_SCHEMA, PROMPT_VERSION, SCHEMA, parse_proposal, prompt_messages
 from .live_generation import load_study, study
 from .model_options import add_model_options, configured_provider
 from .retrieval_options import description
 
 
-FORMATS = ('schema', 'prompt_only')
+DECODER_SCHEMAS = {'schema': SCHEMA, 'flat_schema': FLAT_SCHEMA, 'prompt_only': None}
+COMPARISONS = {'constraint': ('schema', 'prompt_only'), 'union': ('schema', 'flat_schema', 'prompt_only')}
 
 
 class _DiagnosticProvider:
@@ -28,11 +29,13 @@ class _DiagnosticProvider:
     def generate(self, packet):
         messages = prompt_messages(packet)
         self.prompt_hashes.append(digest(messages))
-        schema = SCHEMA if self.response_format == 'schema' else None
+        schema = DECODER_SCHEMAS[self.response_format]
         return parse_proposal(self.provider._chat(messages, schema=schema))
 
 
-def declare(inputs, provider):
+def declare(inputs, provider, *, comparison='constraint'):
+    if comparison not in COMPARISONS:
+        raise ValueError('Choose a declared format comparison')
     cases = inputs['document']['cases']
     if any(case['split'] != 'development' or not case['request'].get('current_message')
            or not case['request'].get('intent') for case in cases):
@@ -45,30 +48,34 @@ def declare(inputs, provider):
                                           messages=[asdict(message) for message in inputs['messages']])),
                 source_sha256=source_fingerprint(),
                 prompt_version=PROMPT_VERSION, configuration=deepcopy(provider.describe()),
-                retrieval_configuration=description(1), response_formats=list(FORMATS))
+                retrieval_configuration=description(1), comparison=comparison,
+                response_formats=list(COMPARISONS[comparison]),
+                decoder_schema_sha256={name: digest(DECODER_SCHEMAS[name]) for name in COMPARISONS[comparison]})
 
 
-def compare(inputs, provider, frozen):
+def compare(inputs, provider, frozen, *, comparison='constraint'):
+    current = declare(inputs, provider, comparison=comparison)
+    if frozen != current:
+        raise ValueError('Format diagnostic source, inputs, prompt or provider differs from its declaration')
     reports = {}
-    for response_format in FORMATS:
-        if frozen != declare(inputs, provider):
-            raise ValueError('Format diagnostic source, inputs, prompt or provider differs from its declaration')
+    for response_format in current['response_formats']:
         diagnostic = _DiagnosticProvider(provider, response_format)
         report = study(inputs, diagnostic, split='development', neighbor_window=1)
         reports[response_format] = report | {'prompt_sha256': diagnostic.prompt_hashes}
-    if frozen != declare(inputs, provider):
-        raise ValueError('Format diagnostic changed during inference')
+        if frozen != declare(inputs, provider, comparison=comparison):
+            raise ValueError('Format diagnostic changed during inference')
 
-    constrained, prompt_only = (reports[name] for name in FORMATS)
-    if constrained['prompt_sha256'] != prompt_only['prompt_sha256']:
-        raise ValueError('Paired format requests differ in prompt messages')
+    reference = reports['schema']
+    if any(report['prompt_sha256'] != reference['prompt_sha256'] for report in reports.values()):
+        raise ValueError('Matched format requests differ in prompt messages')
     paired = []
-    for left, right in zip(constrained['cases'], prompt_only['cases'], strict=True):
+    for matched in zip(*(report['cases'] for report in reports.values()), strict=True):
+        reference_row = matched[0]
         fields = ('case_id', 'mode', 'retrieved_sources', 'provider_calls')
-        if any(left[field] != right[field] for field in fields):
-            raise ValueError('Paired format attempts differ in case, sources or model access')
-        paired.append(dict(case_id=left['case_id'], mode=left['mode'],
-                           schema_status=left['status'], prompt_only_status=right['status']))
+        if any(row[field] != reference_row[field] for row in matched[1:] for field in fields):
+            raise ValueError('Matched format attempts differ in case, sources or model access')
+        statuses = {f'{name}_status': row['status'] for name, row in zip(reports, matched, strict=True)}
+        paired.append(dict(case_id=reference_row['case_id'], mode=reference_row['mode'], **statuses))
     return dict(version=1, kind='development_only_response_format_results',
                 declaration_sha256=digest(frozen), paired=paired, reports=reports,
                 evaluation_cases_inspected=False, reply_quality_scored=False, sending_performed=False)
@@ -79,6 +86,7 @@ def main():
     parser.add_argument('manifest', type=Path)
     parser.add_argument('receipt', type=Path)
     parser.add_argument('--output', type=Path, help='Run a declared comparison and write a new report')
+    parser.add_argument('--comparison', choices=COMPARISONS, default='constraint')
     add_model_options(parser)
     args = parser.parse_args()
     try:
@@ -87,12 +95,12 @@ def main():
         inputs = load_study(args.manifest)
         provider = configured_provider(args)
         if args.output is None:
-            path, result = args.receipt, declare(inputs, provider)
+            path, result = args.receipt, declare(inputs, provider, comparison=args.comparison)
         else:
             path = args.output
             if path.exists():
                 raise ValueError('Choose a new output path for the format diagnostic')
-            result = compare(inputs, provider, json.loads(args.receipt.read_text()))
+            result = compare(inputs, provider, json.loads(args.receipt.read_text()), comparison=args.comparison)
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open('x') as handle:
             handle.write(json.dumps(result, indent=2, allow_nan=False)+'\n')
