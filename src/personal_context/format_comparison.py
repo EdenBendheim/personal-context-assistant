@@ -2,6 +2,7 @@
 
 import argparse
 from copy import deepcopy
+from dataclasses import asdict
 import json
 from pathlib import Path
 
@@ -39,7 +40,10 @@ def declare(inputs, provider):
     if not provider.config.expected_digest:
         raise ValueError('Format diagnostic requires an exact installed model digest')
     return dict(version=1, kind='development_only_response_format',
-                benchmark_sha256=inputs['fingerprint'], source_sha256=source_fingerprint(),
+                benchmark_sha256=inputs['fingerprint'],
+                inputs_sha256=digest(dict(document=inputs['document'],
+                                          messages=[asdict(message) for message in inputs['messages']])),
+                source_sha256=source_fingerprint(),
                 prompt_version=PROMPT_VERSION, configuration=deepcopy(provider.describe()),
                 retrieval_configuration=description(1), response_formats=list(FORMATS))
 

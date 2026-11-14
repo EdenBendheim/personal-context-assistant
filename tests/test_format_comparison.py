@@ -1,4 +1,5 @@
 from copy import deepcopy
+from dataclasses import replace
 import json
 from pathlib import Path
 import unittest
@@ -64,4 +65,15 @@ class FormatComparisonTests(unittest.TestCase):
                 case['request'].pop(field)
             with self.assertRaisesRegex(ValueError, 'development-only'):
                 declare(inputs, self.provider)
+        self.assertFalse(self.provider.calls)
+
+    def test_changed_loaded_requests_or_messages_invalidate_the_original_declaration(self):
+        frozen = declare(self.inputs, self.provider)
+        changed_task = deepcopy(self.inputs)
+        changed_task['document']['cases'][0]['request']['intent'] = 'Ask who is running the workshop.'
+        changed_message = deepcopy(self.inputs)
+        changed_message['messages'][0] = replace(changed_message['messages'][0], body='Different synthetic evidence.')
+        for inputs in (changed_task, changed_message):
+            with self.assertRaisesRegex(ValueError, 'differs from its declaration'):
+                compare(inputs, self.provider, frozen)
         self.assertFalse(self.provider.calls)
