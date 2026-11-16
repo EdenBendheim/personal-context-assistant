@@ -1,0 +1,256 @@
+{
+  "version": 1,
+  "split": "development",
+  "packet_sha256": "727d19be626f5b6e3b58a062e5f3e06ad12ee277a58654f8a249a4fd39ddc0de",
+  "study_sha256": "4007360095767653dfedf6454f5f978e2a0bcc6d6a538e7ac6e58dfdcee5a33a",
+  "reviewer_kind": "assistant",
+  "prior_exposure": true,
+  "distinct_wordings_rated": 6,
+  "conditions": {
+    "flat_schema": {
+      "attempts": 9,
+      "needs_review": 1,
+      "provider_abstained": 6,
+      "rejected": 2,
+      "needs_history": 0,
+      "supported": 0,
+      "unsupported": 1,
+      "uncertain": 0,
+      "task_complete": 0,
+      "supported_and_complete": 0
+    },
+    "prompt_only": {
+      "attempts": 9,
+      "needs_review": 7,
+      "provider_abstained": 0,
+      "rejected": 2,
+      "needs_history": 0,
+      "supported": 2,
+      "unsupported": 4,
+      "uncertain": 1,
+      "task_complete": 0,
+      "supported_and_complete": 0
+    },
+    "schema": {
+      "attempts": 9,
+      "needs_review": 1,
+      "provider_abstained": 8,
+      "rejected": 0,
+      "needs_history": 0,
+      "supported": 0,
+      "unsupported": 1,
+      "uncertain": 0,
+      "task_complete": 0,
+      "supported_and_complete": 0
+    }
+  },
+  "attempts": [
+    {
+      "condition": "flat_schema",
+      "case_id": "workshop",
+      "mode": "generic",
+      "status": "provider_abstained",
+      "candidate_id": null
+    },
+    {
+      "condition": "flat_schema",
+      "case_id": "workshop",
+      "mode": "context",
+      "status": "needs_review",
+      "candidate_id": "reply-001",
+      "support": "unsupported",
+      "complete": false
+    },
+    {
+      "condition": "flat_schema",
+      "case_id": "workshop",
+      "mode": "personalized",
+      "status": "provider_abstained",
+      "candidate_id": null
+    },
+    {
+      "condition": "flat_schema",
+      "case_id": "export",
+      "mode": "generic",
+      "status": "provider_abstained",
+      "candidate_id": null
+    },
+    {
+      "condition": "flat_schema",
+      "case_id": "export",
+      "mode": "context",
+      "status": "rejected",
+      "candidate_id": null
+    },
+    {
+      "condition": "flat_schema",
+      "case_id": "export",
+      "mode": "personalized",
+      "status": "rejected",
+      "candidate_id": null
+    },
+    {
+      "condition": "flat_schema",
+      "case_id": "ticket",
+      "mode": "generic",
+      "status": "provider_abstained",
+      "candidate_id": null
+    },
+    {
+      "condition": "flat_schema",
+      "case_id": "ticket",
+      "mode": "context",
+      "status": "provider_abstained",
+      "candidate_id": null
+    },
+    {
+      "condition": "flat_schema",
+      "case_id": "ticket",
+      "mode": "personalized",
+      "status": "provider_abstained",
+      "candidate_id": null
+    },
+    {
+      "condition": "prompt_only",
+      "case_id": "workshop",
+      "mode": "generic",
+      "status": "rejected",
+      "candidate_id": null
+    },
+    {
+      "condition": "prompt_only",
+      "case_id": "workshop",
+      "mode": "context",
+      "status": "needs_review",
+      "candidate_id": "reply-002",
+      "support": "supported",
+      "complete": false
+    },
+    {
+      "condition": "prompt_only",
+      "case_id": "workshop",
+      "mode": "personalized",
+      "status": "needs_review",
+      "candidate_id": "reply-001",
+      "support": "unsupported",
+      "complete": false
+    },
+    {
+      "condition": "prompt_only",
+      "case_id": "export",
+      "mode": "generic",
+      "status": "rejected",
+      "candidate_id": null
+    },
+    {
+      "condition": "prompt_only",
+      "case_id": "export",
+      "mode": "context",
+      "status": "needs_review",
+      "candidate_id": "reply-003",
+      "support": "unsupported",
+      "complete": false
+    },
+    {
+      "condition": "prompt_only",
+      "case_id": "export",
+      "mode": "personalized",
+      "status": "needs_review",
+      "candidate_id": "reply-003",
+      "support": "unsupported",
+      "complete": false
+    },
+    {
+      "condition": "prompt_only",
+      "case_id": "ticket",
+      "mode": "generic",
+      "status": "needs_review",
+      "candidate_id": "reply-004",
+      "support": "supported",
+      "complete": false
+    },
+    {
+      "condition": "prompt_only",
+      "case_id": "ticket",
+      "mode": "context",
+      "status": "needs_review",
+      "candidate_id": "reply-005",
+      "support": "uncertain",
+      "complete": false
+    },
+    {
+      "condition": "prompt_only",
+      "case_id": "ticket",
+      "mode": "personalized",
+      "status": "needs_review",
+      "candidate_id": "reply-006",
+      "support": "unsupported",
+      "complete": false
+    },
+    {
+      "condition": "schema",
+      "case_id": "workshop",
+      "mode": "generic",
+      "status": "provider_abstained",
+      "candidate_id": null
+    },
+    {
+      "condition": "schema",
+      "case_id": "workshop",
+      "mode": "context",
+      "status": "needs_review",
+      "candidate_id": "reply-001",
+      "support": "unsupported",
+      "complete": false
+    },
+    {
+      "condition": "schema",
+      "case_id": "workshop",
+      "mode": "personalized",
+      "status": "provider_abstained",
+      "candidate_id": null
+    },
+    {
+      "condition": "schema",
+      "case_id": "export",
+      "mode": "generic",
+      "status": "provider_abstained",
+      "candidate_id": null
+    },
+    {
+      "condition": "schema",
+      "case_id": "export",
+      "mode": "context",
+      "status": "provider_abstained",
+      "candidate_id": null
+    },
+    {
+      "condition": "schema",
+      "case_id": "export",
+      "mode": "personalized",
+      "status": "provider_abstained",
+      "candidate_id": null
+    },
+    {
+      "condition": "schema",
+      "case_id": "ticket",
+      "mode": "generic",
+      "status": "provider_abstained",
+      "candidate_id": null
+    },
+    {
+      "condition": "schema",
+      "case_id": "ticket",
+      "mode": "context",
+      "status": "provider_abstained",
+      "candidate_id": null
+    },
+    {
+      "condition": "schema",
+      "case_id": "ticket",
+      "mode": "personalized",
+      "status": "provider_abstained",
+      "candidate_id": null
+    }
+  ]
+}

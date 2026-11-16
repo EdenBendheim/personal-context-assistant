@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "packet_sha256": "727d19be626f5b6e3b58a062e5f3e06ad12ee277a58654f8a249a4fd39ddc0de",
+  "reviewer_kind": "assistant",
+  "prior_exposure": true,
+  "ratings": {
+    "reply-001": {
+      "support": "unsupported",
+      "completed": [
+        "time",
+        "room"
+      ],
+      "note": "Workshop-2 gives the time and room without a separate confirmation. The reply adds that assurance and omits thanks."
+    },
+    "reply-002": {
+      "support": "supported",
+      "completed": [
+        "time",
+        "room"
+      ],
+      "note": "The time and room match workshop-2. The opening introduces that restatement, and the reply omits thanks."
+    },
+    "reply-003": {
+      "support": "unsupported",
+      "completed": [
+        "correction"
+      ],
+      "note": "Export-2 tells the owner which file to use. It gives no evidence the owner saw the correction or the whole export changed formats. The reply asks for delivery and leaves the location question unasked."
+    },
+    "reply-004": {
+      "support": "supported",
+      "completed": [],
+      "note": "The opening expresses an opinion and the question adds no factual claim. It neither names repair/cache nor asks what test the owner should run."
+    },
+    "reply-005": {
+      "support": "uncertain",
+      "completed": [
+        "branch"
+      ],
+      "note": "Ticket-2 directs the owner to repair/cache and says main lacks the fix. It implies that repair/cache has it, but does not say so explicitly. The question asks about tests the recipient already ran."
+    },
+    "reply-006": {
+      "support": "unsupported",
+      "completed": [
+        "branch"
+      ],
+      "note": "Ticket-2 instructs the owner to use repair/cache. The reply says the update already uses it. It asks about prior tests instead of which test the owner should run."
+    }
+  }
+}
