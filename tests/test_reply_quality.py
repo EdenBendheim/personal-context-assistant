@@ -57,3 +57,47 @@ class ReplyQualityTests(unittest.TestCase):
                 report['benchmark_sha256'] = '0'*64
             with self.subTest(change=change), self.assertRaisesRegex(ValueError, 'must match the fixture'):
                 self.prepare()
+
+    def test_expands_duplicate_ratings_and_retains_all_attempts(self):
+        from personal_context.reply_quality import summarize_reviews
+
+        packet, key = self.prepare()
+        ratings = self.ratings(packet, key)
+        exact_match = packet['cases'][0]['candidates'][0]['id']
+        ratings['ratings'][exact_match]['support'] = 'unsupported'
+        report = summarize_reviews(packet, key, ratings)
+        self.assertEqual(6, report['distinct_wordings_rated'])
+        self.assertEqual(27, len(report['attempts']))
+        self.assertEqual(9, report['conditions']['flat_schema']['attempts'])
+        self.assertEqual(2, report['conditions']['flat_schema']['rejected'])
+        self.assertEqual(8, report['conditions']['schema']['provider_abstained'])
+        matching = [attempt for attempt in report['attempts'] if attempt['candidate_id'] == exact_match]
+        self.assertTrue(all(attempt['support'] == 'unsupported' and attempt['complete'] for attempt in matching))
+        for tally in report['conditions'].values():
+            self.assertEqual(tally['needs_review'], tally['supported'] + tally['unsupported'] + tally['uncertain'])
+            self.assertEqual(tally['supported'], tally['supported_and_complete'])
+
+    def test_drift_partial_labels_and_duplicate_criteria_cannot_be_summarized(self):
+        from personal_context.reply_quality import summarize_reviews
+
+        packet, key = self.prepare()
+        ratings = self.ratings(packet, key)
+        altered = deepcopy(packet)
+        altered['cases'][0]['history'][0]['body'] = 'Changed context.'
+        with self.assertRaisesRegex(ValueError, 'exact reviewer packet'):
+            summarize_reviews(altered, key, ratings)
+        candidate_id = next(iter(ratings['ratings']))
+        missing = deepcopy(ratings)
+        del missing['ratings'][candidate_id]
+        with self.assertRaisesRegex(ValueError, 'every distinct'):
+            summarize_reviews(packet, key, missing)
+        ratings['ratings'][candidate_id]['completed'] = ['time', 'time']
+        with self.assertRaisesRegex(ValueError, 'Invalid rating'):
+            summarize_reviews(packet, key, ratings)
+
+    @staticmethod
+    def ratings(packet, key):
+        return dict(version=1, reviewer_kind='assistant', prior_exposure=True,
+            packet_sha256=key['packet_sha256'], ratings={
+                candidate['id']: dict(support='supported', completed=list(case['criteria']), note='Test rating.')
+                for case in packet['cases'] for candidate in case['candidates']})

@@ -88,3 +88,61 @@ def prepare_reviews(inputs, study, criteria, *, seed):
                               candidate_id=ids.get((case_id, wording)))
                          for condition, case_id, mode, status, wording in attempts])
     return packet, key
+
+
+SUPPORT_RATINGS = ('supported', 'unsupported', 'uncertain')
+
+
+def summarize_reviews(packet, key, ratings):
+    """Join completed ratings to the coordinator's original attempt key."""
+    fingerprint = digest(packet)
+    if (key['packet_sha256'] != fingerprint or ratings.get('packet_sha256') != fingerprint
+            or type(ratings.get('version')) is not int or ratings['version'] != 1):
+        raise ValueError('Ratings must match the exact reviewer packet')
+    reviewer_kind = ratings.get('reviewer_kind')
+    prior_exposure = ratings.get('prior_exposure')
+    if reviewer_kind not in ('human', 'assistant') or type(prior_exposure) is not bool:
+        raise ValueError('Record reviewer kind and prior exposure')
+
+    candidates = {candidate['id']: case for case in packet['cases'] for candidate in case['candidates']}
+    entries = ratings.get('ratings')
+    if not isinstance(entries, dict) or entries.keys() != candidates.keys():
+        raise ValueError('Rate every distinct candidate exactly once')
+
+    judgments = {}
+    for candidate_id, case in candidates.items():
+        rating = entries[candidate_id]
+        support, completed, note = (rating[field] for field in ('support', 'completed', 'note'))
+        if (support not in SUPPORT_RATINGS or not isinstance(completed, list)
+                or any(not isinstance(item, str) or item not in case['criteria'] for item in completed)
+                or len(completed) != len(set(completed))
+                or not isinstance(note, str) or not 1 <= len(note.strip()) <= 1000):
+            raise ValueError(f'Invalid rating for {candidate_id}')
+        judgments[candidate_id] = dict(support=support, complete=len(completed) == len(case['criteria']))
+
+    counts, unblinded = {}, []
+    for attempt in key['attempts']:
+        tally = counts.setdefault(attempt['condition'], Counter(
+            attempts=0, **dict.fromkeys(ATTEMPT_STATUSES, 0), **dict.fromkeys(SUPPORT_RATINGS, 0),
+            task_complete=0, supported_and_complete=0))
+        tally['attempts'] += 1
+        tally[attempt['status']] += 1
+        candidate_id = attempt['candidate_id']
+        row = attempt.copy()
+        if attempt['status'] == 'needs_review':
+            if candidate_id not in candidates or candidates[candidate_id]['case_id'] != attempt['case_id']:
+                raise ValueError('Candidate key does not match the original case')
+            judgment = judgments[candidate_id]
+            supported = judgment['support'] == 'supported'
+            tally[judgment['support']] += 1
+            tally['task_complete'] += judgment['complete']
+            tally['supported_and_complete'] += supported and judgment['complete']
+            row.update(judgment)
+        elif candidate_id is not None:
+            raise ValueError('Only drafts reaching review may have a candidate ID')
+        unblinded.append(row)
+
+    return dict(version=1, split=packet['split'], packet_sha256=fingerprint,
+                study_sha256=key['study_sha256'], reviewer_kind=reviewer_kind, prior_exposure=prior_exposure,
+                distinct_wordings_rated=len(candidates), conditions={name: dict(tally) for name, tally in counts.items()},
+                attempts=unblinded)
