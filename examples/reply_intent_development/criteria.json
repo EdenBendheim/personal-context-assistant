@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "cases": {
+    "workshop": {
+      "thanks": "Thanks the recipient for the workshop details.",
+      "time": "States that the workshop starts at 2 pm.",
+      "room": "States that the workshop is in room 12."
+    },
+    "export": {
+      "correction": "Acknowledges the correction to use the second JSONL file.",
+      "location": "Asks where to find or access the second file."
+    },
+    "ticket": {
+      "branch": "Acknowledges that the intended branch is repair/cache.",
+      "test": "Asks what test, if any, the owner should run."
+    }
+  }
+}
