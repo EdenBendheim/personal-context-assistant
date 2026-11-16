@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "kind": "synthetic local reply study",
+  "messages": "messages.jsonl",
+  "cases": [
+    {
+      "id": "rehearsal",
+      "split": "evaluation",
+      "reference_fact": "Use room 7B. An earlier message said 3C, and an update at the cutoff is unavailable.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "quality-rehearsal@example.invalid",
+        "before": "2026-08-12T12:00:00Z",
+        "query": "rehearsal",
+        "current_message": "Which later room update should we use?",
+        "intent": "Thank them for the correction and restate the current rehearsal room."
+      }
+    },
+    {
+      "id": "printing",
+      "split": "evaluation",
+      "reference_fact": "The printer needs a PDF with 3 mm bleed. No approver is named.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "quality-printing@example.invalid",
+        "before": "2026-08-12T12:00:00Z",
+        "query": "printing",
+        "current_message": "Is this enough to send to the printer?",
+        "intent": "Restate the format and ask who approves the print proof."
+      }
+    },
+    {
+      "id": "shipment",
+      "split": "evaluation",
+      "reference_fact": "The contact sent two outbound labels. History does not establish that the owner checked the files.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "quality-shipment@example.invalid",
+        "before": "2026-08-12T12:00:00Z",
+        "query": "shipment",
+        "current_message": "Did the labels come through?",
+        "intent": "Say which labels they sent and ask whether a return label is included."
+      }
+    },
+    {
+      "id": "plant",
+      "split": "evaluation",
+      "reference_fact": "Water the plant only if the top inch of soil is dry.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "quality-plant@example.invalid",
+        "before": "2026-08-12T12:00:00Z",
+        "query": "plant",
+        "current_message": "Can you remind me what to do and let me know if you can drop by?",
+        "intent": "Explain the care instruction and ask when they will be home. Leave availability open."
+      }
+    },
+    {
+      "id": "photos",
+      "split": "evaluation",
+      "reference_fact": "Only the private album is approved. The public folder is excluded.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "quality-photos@example.invalid",
+        "before": "2026-08-12T12:00:00Z",
+        "query": "photos",
+        "current_message": "Should these go in the album or the public folder?",
+        "intent": "Repeat the sharing restriction and ask for the private album link."
+      }
+    },
+    {
+      "id": "donation",
+      "split": "evaluation",
+      "reference_fact": "No donation drop-off location is available before the cutoff.",
+      "request": {
+        "owner": "owner@example.invalid",
+        "contact": "quality-donation@example.invalid",
+        "before": "2026-08-12T12:00:00Z",
+        "query": "donation",
+        "current_message": "Can you tell me where to leave the donation boxes?",
+        "intent": "Ask the recipient to confirm a drop-off location. Avoid naming a place."
+      }
+    }
+  ]
+}

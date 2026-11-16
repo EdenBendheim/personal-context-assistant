@@ -1,5 +1,26 @@
 # Development log
 
+## November 15, 2026
+
+- Added a rubric and local export and scoring commands. Reviewers see anonymous
+  candidate wording, the same eligible history for each case, and a checklist
+  for the requested actions. Scores require the exact packet hash and one
+  rating per distinct wording. Original refusals, rejections and skips remain
+  in the denominator.
+- Rated the six distinct drafts from the archived 27 attempts. Zero completed
+  every task criterion. Two prompt-only drafts earned factual support. The
+  assistant had previously seen the development outputs. Human ratings and
+  independent model results remain pending.
+  [Audit and replay](experiments/REPLY-QUALITY-2026-11-15.md)
+- Froze six new synthetic evaluation cases with separate contact scopes.
+  Verified the exclusive cutoff, empty-history case and 18-attempt path using
+  a scripted provider. The archived ratings reproduced byte-for-byte through
+  the CLI. These checks used no model calls.
+  [Evaluation fixture](examples/reply_quality_evaluation/README.md)
+- Interview explanation — “I built a masked review packet and kept every
+  original attempt in the denominator. Several drafts passed structural
+  validation, but none completed the task with factual support.”
+
 ## November 13, 2026
 
 - Bound format study declarations to the loaded requests and evidence. Tests

@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "cases": {
+    "rehearsal": {
+      "thanks": "Thanks the recipient for the correction.",
+      "room": "States that rehearsal is in room 7B."
+    },
+    "printing": {
+      "format": "Restates PDF with 3 mm bleed.",
+      "approver": "Asks who approves the print proof."
+    },
+    "shipment": {
+      "outbound": "Identifies the two outbound labels.",
+      "return": "Asks whether a return label is included."
+    },
+    "plant": {
+      "care": "States the conditional watering instruction with the one-inch threshold.",
+      "home": "Asks when the contact will be home.",
+      "availability": "Leaves the owner\u2019s availability open."
+    },
+    "photos": {
+      "limit": "States that photos go only in the private album.",
+      "link": "Asks for the private album link."
+    },
+    "donation": {
+      "ask": "Asks the recipient to confirm where the boxes should go.",
+      "location": "Leaves the drop-off location unspecified."
+    }
+  }
+}

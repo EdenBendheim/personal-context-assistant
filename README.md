@@ -2,6 +2,14 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
+**November 15 reply quality audit** — The review CLI masks decoder labels,
+records separate judgments for factual support and task completion, and retains
+rejected and skipped attempts in the score. In an assistant audit of 27 archived
+synthetic attempts, zero passed both checks. Six new held-out cases are ready
+for a declared model run and independent review.
+[Development ratings and replay](experiments/REPLY-QUALITY-2026-11-15.md) ·
+[Held-out fixture](examples/reply_quality_evaluation/README.md)
+
 **November 13 decoder comparison:** a flat schema and the union schema each
 produced one draft for review in nine requests. The flat schema also produced
 two mixed reply and abstention responses that the validator rejected.

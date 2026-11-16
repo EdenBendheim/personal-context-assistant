@@ -48,6 +48,8 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 
 ## Milestone 4 — measured results
 
+- [x] Export masked synthetic review packets and score factual support and task completion against explicit criteria.
+- [x] Rate archived development replies and freeze the first six new evaluation cases.
 - [ ] Approximately 50 held-out reply situations, subject to suitable data availability.
 - [ ] Blind style/preference comparison with generic drafting, factual support, edits, latency/cost.
 - [x] Report initial real-model failure examples and uncertainty, not only successful screenshots; expand with the larger reply study.
@@ -90,9 +92,14 @@ rejections. Inspection found unsupported claims and missed tasks.
 November 13: the [matched union and flat schema comparison](experiments/REPLY-UNION-2026-11-13.md)
 produced one draft for review under each constraint. The flat schema turned
 two refusals into mixed outputs that the validator rejected. Prompt-only
-reproduced seven drafts for review and two citation rejections. Next define
-separate support and task-completion criteria, rate the development drafts,
-and freeze a separate held-out evaluation before style claims or fine-tuning.
+reproduced seven drafts for review and two citation rejections. The November 15
+assistant audit rated six distinct wordings and found zero attempts passing
+both support and task completion. The masked reviewer packet and scorer are
+ready, and six new evaluation cases are frozen. Next choose a prompt or
+retrieval change using development cases and declare its settings before
+running those held-out cases with independent ratings.
+[Audit](experiments/REPLY-QUALITY-2026-11-15.md) ·
+[Evaluation fixture](examples/reply_quality_evaluation/README.md)
 Missing lexical seeds, distant and separate-thread facts remain
 outside the new neighbor adapter. UI and saved-review defaults stay lexical;
 the CLI option is deliberate and source-traceable. Grow beyond the small authored

@@ -101,3 +101,28 @@ class ReplyQualityTests(unittest.TestCase):
             packet_sha256=key['packet_sha256'], ratings={
                 candidate['id']: dict(support='supported', completed=list(case['criteria']), note='Test rating.')
                 for case in packet['cases'] for candidate in case['candidates']})
+
+    def test_held_out_packet_keeps_no_history_attempts_and_excludes_later_sources(self):
+        from personal_context.generation import GeneratedProposal
+        from personal_context.live_generation import study
+        from personal_context.reply_quality import summarize_reviews
+
+        class AbstainingFixture:
+            def describe(self):
+                return dict(backend='scripted local test')
+
+            def generate(self, packet):
+                return GeneratedProposal(abstain_reason='Scripted abstention.')
+
+        fixture = ROOT/'examples/reply_quality_evaluation'
+        inputs = load_study(fixture/'manifest.json')
+        criteria = json.loads((fixture/'criteria.json').read_text())
+        report = study(inputs, AbstainingFixture(), split='evaluation', neighbor_window=1)
+        packet, key = prepare_reviews(inputs, report, criteria, seed=29)
+        histories = {case['case_id']: [row['id'] for row in case['history']] for case in packet['cases']}
+        self.assertEqual(['rehearsal-1', 'rehearsal-2', 'rehearsal-3'], histories['rehearsal'])
+        self.assertEqual([], histories['donation'])
+        scored = summarize_reviews(packet, key, self.ratings(packet, key))
+        counts = scored['conditions']['study']
+        self.assertEqual((18, 2, 16, 0), (counts['attempts'], counts['needs_history'],
+            counts['provider_abstained'], counts['supported_and_complete']))
