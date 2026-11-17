@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "kind": "synthetic_reply_prompt_comparison",
+  "split": "development",
+  "benchmark_sha256": "beac55f03c903b0e020b2bc4e14be2076f6d650c90815f2af9894e01283b2696",
+  "criteria_sha256": "17bd212119fd9157f8b6858c0fb9c357b45c4f3b577ee18ca032c856e27102e7",
+  "inputs_sha256": "634018c52c1167327800f901085e1124b468710a9856133037477addeae9ba59",
+  "source_sha256": "4166b13643f31fa5053cb303906b80ab6546ff00dc254bb8c748abd216b38477",
+  "versions": [
+    "grounded-draft-v4",
+    "grounded-draft-v5"
+  ],
+  "prompts_sha256": {
+    "grounded-draft-v4": "1f2ac000bd80bfee2e74e618fcadf154d49e76997f390c0ab5c610ea21da50ba",
+    "grounded-draft-v5": "70543c3e4dfcea71c0e0b128d24a3dee97a3fd593b906a47f6db3d8d0166ed44"
+  },
+  "configuration": {
+    "backend": "ollama_chat",
+    "prompt_version": "grounded-draft-v4",
+    "settings": {
+      "model": "qwen2.5:7b",
+      "endpoint": "http://127.0.0.1:49857",
+      "timeout": 60.0,
+      "max_tokens": 512,
+      "seed": 29,
+      "local_only_confirmed": true,
+      "expected_digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+    },
+    "identity_note": "Requested model/settings, not a served-weight attestation or semantic validation",
+    "model_identity": {
+      "version": 1,
+      "model": "qwen2.5:7b",
+      "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+      "size_bytes": 4683087332,
+      "runtime_version": "0.40.13",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "format": "gguf",
+        "family": "qwen2",
+        "parameter_size": "7.6B",
+        "quantization_level": "Q4_K_M"
+      },
+      "show_sha256": "bef4e60dde0f24b602417c53fa0d9ef4d7d90f482917c6006bce9e8a383bfaf1",
+      "local_only_confirmed": true,
+      "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+    }
+  },
+  "response_format": "prompt_only",
+  "retrieval": {
+    "backend": "lexical_thread_neighbors",
+    "window": 1,
+    "max_gap_seconds": 86400,
+    "max_candidates": 128,
+    "ordering": "All lexical seeds first; round-robin nearest neighbors in the same source/thread",
+    "limitation": "Neighbors can be unrelated or outdated. Their score is inherited from a lexical seed, not evidence of relevance, factual support or reply quality."
+  }
+}

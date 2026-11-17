@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "packet_sha256": "ee93033f6dbd10dc3f505705a9f2bfee396fa0c0c72c95f2679dd87a6126679a",
+  "reviewer_kind": "assistant",
+  "prior_exposure": true,
+  "ratings": {
+    "reply-001": {
+      "support": "unsupported",
+      "completed": [
+        "time",
+        "room"
+      ],
+      "note": "Workshop-2 gives the time and room without separate confirmation. The reply adds assurance and omits thanks."
+    },
+    "reply-002": {
+      "support": "supported",
+      "completed": [
+        "time",
+        "room"
+      ],
+      "note": "The source supports the listed time and room. The reply omits thanks."
+    },
+    "reply-003": {
+      "support": "unsupported",
+      "completed": [
+        "thanks"
+      ],
+      "note": "The reply thanks the contact but claims they confirmed details. It asks the contact to verify the time and place instead of confirming those details."
+    },
+    "reply-004": {
+      "support": "supported",
+      "completed": [
+        "correction",
+        "location"
+      ],
+      "note": "Export-2 is itself the correction to use JSONL instead of CSV. The opening acknowledges that instruction and asks where to find the second file."
+    },
+    "reply-005": {
+      "support": "unsupported",
+      "completed": [
+        "correction",
+        "location"
+      ],
+      "note": "Export-2 supports the format instruction, while the completed act of noting the correction lacks support. The reply asks where to access the second file."
+    },
+    "reply-006": {
+      "support": "unsupported",
+      "completed": [
+        "correction"
+      ],
+      "note": "Export-2 corrects which file to use. The reply adds a completed action and a claim that the export changed format. It asks for delivery."
+    },
+    "reply-007": {
+      "support": "unsupported",
+      "completed": [
+        "location"
+      ],
+      "note": "Export-2 does not establish that the owner saw the correction. The reply asks where to access the file and omits the corrected format."
+    },
+    "reply-008": {
+      "support": "uncertain",
+      "completed": [
+        "branch"
+      ],
+      "note": "Ticket-2 implies the requested branch has the fix but says explicitly only that main lacks it. The question asks which tests the recipient already ran."
+    },
+    "reply-009": {
+      "support": "unsupported",
+      "completed": [
+        "branch",
+        "test"
+      ],
+      "note": "Ticket-2 directs the owner to use repair/cache. The reply states the update already uses it. The test question fits the goal."
+    },
+    "reply-010": {
+      "support": "supported",
+      "completed": [
+        "branch",
+        "test"
+      ],
+      "note": "Ticket-2 supplies the branch name, and the reply asks what tests the owner should run."
+    },
+    "reply-011": {
+      "support": "unsupported",
+      "completed": [
+        "branch"
+      ],
+      "note": "Ticket-2 instructs the owner to use repair/cache. It does not say the update already uses it. The draft asks about prior tests."
+    },
+    "reply-012": {
+      "support": "supported",
+      "completed": [],
+      "note": "The opening gives an opinion and introduces a request for verification. It omits the branch name and test question."
+    }
+  }
+}

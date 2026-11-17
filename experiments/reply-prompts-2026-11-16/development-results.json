@@ -1,0 +1,1047 @@
+{
+  "version": 1,
+  "kind": "synthetic_reply_prompt_comparison_results",
+  "declaration_sha256": "ccf4e4039dc880ef26fd46731491a2d1d9cb62961e6d6605b9d63743912a5155",
+  "split": "development",
+  "reports": {
+    "grounded-draft-v4": {
+      "version": 1,
+      "kind": "synthetic provider reply study",
+      "benchmark_sha256": "beac55f03c903b0e020b2bc4e14be2076f6d650c90815f2af9894e01283b2696",
+      "prompt_version": "grounded-draft-v4",
+      "split": "development",
+      "configuration": {
+        "backend": "ollama_chat",
+        "prompt_version": "grounded-draft-v4",
+        "settings": {
+          "model": "qwen2.5:7b",
+          "endpoint": "http://127.0.0.1:49857",
+          "timeout": 60.0,
+          "max_tokens": 512,
+          "seed": 29,
+          "local_only_confirmed": true,
+          "expected_digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+        },
+        "identity_note": "Requested model/settings, not a served-weight attestation or semantic validation",
+        "model_identity": {
+          "version": 1,
+          "model": "qwen2.5:7b",
+          "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+          "size_bytes": 4683087332,
+          "runtime_version": "0.40.13",
+          "capabilities": [
+            "completion",
+            "tools"
+          ],
+          "details": {
+            "format": "gguf",
+            "family": "qwen2",
+            "parameter_size": "7.6B",
+            "quantization_level": "Q4_K_M"
+          },
+          "show_sha256": "bef4e60dde0f24b602417c53fa0d9ef4d7d90f482917c6006bce9e8a383bfaf1",
+          "local_only_confirmed": true,
+          "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+        },
+        "response_format": "prompt_only"
+      },
+      "retrieval_configuration": {
+        "backend": "lexical_thread_neighbors",
+        "window": 1,
+        "max_gap_seconds": 86400,
+        "max_candidates": 128,
+        "ordering": "All lexical seeds first; round-robin nearest neighbors in the same source/thread",
+        "limitation": "Neighbors can be unrelated or outdated. Their score is inherited from a lexical seed, not evidence of relevance, factual support or reply quality."
+      },
+      "modes": [
+        "generic",
+        "context",
+        "personalized"
+      ],
+      "attempts": 9,
+      "provider_calls": 9,
+      "statuses": {
+        "rejected": 2,
+        "needs_review": 7
+      },
+      "cases": [
+        {
+          "case_id": "workshop",
+          "split": "development",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Starts at 2 pm in room 12.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.1902009999903385,
+          "retrieved_sources": [],
+          "status": "rejected",
+          "draft_text": "",
+          "error": "Generated support must quote available factual evidence literally",
+          "packet_sha256": "23fa71f291fc25e46d10fef3b66a8a990ff0d2ff3bfb15dbea8935deb154c677"
+        },
+        {
+          "case_id": "workshop",
+          "split": "development",
+          "mode": "context",
+          "reference_fact_for_human_review": "Starts at 2 pm in room 12.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.1479220839974005,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "workshop-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "workshop-2"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Of course, I can confirm the details for you.\n\nThe workshop starts at 2 pm in room 12.",
+          "packet_sha256": "e2bac59df3f38af958b80306673a4a60ba5534ff6734dee6392eb5ee4332fe38",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "It starts at 2 pm in room 12.",
+              "provenance": {
+                "id": "workshop-2",
+                "source": "synthetic",
+                "thread": "workshop",
+                "author": "workshop@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-09-01T10:20:00.000000+00:00",
+                "fingerprint": "76b4ba8e65e62c23cc817ef224f76f8f00df987139205cd0a33836b25f027607",
+                "retrieval": {
+                  "origin": "thread_neighbor",
+                  "seed": {
+                    "source": "synthetic",
+                    "id": "workshop-1"
+                  }
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Of course, I can confirm the details for you.",
+              "kind": "social",
+              "citation_labels": []
+            },
+            {
+              "text": "The workshop starts at 2 pm in room 12.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "workshop",
+          "split": "development",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Starts at 2 pm in room 12.",
+          "provider_calls": 1,
+          "elapsed_seconds": 6.540500167000573,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "workshop-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "workshop-2"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Of course, the workshop is confirmed for 2 pm in room 12.",
+          "packet_sha256": "7bf1c15672d5bac005c970053fc177271860a6aed99f0a675a65446d62a34c44",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "It starts at 2 pm in room 12.",
+              "provenance": {
+                "id": "workshop-2",
+                "source": "synthetic",
+                "thread": "workshop",
+                "author": "workshop@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-09-01T10:20:00.000000+00:00",
+                "fingerprint": "76b4ba8e65e62c23cc817ef224f76f8f00df987139205cd0a33836b25f027607",
+                "retrieval": {
+                  "origin": "thread_neighbor",
+                  "seed": {
+                    "source": "synthetic",
+                    "id": "workshop-1"
+                  }
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Of course, the workshop is confirmed for 2 pm in room 12.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "export",
+          "split": "development",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Use the second JSONL file, not CSV.",
+          "provider_calls": 1,
+          "elapsed_seconds": 6.225578041980043,
+          "retrieved_sources": [],
+          "status": "rejected",
+          "draft_text": "",
+          "error": "Generated support must quote available factual evidence literally",
+          "packet_sha256": "d55404842581eb0858efdbf4679fd6c6798afb74122d75a0f74f6de22c0f5d9d"
+        },
+        {
+          "case_id": "export",
+          "split": "development",
+          "mode": "context",
+          "reference_fact_for_human_review": "Use the second JSONL file, not CSV.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.024687625002116,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "export-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "export-2"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Yes, I saw the correction. The export is now in JSONL format.\n\nCould you please send me the second file?",
+          "packet_sha256": "0abdb7e3c63a7fec551ce3c2dddfb97aab199b57129df0a71ffa23ca41ba92e4",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Correction: use JSONL, not CSV.",
+              "provenance": {
+                "id": "export-2",
+                "source": "synthetic",
+                "thread": "export",
+                "author": "export@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-09-01T10:20:00.000000+00:00",
+                "fingerprint": "8abdd169c8a692161343812acbca593e2ebb8c84603a71144f41bda4d5e3f55f",
+                "retrieval": {
+                  "origin": "thread_neighbor",
+                  "seed": {
+                    "source": "synthetic",
+                    "id": "export-1"
+                  }
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Yes, I saw the correction. The export is now in JSONL format.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Could you please send me the second file?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "export",
+          "split": "development",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Use the second JSONL file, not CSV.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.169140958983917,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "export-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "export-2"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Yes, I saw the correction. The export is now in JSONL format.\n\nCould you please send me the second file?",
+          "packet_sha256": "cf76bbce80e2576c4839fd4a6106421444e96922ee8af444c8a790c4a56dc752",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Correction: use JSONL, not CSV.",
+              "provenance": {
+                "id": "export-2",
+                "source": "synthetic",
+                "thread": "export",
+                "author": "export@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-09-01T10:20:00.000000+00:00",
+                "fingerprint": "8abdd169c8a692161343812acbca593e2ebb8c84603a71144f41bda4d5e3f55f",
+                "retrieval": {
+                  "origin": "thread_neighbor",
+                  "seed": {
+                    "source": "synthetic",
+                    "id": "export-1"
+                  }
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Yes, I saw the correction. The export is now in JSONL format.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Could you please send me the second file?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "ticket",
+          "split": "development",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Use repair/cache rather than main.",
+          "provider_calls": 1,
+          "elapsed_seconds": 5.58086233297945,
+          "retrieved_sources": [],
+          "status": "needs_review",
+          "draft_text": "The ticket update looks good, but I want to confirm the branch information.\n\nCould you please verify the branch details for me?",
+          "packet_sha256": "3e0ec66dfe6bce1d0388bd7ad4fbc73d87dfff62f104a98a7ef7fa2020090fdf",
+          "citations": [],
+          "segments": [
+            {
+              "text": "The ticket update looks good, but I want to confirm the branch information.",
+              "kind": "social",
+              "citation_labels": []
+            },
+            {
+              "text": "Could you please verify the branch details for me?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "ticket",
+          "split": "development",
+          "mode": "context",
+          "reference_fact_for_human_review": "Use repair/cache rather than main.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.225525874993764,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "ticket-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "ticket-2"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Yes, the ticket update makes sense. We should use the repair/cache branch as it contains the fix.\n\nHave you run the test suite on this branch yet?",
+          "packet_sha256": "24adece5ad24055039e71ec8d6705fc564243a35c25b13ec3020307b888ecb8d",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Use the repair/cache branch; main does not have the fix.",
+              "provenance": {
+                "id": "ticket-2",
+                "source": "synthetic",
+                "thread": "ticket",
+                "author": "ticket@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-09-01T10:20:00.000000+00:00",
+                "fingerprint": "9ddecfbcb334e3fddfb221a904df48b430d9a494a1b79db8443d97074a56652a",
+                "retrieval": {
+                  "origin": "thread_neighbor",
+                  "seed": {
+                    "source": "synthetic",
+                    "id": "ticket-1"
+                  }
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Yes, the ticket update makes sense. We should use the repair/cache branch as it contains the fix.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Have you run the test suite on this branch yet?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "ticket",
+          "split": "development",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Use repair/cache rather than main.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.138908500026446,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "ticket-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "ticket-2"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "The ticket update uses the repair/cache branch, as instructed.\n\nHave you run the tests to verify the changes?",
+          "packet_sha256": "49025b4161ff613cd643cea24f1caeae7394892024a3ce2528ce7e19a536f14e",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Use the repair/cache branch; main does not have the fix.",
+              "provenance": {
+                "id": "ticket-2",
+                "source": "synthetic",
+                "thread": "ticket",
+                "author": "ticket@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-09-01T10:20:00.000000+00:00",
+                "fingerprint": "9ddecfbcb334e3fddfb221a904df48b430d9a494a1b79db8443d97074a56652a",
+                "retrieval": {
+                  "origin": "thread_neighbor",
+                  "seed": {
+                    "source": "synthetic",
+                    "id": "ticket-1"
+                  }
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "The ticket update uses the repair/cache branch, as instructed.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Have you run the tests to verify the changes?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        }
+      ],
+      "abstention_reasons": {},
+      "reply_quality_scored": false,
+      "semantic_entailment_automated": false,
+      "sending_performed": false,
+      "limitation": "Generated text and literal citation checks require human review. Provider rejection/abstention is retained, not hidden. Timing includes model loading and local infrastructure. Synthetic examples do not establish owner-style imitation or real-user preference."
+    },
+    "grounded-draft-v5": {
+      "version": 1,
+      "kind": "synthetic provider reply study",
+      "benchmark_sha256": "beac55f03c903b0e020b2bc4e14be2076f6d650c90815f2af9894e01283b2696",
+      "prompt_version": "grounded-draft-v5",
+      "split": "development",
+      "configuration": {
+        "backend": "ollama_chat",
+        "prompt_version": "grounded-draft-v5",
+        "settings": {
+          "model": "qwen2.5:7b",
+          "endpoint": "http://127.0.0.1:49857",
+          "timeout": 60.0,
+          "max_tokens": 512,
+          "seed": 29,
+          "local_only_confirmed": true,
+          "expected_digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+        },
+        "identity_note": "Requested model/settings, not a served-weight attestation or semantic validation",
+        "model_identity": {
+          "version": 1,
+          "model": "qwen2.5:7b",
+          "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+          "size_bytes": 4683087332,
+          "runtime_version": "0.40.13",
+          "capabilities": [
+            "completion",
+            "tools"
+          ],
+          "details": {
+            "format": "gguf",
+            "family": "qwen2",
+            "parameter_size": "7.6B",
+            "quantization_level": "Q4_K_M"
+          },
+          "show_sha256": "bef4e60dde0f24b602417c53fa0d9ef4d7d90f482917c6006bce9e8a383bfaf1",
+          "local_only_confirmed": true,
+          "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+        },
+        "response_format": "prompt_only"
+      },
+      "retrieval_configuration": {
+        "backend": "lexical_thread_neighbors",
+        "window": 1,
+        "max_gap_seconds": 86400,
+        "max_candidates": 128,
+        "ordering": "All lexical seeds first; round-robin nearest neighbors in the same source/thread",
+        "limitation": "Neighbors can be unrelated or outdated. Their score is inherited from a lexical seed, not evidence of relevance, factual support or reply quality."
+      },
+      "modes": [
+        "generic",
+        "context",
+        "personalized"
+      ],
+      "attempts": 9,
+      "provider_calls": 9,
+      "statuses": {
+        "rejected": 2,
+        "needs_review": 7
+      },
+      "cases": [
+        {
+          "case_id": "workshop",
+          "split": "development",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Starts at 2 pm in room 12.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.089691667002626,
+          "retrieved_sources": [],
+          "status": "rejected",
+          "draft_text": "",
+          "error": "Generated response is not strict proposal JSON",
+          "packet_sha256": "23fa71f291fc25e46d10fef3b66a8a990ff0d2ff3bfb15dbea8935deb154c677"
+        },
+        {
+          "case_id": "workshop",
+          "split": "development",
+          "mode": "context",
+          "reference_fact_for_human_review": "Starts at 2 pm in room 12.",
+          "provider_calls": 1,
+          "elapsed_seconds": 6.742538999998942,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "workshop-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "workshop-2"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Thank you for confirming the workshop details.\n\nThe workshop starts at 2 pm in room 12, correct?",
+          "packet_sha256": "e2bac59df3f38af958b80306673a4a60ba5534ff6734dee6392eb5ee4332fe38",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "It starts at 2 pm in room 12.",
+              "provenance": {
+                "id": "workshop-2",
+                "source": "synthetic",
+                "thread": "workshop",
+                "author": "workshop@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-09-01T10:20:00.000000+00:00",
+                "fingerprint": "76b4ba8e65e62c23cc817ef224f76f8f00df987139205cd0a33836b25f027607",
+                "retrieval": {
+                  "origin": "thread_neighbor",
+                  "seed": {
+                    "source": "synthetic",
+                    "id": "workshop-1"
+                  }
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Thank you for confirming the workshop details.",
+              "kind": "social",
+              "citation_labels": []
+            },
+            {
+              "text": "The workshop starts at 2 pm in room 12, correct?",
+              "kind": "question",
+              "citation_labels": [
+                1
+              ]
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "workshop",
+          "split": "development",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Starts at 2 pm in room 12.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.088900542003103,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "workshop-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "workshop-2"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Thank you for confirming the workshop details.\n\nThe workshop starts at 2 pm in room 12, correct?",
+          "packet_sha256": "7bf1c15672d5bac005c970053fc177271860a6aed99f0a675a65446d62a34c44",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "It starts at 2 pm in room 12.",
+              "provenance": {
+                "id": "workshop-2",
+                "source": "synthetic",
+                "thread": "workshop",
+                "author": "workshop@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-09-01T10:20:00.000000+00:00",
+                "fingerprint": "76b4ba8e65e62c23cc817ef224f76f8f00df987139205cd0a33836b25f027607",
+                "retrieval": {
+                  "origin": "thread_neighbor",
+                  "seed": {
+                    "source": "synthetic",
+                    "id": "workshop-1"
+                  }
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Thank you for confirming the workshop details.",
+              "kind": "social",
+              "citation_labels": []
+            },
+            {
+              "text": "The workshop starts at 2 pm in room 12, correct?",
+              "kind": "question",
+              "citation_labels": [
+                1
+              ]
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "export",
+          "split": "development",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Use the second JSONL file, not CSV.",
+          "provider_calls": 1,
+          "elapsed_seconds": 5.200052500003949,
+          "retrieved_sources": [],
+          "status": "needs_review",
+          "draft_text": "I've seen the correction for the export. Thank you for letting me know.\n\nCould you please share the location or method to access the second file?",
+          "packet_sha256": "d55404842581eb0858efdbf4679fd6c6798afb74122d75a0f74f6de22c0f5d9d",
+          "citations": [],
+          "segments": [
+            {
+              "text": "I've seen the correction for the export. Thank you for letting me know.",
+              "kind": "social",
+              "citation_labels": []
+            },
+            {
+              "text": "Could you please share the location or method to access the second file?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "export",
+          "split": "development",
+          "mode": "context",
+          "reference_fact_for_human_review": "Use the second JSONL file, not CSV.",
+          "provider_calls": 1,
+          "elapsed_seconds": 6.9715070000092965,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "export-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "export-2"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "I've noted the correction to use JSONL instead of CSV.\n\nCould you please provide the location or method to access the second file?",
+          "packet_sha256": "0abdb7e3c63a7fec551ce3c2dddfb97aab199b57129df0a71ffa23ca41ba92e4",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Correction: use JSONL, not CSV. The second file is the right one.",
+              "provenance": {
+                "id": "export-2",
+                "source": "synthetic",
+                "thread": "export",
+                "author": "export@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-09-01T10:20:00.000000+00:00",
+                "fingerprint": "8abdd169c8a692161343812acbca593e2ebb8c84603a71144f41bda4d5e3f55f",
+                "retrieval": {
+                  "origin": "thread_neighbor",
+                  "seed": {
+                    "source": "synthetic",
+                    "id": "export-1"
+                  }
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "I've noted the correction to use JSONL instead of CSV.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Could you please provide the location or method to access the second file?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "export",
+          "split": "development",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Use the second JSONL file, not CSV.",
+          "provider_calls": 1,
+          "elapsed_seconds": 6.8781962920038495,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "export-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "export-2"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "I see the correction has been made to use JSONL instead of CSV.\n\nCould you please tell me where I can find the second file?",
+          "packet_sha256": "cf76bbce80e2576c4839fd4a6106421444e96922ee8af444c8a790c4a56dc752",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Correction: use JSONL, not CSV. The second file is the right one.",
+              "provenance": {
+                "id": "export-2",
+                "source": "synthetic",
+                "thread": "export",
+                "author": "export@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-09-01T10:20:00.000000+00:00",
+                "fingerprint": "8abdd169c8a692161343812acbca593e2ebb8c84603a71144f41bda4d5e3f55f",
+                "retrieval": {
+                  "origin": "thread_neighbor",
+                  "seed": {
+                    "source": "synthetic",
+                    "id": "export-1"
+                  }
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "I see the correction has been made to use JSONL instead of CSV.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Could you please tell me where I can find the second file?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "ticket",
+          "split": "development",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Use repair/cache rather than main.",
+          "provider_calls": 1,
+          "elapsed_seconds": 6.024317875009729,
+          "retrieved_sources": [],
+          "status": "rejected",
+          "draft_text": "",
+          "error": "Generated response is not strict proposal JSON",
+          "packet_sha256": "3e0ec66dfe6bce1d0388bd7ad4fbc73d87dfff62f104a98a7ef7fa2020090fdf"
+        },
+        {
+          "case_id": "ticket",
+          "split": "development",
+          "mode": "context",
+          "reference_fact_for_human_review": "Use repair/cache rather than main.",
+          "provider_calls": 1,
+          "elapsed_seconds": 6.66119804198388,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "ticket-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "ticket-2"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "The ticket update suggests using the repair/cache branch.\n\nShould I run any specific tests after applying the changes?",
+          "packet_sha256": "24adece5ad24055039e71ec8d6705fc564243a35c25b13ec3020307b888ecb8d",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Use the repair/cache branch; main does not have the fix.",
+              "provenance": {
+                "id": "ticket-2",
+                "source": "synthetic",
+                "thread": "ticket",
+                "author": "ticket@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-09-01T10:20:00.000000+00:00",
+                "fingerprint": "9ddecfbcb334e3fddfb221a904df48b430d9a494a1b79db8443d97074a56652a",
+                "retrieval": {
+                  "origin": "thread_neighbor",
+                  "seed": {
+                    "source": "synthetic",
+                    "id": "ticket-1"
+                  }
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "The ticket update suggests using the repair/cache branch.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Should I run any specific tests after applying the changes?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "ticket",
+          "split": "development",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Use repair/cache rather than main.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.11476558301365,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "ticket-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "ticket-2"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "The ticket update uses the repair/cache branch, as instructed.\n\nShould I run any specific tests after applying the changes?",
+          "packet_sha256": "49025b4161ff613cd643cea24f1caeae7394892024a3ce2528ce7e19a536f14e",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Use the repair/cache branch; main does not have the fix.",
+              "provenance": {
+                "id": "ticket-2",
+                "source": "synthetic",
+                "thread": "ticket",
+                "author": "ticket@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-09-01T10:20:00.000000+00:00",
+                "fingerprint": "9ddecfbcb334e3fddfb221a904df48b430d9a494a1b79db8443d97074a56652a",
+                "retrieval": {
+                  "origin": "thread_neighbor",
+                  "seed": {
+                    "source": "synthetic",
+                    "id": "ticket-1"
+                  }
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "The ticket update uses the repair/cache branch, as instructed.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Should I run any specific tests after applying the changes?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        }
+      ],
+      "abstention_reasons": {},
+      "reply_quality_scored": false,
+      "semantic_entailment_automated": false,
+      "sending_performed": false,
+      "limitation": "Generated text and literal citation checks require human review. Provider rejection/abstention is retained, not hidden. Timing includes model loading and local infrastructure. Synthetic examples do not establish owner-style imitation or real-user preference."
+    }
+  }
+}
