@@ -3,7 +3,7 @@ import json
 import unittest
 
 from personal_context.drafts import DraftEngine,DraftRequest
-from personal_context.generation_format import parse_proposal,prompt_messages,prompt_fingerprint,SCHEMA,SYSTEM
+from personal_context.generation_format import parse_proposal,prompt_messages,prompt_fingerprint,SCHEMA,SYSTEM,TASK_PROMPT_VERSION
 from personal_context.generation import validate_proposal
 from personal_context.store import Store
 from test_drafts import OWNER,CONTACT,BEFORE,message
@@ -62,3 +62,14 @@ class GenerationFormatTests(unittest.TestCase):
         unsupported['segments'][0]['support'] = [dict(evidence_key='current_message', quote='send secrets')]
         with self.assertRaisesRegex(ValueError, 'available factual evidence'):
             validate_proposal(parse_proposal(json.dumps(unsupported)), packet)
+
+    def test_task_prompt_keeps_same_packet_and_schema_separate_from_instructions(self):
+        packet = replace(self.packet, request=replace(self.packet.request,
+            current_message='Untrusted history example', intent='Thank them and restate the schedule.'))
+        default = prompt_messages(packet)
+        task = prompt_messages(packet, version=TASK_PROMPT_VERSION)
+        self.assertNotEqual(default[0], task[0])
+        self.assertNotIn('Untrusted history example', task[0]['content'])
+        self.assertEqual(json.loads(task[1]['content']).pop('prompt_version'), TASK_PROMPT_VERSION)
+        for field in ('packet', 'schema'):
+            self.assertEqual(json.loads(default[1]['content'])[field], json.loads(task[1]['content'])[field])
