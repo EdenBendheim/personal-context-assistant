@@ -74,12 +74,14 @@ def study(study_inputs, provider, *, split='development', neighbor_window=0):
             store = Store()
             counted = CountingProvider(provider)
             retrieved_sources = []
+            packet_sha256 = None
             started = perf_counter()
             try:
                 store.ingest(study_inputs['messages'])
                 engine = DraftEngine(store, retrieval=retrieval_for(store, neighbor_window))
                 selected = replace(request, mode=mode)
                 packet = engine.prepare(selected)
+                packet_sha256 = packet.fingerprint
                 retrieved_sources = [dict(source=e.provenance['source'], id=e.provenance['id'])
                                      for e in packet.evidence if e.kind == 'message']
                 result = generate(engine, selected, counted)
@@ -87,6 +89,8 @@ def study(study_inputs, provider, *, split='development', neighbor_window=0):
                                              'support_review_required', 'abstain_reason', 'review_notes') if k in result}
             except ValueError as exc:
                 row = dict(status='rejected', draft_text='', error=str(exc))
+                if packet_sha256 is not None:
+                    row['packet_sha256'] = packet_sha256
             finally:
                 store.close()
             rows.append(dict(case_id=case['id'], split=case['split'], mode=mode,
@@ -97,7 +101,7 @@ def study(study_inputs, provider, *, split='development', neighbor_window=0):
     if configuration != provider.describe():
         raise ValueError('Provider configuration changed during reply study')
     return dict(version=1, kind='synthetic provider reply study', benchmark_sha256=study_inputs['fingerprint'],
-        prompt_version=PROMPT_VERSION, split=split, configuration=configuration,
+        prompt_version=configuration.get('prompt_version', PROMPT_VERSION), split=split, configuration=configuration,
         retrieval_configuration=retrieval_configuration, modes=list(MODES),
         attempts=len(rows), provider_calls=sum(r['provider_calls'] for r in rows),
         statuses=dict(Counter(r['status'] for r in rows)), cases=rows,

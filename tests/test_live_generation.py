@@ -37,6 +37,9 @@ class LiveGenerationTests(unittest.TestCase):
         failed=study(inputs,Provider(fail=True),split='evaluation')
         self.assertEqual({'rejected':1,'needs_history':2},failed['statuses'])
         self.assertEqual(1,failed['provider_calls'])
+        self.assertEqual(
+            [row['packet_sha256'] for row in report['cases'] if row['split'] == 'evaluation'],
+            [row['packet_sha256'] for row in failed['cases']])
 
     def test_private_participants_and_cross_split_conversations_are_refused(self):
         for change in ('participant','split'):
