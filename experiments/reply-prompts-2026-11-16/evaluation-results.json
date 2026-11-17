@@ -1,0 +1,1721 @@
+{
+  "version": 1,
+  "kind": "synthetic_reply_prompt_comparison_results",
+  "declaration_sha256": "91f94f8aaca63dc911fcb40c9dddfde7ac5d6a0e5a8ca59209961d153034c2cd",
+  "split": "evaluation",
+  "reports": {
+    "grounded-draft-v4": {
+      "version": 1,
+      "kind": "synthetic provider reply study",
+      "benchmark_sha256": "4ea54fc149b915ccce4c46fbf138bab73083deb06262a3703bbfbf99b12512e9",
+      "prompt_version": "grounded-draft-v4",
+      "split": "evaluation",
+      "configuration": {
+        "backend": "ollama_chat",
+        "prompt_version": "grounded-draft-v4",
+        "settings": {
+          "model": "qwen2.5:7b",
+          "endpoint": "http://127.0.0.1:49857",
+          "timeout": 60.0,
+          "max_tokens": 512,
+          "seed": 29,
+          "local_only_confirmed": true,
+          "expected_digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+        },
+        "identity_note": "Requested model/settings, not a served-weight attestation or semantic validation",
+        "model_identity": {
+          "version": 1,
+          "model": "qwen2.5:7b",
+          "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+          "size_bytes": 4683087332,
+          "runtime_version": "0.40.13",
+          "capabilities": [
+            "completion",
+            "tools"
+          ],
+          "details": {
+            "format": "gguf",
+            "family": "qwen2",
+            "parameter_size": "7.6B",
+            "quantization_level": "Q4_K_M"
+          },
+          "show_sha256": "bef4e60dde0f24b602417c53fa0d9ef4d7d90f482917c6006bce9e8a383bfaf1",
+          "local_only_confirmed": true,
+          "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+        },
+        "response_format": "prompt_only"
+      },
+      "retrieval_configuration": {
+        "backend": "lexical_thread_neighbors",
+        "window": 1,
+        "max_gap_seconds": 86400,
+        "max_candidates": 128,
+        "ordering": "All lexical seeds first; round-robin nearest neighbors in the same source/thread",
+        "limitation": "Neighbors can be unrelated or outdated. Their score is inherited from a lexical seed, not evidence of relevance, factual support or reply quality."
+      },
+      "modes": [
+        "generic",
+        "context",
+        "personalized"
+      ],
+      "attempts": 18,
+      "provider_calls": 16,
+      "statuses": {
+        "rejected": 5,
+        "needs_review": 11,
+        "needs_history": 2
+      },
+      "cases": [
+        {
+          "case_id": "rehearsal",
+          "split": "evaluation",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Use room 7B. An earlier message said 3C, and an update at the cutoff is unavailable.",
+          "provider_calls": 1,
+          "elapsed_seconds": 5.414164040994365,
+          "retrieved_sources": [],
+          "status": "rejected",
+          "draft_text": "",
+          "error": "Factual wording requires cited support for human inspection",
+          "packet_sha256": "993ff979d444c85476222532c31fdf93ea15241deb79956d2ce1df039ccfdd09"
+        },
+        {
+          "case_id": "rehearsal",
+          "split": "evaluation",
+          "mode": "context",
+          "reference_fact_for_human_review": "Use room 7B. An earlier message said 3C, and an update at the cutoff is unavailable.",
+          "provider_calls": 1,
+          "elapsed_seconds": 9.205617416999303,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "rehearsal-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "rehearsal-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "rehearsal-3"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Thank you for the correction, quality-rehearsal@example.invalid.\n\nWe will use room 7B for the rehearsal.",
+          "packet_sha256": "6f7f46fcca6869037a2c93accf49f44ad3d8f8cc164d1ac466a8e3c90c132139",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-3",
+              "kind": "message",
+              "quote": "Rehearsal correction: use room 7B. The 3C booking was canceled.",
+              "provenance": {
+                "id": "rehearsal-3",
+                "source": "synthetic",
+                "thread": "rehearsal",
+                "author": "quality-rehearsal@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T09:30:00.000000+00:00",
+                "fingerprint": "4a2aa629876f7dd95d086461aaefd64f0a7a267fe5f3032477b2859c945f7d57",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Thank you for the correction, quality-rehearsal@example.invalid.",
+              "kind": "social",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "We will use room 7B for the rehearsal.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "rehearsal",
+          "split": "evaluation",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Use room 7B. An earlier message said 3C, and an update at the cutoff is unavailable.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.717274333001114,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "rehearsal-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "rehearsal-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "rehearsal-3"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Thank you for the correction. We will use room 7B for the rehearsal.",
+          "packet_sha256": "0952d04019378e84c9016d54a056caca54ef41af11b0059779348471445a2fea",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-3",
+              "kind": "message",
+              "quote": "Rehearsal correction: use room 7B. The 3C booking was canceled.",
+              "provenance": {
+                "id": "rehearsal-3",
+                "source": "synthetic",
+                "thread": "rehearsal",
+                "author": "quality-rehearsal@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T09:30:00.000000+00:00",
+                "fingerprint": "4a2aa629876f7dd95d086461aaefd64f0a7a267fe5f3032477b2859c945f7d57",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Thank you for the correction. We will use room 7B for the rehearsal.",
+              "kind": "social",
+              "citation_labels": [
+                1
+              ]
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "printing",
+          "split": "evaluation",
+          "mode": "generic",
+          "reference_fact_for_human_review": "The printer needs a PDF with 3 mm bleed. No approver is named.",
+          "provider_calls": 1,
+          "elapsed_seconds": 6.42334424998262,
+          "retrieved_sources": [],
+          "status": "needs_review",
+          "draft_text": "Is this enough to send to the printer?\n\nCould you please check the format and ensure it matches our standards?\n\nWho should approve the print proof before we proceed?",
+          "packet_sha256": "c7b906b47f0e773096fc86e493910af6593b97344a58a469f39cb29e49fa9a51",
+          "citations": [],
+          "segments": [
+            {
+              "text": "Is this enough to send to the printer?",
+              "kind": "question",
+              "citation_labels": []
+            },
+            {
+              "text": "Could you please check the format and ensure it matches our standards?",
+              "kind": "social",
+              "citation_labels": []
+            },
+            {
+              "text": "Who should approve the print proof before we proceed?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "printing",
+          "split": "evaluation",
+          "mode": "context",
+          "reference_fact_for_human_review": "The printer needs a PDF with 3 mm bleed. No approver is named.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.73393849999411,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "printing-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "printing-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "The format you provided should be sufficient for printing, but we need to ensure it meets all the requirements.\n\nCould you please check if the PDF includes the 3 mm bleed as required?",
+          "packet_sha256": "f3e3bc5201fb37543a67b93d776f95ebf18f3a1ce34d01bcd9dcb4bf54fc00a8",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Printing needs a PDF with 3 mm bleed.",
+              "provenance": {
+                "id": "printing-1",
+                "source": "synthetic",
+                "thread": "printing",
+                "author": "quality-printing@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T10:00:00.000000+00:00",
+                "fingerprint": "26d3b90d5273efe2b453b58e9a26b8c6dfb22a6861d40f51af81e141e4bdd692",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "The format you provided should be sufficient for printing, but we need to ensure it meets all the requirements.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Could you please check if the PDF includes the 3 mm bleed as required?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "printing",
+          "split": "evaluation",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "The printer needs a PDF with 3 mm bleed. No approver is named.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.9062220829946455,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "printing-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "printing-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "The PDF should include a 3 mm bleed as per the printing requirements.\n\nWho will be approving the print proof before we proceed?",
+          "packet_sha256": "4dc899004d4d84b3f3529ed85de75e357d3d2c7b1c9638b0ec3f349d1775b24c",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Printing needs a PDF with 3 mm bleed.",
+              "provenance": {
+                "id": "printing-1",
+                "source": "synthetic",
+                "thread": "printing",
+                "author": "quality-printing@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T10:00:00.000000+00:00",
+                "fingerprint": "26d3b90d5273efe2b453b58e9a26b8c6dfb22a6861d40f51af81e141e4bdd692",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "The PDF should include a 3 mm bleed as per the printing requirements.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Who will be approving the print proof before we proceed?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "shipment",
+          "split": "evaluation",
+          "mode": "generic",
+          "reference_fact_for_human_review": "The contact sent two outbound labels. History does not establish that the owner checked the files.",
+          "provider_calls": 1,
+          "elapsed_seconds": 6.917005666997284,
+          "retrieved_sources": [],
+          "status": "rejected",
+          "draft_text": "",
+          "error": "Generated support must quote available factual evidence literally",
+          "packet_sha256": "2519338fba0e466d44cf912cc86e22b1905321e51a0699caa2b4bc6c3b8d78a8"
+        },
+        {
+          "case_id": "shipment",
+          "split": "evaluation",
+          "mode": "context",
+          "reference_fact_for_human_review": "The contact sent two outbound labels. History does not establish that the owner checked the files.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.56815124998684,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "shipment-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "shipment-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "I sent two outbound labels for the shipment.\n\nIs a return label included in this shipment?",
+          "packet_sha256": "c190c22c048d195878db05cc7ac4fcb047678b3ea8b9122dbd1dd68a8e8adb86",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "For the shipment, I sent two outbound labels.",
+              "provenance": {
+                "id": "shipment-1",
+                "source": "synthetic",
+                "thread": "shipment",
+                "author": "quality-shipment@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T11:00:00.000000+00:00",
+                "fingerprint": "25be3319c95cfbf83572c4f47383126ff903a75ac3181a84cd373bf7aacb880f",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "I sent two outbound labels for the shipment.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Is a return label included in this shipment?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "shipment",
+          "split": "evaluation",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "The contact sent two outbound labels. History does not establish that the owner checked the files.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.630739791988162,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "shipment-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "shipment-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "I sent two outbound labels for the shipment.\n\nIs a return label included in this shipment?",
+          "packet_sha256": "a1a066ff2f3e293d8d3b564dbde72dae82c4bb7762728f79feaf0064470dc2d1",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "For the shipment, I sent two outbound labels.",
+              "provenance": {
+                "id": "shipment-1",
+                "source": "synthetic",
+                "thread": "shipment",
+                "author": "quality-shipment@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T11:00:00.000000+00:00",
+                "fingerprint": "25be3319c95cfbf83572c4f47383126ff903a75ac3181a84cd373bf7aacb880f",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "I sent two outbound labels for the shipment.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Is a return label included in this shipment?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "plant",
+          "split": "evaluation",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Water the plant only if the top inch of soil is dry.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.75648529198952,
+          "retrieved_sources": [],
+          "status": "rejected",
+          "draft_text": "",
+          "error": "Generated support must quote available factual evidence literally",
+          "packet_sha256": "34b7447b682dea143a1fb42f93289549a990f63a73e69cfb61dc2d1907a3a5b2"
+        },
+        {
+          "case_id": "plant",
+          "split": "evaluation",
+          "mode": "context",
+          "reference_fact_for_human_review": "Water the plant only if the top inch of soil is dry.",
+          "provider_calls": 1,
+          "elapsed_seconds": 8.8853697500017,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "plant-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "plant-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Sure, I can remind you. Water the plant only if the top inch of soil is dry.\n\nI'll let you know if I can drop by later today.\n\nWhen are you planning to be home?",
+          "packet_sha256": "7a44e04968038db99e1ad26d4f8766b722ab05843313e9738d00702256855cbb",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Water the plant only if the top inch of soil is dry.",
+              "provenance": {
+                "id": "plant-1",
+                "source": "synthetic",
+                "thread": "plant",
+                "author": "quality-plant@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T12:00:00.000000+00:00",
+                "fingerprint": "f7b6de5b6f498166933be61a2ed04e6107c36ca681df5d7a3967226517b3e0a5",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Sure, I can remind you. Water the plant only if the top inch of soil is dry.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "I'll let you know if I can drop by later today.",
+              "kind": "social",
+              "citation_labels": []
+            },
+            {
+              "text": "When are you planning to be home?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "plant",
+          "split": "evaluation",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Water the plant only if the top inch of soil is dry.",
+          "provider_calls": 1,
+          "elapsed_seconds": 8.42476708299364,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "plant-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "plant-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Sure, the plant should be watered only when the top inch of soil is dry.\n\nI can drop by anytime today, let me know when you'll be home.",
+          "packet_sha256": "c60cc349963a617405916f86f37a2f70956b3babca459a1f266ef7e369976a4a",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Water the plant only if the top inch of soil is dry.",
+              "provenance": {
+                "id": "plant-1",
+                "source": "synthetic",
+                "thread": "plant",
+                "author": "quality-plant@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T12:00:00.000000+00:00",
+                "fingerprint": "f7b6de5b6f498166933be61a2ed04e6107c36ca681df5d7a3967226517b3e0a5",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Sure, the plant should be watered only when the top inch of soil is dry.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "I can drop by anytime today, let me know when you'll be home.",
+              "kind": "social",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "photos",
+          "split": "evaluation",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Only the private album is approved. The public folder is excluded.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.198689541022759,
+          "retrieved_sources": [],
+          "status": "rejected",
+          "draft_text": "",
+          "error": "Generated support must quote available factual evidence literally",
+          "packet_sha256": "a197a72c06a92bb61707f49ad602a64d65704987d985d748bad66d35b1d9e926"
+        },
+        {
+          "case_id": "photos",
+          "split": "evaluation",
+          "mode": "context",
+          "reference_fact_for_human_review": "Only the private album is approved. The public folder is excluded.",
+          "provider_calls": 1,
+          "elapsed_seconds": 8.1475705410121,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "photos-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "photos-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "For the photos, use only the private album. Please leave the public folder empty.\n\nDo you have the private album link handy?",
+          "packet_sha256": "a873c1f638cbf64c490668a68dc33a2ca58baa4045598240551ee1ddcdcdeb7b",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "For the photos, use only the private album. Please leave the public folder empty.",
+              "provenance": {
+                "id": "photos-1",
+                "source": "synthetic",
+                "thread": "photos",
+                "author": "quality-photos@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T13:00:00.000000+00:00",
+                "fingerprint": "7161e31e5b225e7c3727a370a200eddf5705c628a99b4674ec78ee1fd121387f",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "For the photos, use only the private album. Please leave the public folder empty.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Do you have the private album link handy?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "photos",
+          "split": "evaluation",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Only the private album is approved. The public folder is excluded.",
+          "provider_calls": 1,
+          "elapsed_seconds": 8.46980987500865,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "photos-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "photos-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "For the photos, use only the private album. Please leave the public folder empty.\n\nDo you have the private album link ready?",
+          "packet_sha256": "c30fcf87f0278e0ebad35908e6ed16cc4e75771f0edf9efe2d0270f1f65cda8e",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "For the photos, use only the private album. Please leave the public folder empty.",
+              "provenance": {
+                "id": "photos-1",
+                "source": "synthetic",
+                "thread": "photos",
+                "author": "quality-photos@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T13:00:00.000000+00:00",
+                "fingerprint": "7161e31e5b225e7c3727a370a200eddf5705c628a99b4674ec78ee1fd121387f",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "For the photos, use only the private album. Please leave the public folder empty.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Do you have the private album link ready?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "donation",
+          "split": "evaluation",
+          "mode": "generic",
+          "reference_fact_for_human_review": "No donation drop-off location is available before the cutoff.",
+          "provider_calls": 1,
+          "elapsed_seconds": 7.971804917004192,
+          "retrieved_sources": [],
+          "status": "rejected",
+          "draft_text": "",
+          "error": "Generated support must quote available factual evidence literally",
+          "packet_sha256": "eed1a1cbe4a3d49994601c839a67400681cd6aa7294083c5e9936dc6bef39d26"
+        },
+        {
+          "case_id": "donation",
+          "split": "evaluation",
+          "mode": "context",
+          "reference_fact_for_human_review": "No donation drop-off location is available before the cutoff.",
+          "provider_calls": 0,
+          "elapsed_seconds": 0.0006532499974127859,
+          "retrieved_sources": [],
+          "status": "needs_history",
+          "draft_text": "",
+          "packet_sha256": "40914be9424fe6103886e1c53dc92751237953816e35b5fc65214204c2a26871",
+          "citations": [],
+          "review_notes": [
+            "Add relevant factual history before generation."
+          ]
+        },
+        {
+          "case_id": "donation",
+          "split": "evaluation",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "No donation drop-off location is available before the cutoff.",
+          "provider_calls": 0,
+          "elapsed_seconds": 0.0005302909994497895,
+          "retrieved_sources": [],
+          "status": "needs_history",
+          "draft_text": "",
+          "packet_sha256": "1e5e81737982a525971a6216a335e0979a05f59def975417fb3e19ed5ce59e0b",
+          "citations": [],
+          "review_notes": [
+            "Add relevant factual history before generation."
+          ]
+        }
+      ],
+      "abstention_reasons": {},
+      "reply_quality_scored": false,
+      "semantic_entailment_automated": false,
+      "sending_performed": false,
+      "limitation": "Generated text and literal citation checks require human review. Provider rejection/abstention is retained, not hidden. Timing includes model loading and local infrastructure. Synthetic examples do not establish owner-style imitation or real-user preference."
+    },
+    "grounded-draft-v5": {
+      "version": 1,
+      "kind": "synthetic provider reply study",
+      "benchmark_sha256": "4ea54fc149b915ccce4c46fbf138bab73083deb06262a3703bbfbf99b12512e9",
+      "prompt_version": "grounded-draft-v5",
+      "split": "evaluation",
+      "configuration": {
+        "backend": "ollama_chat",
+        "prompt_version": "grounded-draft-v5",
+        "settings": {
+          "model": "qwen2.5:7b",
+          "endpoint": "http://127.0.0.1:49857",
+          "timeout": 60.0,
+          "max_tokens": 512,
+          "seed": 29,
+          "local_only_confirmed": true,
+          "expected_digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+        },
+        "identity_note": "Requested model/settings, not a served-weight attestation or semantic validation",
+        "model_identity": {
+          "version": 1,
+          "model": "qwen2.5:7b",
+          "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+          "size_bytes": 4683087332,
+          "runtime_version": "0.40.13",
+          "capabilities": [
+            "completion",
+            "tools"
+          ],
+          "details": {
+            "format": "gguf",
+            "family": "qwen2",
+            "parameter_size": "7.6B",
+            "quantization_level": "Q4_K_M"
+          },
+          "show_sha256": "bef4e60dde0f24b602417c53fa0d9ef4d7d90f482917c6006bce9e8a383bfaf1",
+          "local_only_confirmed": true,
+          "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality"
+        },
+        "response_format": "prompt_only"
+      },
+      "retrieval_configuration": {
+        "backend": "lexical_thread_neighbors",
+        "window": 1,
+        "max_gap_seconds": 86400,
+        "max_candidates": 128,
+        "ordering": "All lexical seeds first; round-robin nearest neighbors in the same source/thread",
+        "limitation": "Neighbors can be unrelated or outdated. Their score is inherited from a lexical seed, not evidence of relevance, factual support or reply quality."
+      },
+      "modes": [
+        "generic",
+        "context",
+        "personalized"
+      ],
+      "attempts": 18,
+      "provider_calls": 16,
+      "statuses": {
+        "rejected": 2,
+        "needs_review": 14,
+        "needs_history": 2
+      },
+      "cases": [
+        {
+          "case_id": "rehearsal",
+          "split": "evaluation",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Use room 7B. An earlier message said 3C, and an update at the cutoff is unavailable.",
+          "provider_calls": 1,
+          "elapsed_seconds": 4.531721167004434,
+          "retrieved_sources": [],
+          "status": "rejected",
+          "draft_text": "",
+          "error": "Generated response is not strict proposal JSON",
+          "packet_sha256": "993ff979d444c85476222532c31fdf93ea15241deb79956d2ce1df039ccfdd09"
+        },
+        {
+          "case_id": "rehearsal",
+          "split": "evaluation",
+          "mode": "context",
+          "reference_fact_for_human_review": "Use room 7B. An earlier message said 3C, and an update at the cutoff is unavailable.",
+          "provider_calls": 1,
+          "elapsed_seconds": 10.181386415992165,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "rehearsal-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "rehearsal-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "rehearsal-3"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Thank you for the correction, quality-rehearsal@example.invalid.\n\nThe current rehearsal room is now confirmed as room 7B.",
+          "packet_sha256": "6f7f46fcca6869037a2c93accf49f44ad3d8f8cc164d1ac466a8e3c90c132139",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-3",
+              "kind": "message",
+              "quote": "Rehearsal correction: use room 7B. The 3C booking was canceled.",
+              "provenance": {
+                "id": "rehearsal-3",
+                "source": "synthetic",
+                "thread": "rehearsal",
+                "author": "quality-rehearsal@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T09:30:00.000000+00:00",
+                "fingerprint": "4a2aa629876f7dd95d086461aaefd64f0a7a267fe5f3032477b2859c945f7d57",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Thank you for the correction, quality-rehearsal@example.invalid.",
+              "kind": "social",
+              "citation_labels": []
+            },
+            {
+              "text": "The current rehearsal room is now confirmed as room 7B.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "rehearsal",
+          "split": "evaluation",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Use room 7B. An earlier message said 3C, and an update at the cutoff is unavailable.",
+          "provider_calls": 1,
+          "elapsed_seconds": 12.76518175000092,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "rehearsal-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "rehearsal-1"
+            },
+            {
+              "source": "synthetic",
+              "id": "rehearsal-3"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Thank you for the correction, quality-rehearsal@example.invalid.\n\nThe current rehearsal room is now confirmed as 7B.",
+          "packet_sha256": "0952d04019378e84c9016d54a056caca54ef41af11b0059779348471445a2fea",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-3",
+              "kind": "message",
+              "quote": "Rehearsal correction: use room 7B. The 3C booking was canceled.",
+              "provenance": {
+                "id": "rehearsal-3",
+                "source": "synthetic",
+                "thread": "rehearsal",
+                "author": "quality-rehearsal@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T09:30:00.000000+00:00",
+                "fingerprint": "4a2aa629876f7dd95d086461aaefd64f0a7a267fe5f3032477b2859c945f7d57",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Thank you for the correction, quality-rehearsal@example.invalid.",
+              "kind": "social",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "The current rehearsal room is now confirmed as 7B.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "printing",
+          "split": "evaluation",
+          "mode": "generic",
+          "reference_fact_for_human_review": "The printer needs a PDF with 3 mm bleed. No approver is named.",
+          "provider_calls": 1,
+          "elapsed_seconds": 6.786423040990485,
+          "retrieved_sources": [],
+          "status": "needs_review",
+          "draft_text": "Is this enough to send to the printer?\n\nWho should approve the print proof before sending?",
+          "packet_sha256": "c7b906b47f0e773096fc86e493910af6593b97344a58a469f39cb29e49fa9a51",
+          "citations": [],
+          "segments": [
+            {
+              "text": "Is this enough to send to the printer?",
+              "kind": "question",
+              "citation_labels": []
+            },
+            {
+              "text": "Who should approve the print proof before sending?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "printing",
+          "split": "evaluation",
+          "mode": "context",
+          "reference_fact_for_human_review": "The printer needs a PDF with 3 mm bleed. No approver is named.",
+          "provider_calls": 1,
+          "elapsed_seconds": 10.112320165993879,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "printing-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "printing-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "The format for printing requires a PDF with 3 mm bleed.\n\nWho should approve the print proof before sending it to the printer?",
+          "packet_sha256": "f3e3bc5201fb37543a67b93d776f95ebf18f3a1ce34d01bcd9dcb4bf54fc00a8",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Printing needs a PDF with 3 mm bleed.",
+              "provenance": {
+                "id": "printing-1",
+                "source": "synthetic",
+                "thread": "printing",
+                "author": "quality-printing@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T10:00:00.000000+00:00",
+                "fingerprint": "26d3b90d5273efe2b453b58e9a26b8c6dfb22a6861d40f51af81e141e4bdd692",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "The format for printing requires a PDF with 3 mm bleed.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Who should approve the print proof before sending it to the printer?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "printing",
+          "split": "evaluation",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "The printer needs a PDF with 3 mm bleed. No approver is named.",
+          "provider_calls": 1,
+          "elapsed_seconds": 11.915206167002907,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "printing-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "printing-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "The format should include a 3 mm bleed as per the printing details.\n\nWho should approve the print proof before sending it to the printer?",
+          "packet_sha256": "4dc899004d4d84b3f3529ed85de75e357d3d2c7b1c9638b0ec3f349d1775b24c",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Printing needs a PDF with 3 mm bleed.",
+              "provenance": {
+                "id": "printing-1",
+                "source": "synthetic",
+                "thread": "printing",
+                "author": "quality-printing@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T10:00:00.000000+00:00",
+                "fingerprint": "26d3b90d5273efe2b453b58e9a26b8c6dfb22a6861d40f51af81e141e4bdd692",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "The format should include a 3 mm bleed as per the printing details.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Who should approve the print proof before sending it to the printer?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "shipment",
+          "split": "evaluation",
+          "mode": "generic",
+          "reference_fact_for_human_review": "The contact sent two outbound labels. History does not establish that the owner checked the files.",
+          "provider_calls": 1,
+          "elapsed_seconds": 6.68374941701768,
+          "retrieved_sources": [],
+          "status": "needs_review",
+          "draft_text": "Did the labels include a return label?",
+          "packet_sha256": "2519338fba0e466d44cf912cc86e22b1905321e51a0699caa2b4bc6c3b8d78a8",
+          "citations": [],
+          "segments": [
+            {
+              "text": "Did the labels include a return label?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "shipment",
+          "split": "evaluation",
+          "mode": "context",
+          "reference_fact_for_human_review": "The contact sent two outbound labels. History does not establish that the owner checked the files.",
+          "provider_calls": 1,
+          "elapsed_seconds": 11.354497624997748,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "shipment-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "shipment-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "You mentioned sending two outbound labels for the shipment. Were both labels included, or is a return label also provided?",
+          "packet_sha256": "c190c22c048d195878db05cc7ac4fcb047678b3ea8b9122dbd1dd68a8e8adb86",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "For the shipment, I sent two outbound labels.",
+              "provenance": {
+                "id": "shipment-1",
+                "source": "synthetic",
+                "thread": "shipment",
+                "author": "quality-shipment@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T11:00:00.000000+00:00",
+                "fingerprint": "25be3319c95cfbf83572c4f47383126ff903a75ac3181a84cd373bf7aacb880f",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "You mentioned sending two outbound labels for the shipment. Were both labels included, or is a return label also provided?",
+              "kind": "question",
+              "citation_labels": [
+                1
+              ]
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "shipment",
+          "split": "evaluation",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "The contact sent two outbound labels. History does not establish that the owner checked the files.",
+          "provider_calls": 1,
+          "elapsed_seconds": 13.033244499994908,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "shipment-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "shipment-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "You sent two outbound labels for the shipment.\n\nIs a return label included in these?",
+          "packet_sha256": "a1a066ff2f3e293d8d3b564dbde72dae82c4bb7762728f79feaf0064470dc2d1",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "For the shipment, I sent two outbound labels.",
+              "provenance": {
+                "id": "shipment-1",
+                "source": "synthetic",
+                "thread": "shipment",
+                "author": "quality-shipment@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T11:00:00.000000+00:00",
+                "fingerprint": "25be3319c95cfbf83572c4f47383126ff903a75ac3181a84cd373bf7aacb880f",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "You sent two outbound labels for the shipment.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Is a return label included in these?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "plant",
+          "split": "evaluation",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Water the plant only if the top inch of soil is dry.",
+          "provider_calls": 1,
+          "elapsed_seconds": 10.547876458003884,
+          "retrieved_sources": [],
+          "status": "needs_review",
+          "draft_text": "Sure, I can help with that. Could you remind me of the specific care instructions for the plant?\n\nAlso, when are you planning to be home today?",
+          "packet_sha256": "34b7447b682dea143a1fb42f93289549a990f63a73e69cfb61dc2d1907a3a5b2",
+          "citations": [],
+          "segments": [
+            {
+              "text": "Sure, I can help with that. Could you remind me of the specific care instructions for the plant?",
+              "kind": "question",
+              "citation_labels": []
+            },
+            {
+              "text": "Also, when are you planning to be home today?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "plant",
+          "split": "evaluation",
+          "mode": "context",
+          "reference_fact_for_human_review": "Water the plant only if the top inch of soil is dry.",
+          "provider_calls": 1,
+          "elapsed_seconds": 16.63288466699305,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "plant-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "plant-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Sure, to care for the plant, water it only when the top inch of soil is dry.\n\nI will drop by later today if that works for you.\n\nWhen are you available to check on the plant?",
+          "packet_sha256": "7a44e04968038db99e1ad26d4f8766b722ab05843313e9738d00702256855cbb",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Water the plant only if the top inch of soil is dry.",
+              "provenance": {
+                "id": "plant-1",
+                "source": "synthetic",
+                "thread": "plant",
+                "author": "quality-plant@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T12:00:00.000000+00:00",
+                "fingerprint": "f7b6de5b6f498166933be61a2ed04e6107c36ca681df5d7a3967226517b3e0a5",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Sure, to care for the plant, water it only when the top inch of soil is dry.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "I will drop by later today if that works for you.",
+              "kind": "social",
+              "citation_labels": []
+            },
+            {
+              "text": "When are you available to check on the plant?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "plant",
+          "split": "evaluation",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Water the plant only if the top inch of soil is dry.",
+          "provider_calls": 1,
+          "elapsed_seconds": 15.00946600001771,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "plant-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "plant-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "Sure, I can help with that. Water the plant only if the top inch of soil is dry.\n\nWhen can I expect you to be home?",
+          "packet_sha256": "c60cc349963a617405916f86f37a2f70956b3babca459a1f266ef7e369976a4a",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "Water the plant only if the top inch of soil is dry.",
+              "provenance": {
+                "id": "plant-1",
+                "source": "synthetic",
+                "thread": "plant",
+                "author": "quality-plant@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T12:00:00.000000+00:00",
+                "fingerprint": "f7b6de5b6f498166933be61a2ed04e6107c36ca681df5d7a3967226517b3e0a5",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "Sure, I can help with that. Water the plant only if the top inch of soil is dry.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "When can I expect you to be home?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "photos",
+          "split": "evaluation",
+          "mode": "generic",
+          "reference_fact_for_human_review": "Only the private album is approved. The public folder is excluded.",
+          "provider_calls": 1,
+          "elapsed_seconds": 10.069358500011731,
+          "retrieved_sources": [],
+          "status": "rejected",
+          "draft_text": "",
+          "error": "Generated response is not strict proposal JSON",
+          "packet_sha256": "a197a72c06a92bb61707f49ad602a64d65704987d985d748bad66d35b1d9e926"
+        },
+        {
+          "case_id": "photos",
+          "split": "evaluation",
+          "mode": "context",
+          "reference_fact_for_human_review": "Only the private album is approved. The public folder is excluded.",
+          "provider_calls": 1,
+          "elapsed_seconds": 14.917405292013427,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "photos-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "photos-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "The sharing restriction is to use only the private album and leave the public folder empty.\n\nCould you please provide the private album link?",
+          "packet_sha256": "a873c1f638cbf64c490668a68dc33a2ca58baa4045598240551ee1ddcdcdeb7b",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "For the photos, use only the private album. Please leave the public folder empty.",
+              "provenance": {
+                "id": "photos-1",
+                "source": "synthetic",
+                "thread": "photos",
+                "author": "quality-photos@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T13:00:00.000000+00:00",
+                "fingerprint": "7161e31e5b225e7c3727a370a200eddf5705c628a99b4674ec78ee1fd121387f",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "The sharing restriction is to use only the private album and leave the public folder empty.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Could you please provide the private album link?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "photos",
+          "split": "evaluation",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "Only the private album is approved. The public folder is excluded.",
+          "provider_calls": 1,
+          "elapsed_seconds": 15.12699629200506,
+          "retrieved_sources": [
+            {
+              "source": "synthetic",
+              "id": "photos-2"
+            },
+            {
+              "source": "synthetic",
+              "id": "photos-1"
+            }
+          ],
+          "status": "needs_review",
+          "draft_text": "The photos should be placed in the private album only.\n\nCould you please share the private album link with me?",
+          "packet_sha256": "c30fcf87f0278e0ebad35908e6ed16cc4e75771f0edf9efe2d0270f1f65cda8e",
+          "citations": [
+            {
+              "label": 1,
+              "evidence_key": "message-2",
+              "kind": "message",
+              "quote": "For the photos, use only the private album. Please leave the public folder empty.",
+              "provenance": {
+                "id": "photos-1",
+                "source": "synthetic",
+                "thread": "photos",
+                "author": "quality-photos@example.invalid",
+                "recipient": "owner@example.invalid",
+                "timestamp": "2026-08-11T13:00:00.000000+00:00",
+                "fingerprint": "7161e31e5b225e7c3727a370a200eddf5705c628a99b4674ec78ee1fd121387f",
+                "retrieval": {
+                  "origin": "lexical_seed"
+                }
+              }
+            }
+          ],
+          "segments": [
+            {
+              "text": "The photos should be placed in the private album only.",
+              "kind": "fact",
+              "citation_labels": [
+                1
+              ]
+            },
+            {
+              "text": "Could you please share the private album link with me?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "donation",
+          "split": "evaluation",
+          "mode": "generic",
+          "reference_fact_for_human_review": "No donation drop-off location is available before the cutoff.",
+          "provider_calls": 1,
+          "elapsed_seconds": 10.194599583017407,
+          "retrieved_sources": [],
+          "status": "needs_review",
+          "draft_text": "Certainly, I can help with that.\n\nCould you confirm a nearby location where we can safely leave the donation boxes?",
+          "packet_sha256": "eed1a1cbe4a3d49994601c839a67400681cd6aa7294083c5e9936dc6bef39d26",
+          "citations": [],
+          "segments": [
+            {
+              "text": "Certainly, I can help with that.",
+              "kind": "social",
+              "citation_labels": []
+            },
+            {
+              "text": "Could you confirm a nearby location where we can safely leave the donation boxes?",
+              "kind": "question",
+              "citation_labels": []
+            }
+          ],
+          "support_review_required": true,
+          "review_notes": [
+            "Every segment requires human factual and wording review before a usable rating.",
+            "Literal support proves quote provenance, not that generated wording follows from it.",
+            "Segment kinds are provider suggestions: social/question text can still contain unsupported claims.",
+            "This draft is not approval or authorization to send a message."
+          ]
+        },
+        {
+          "case_id": "donation",
+          "split": "evaluation",
+          "mode": "context",
+          "reference_fact_for_human_review": "No donation drop-off location is available before the cutoff.",
+          "provider_calls": 0,
+          "elapsed_seconds": 0.0006139999895822257,
+          "retrieved_sources": [],
+          "status": "needs_history",
+          "draft_text": "",
+          "packet_sha256": "40914be9424fe6103886e1c53dc92751237953816e35b5fc65214204c2a26871",
+          "citations": [],
+          "review_notes": [
+            "Add relevant factual history before generation."
+          ]
+        },
+        {
+          "case_id": "donation",
+          "split": "evaluation",
+          "mode": "personalized",
+          "reference_fact_for_human_review": "No donation drop-off location is available before the cutoff.",
+          "provider_calls": 0,
+          "elapsed_seconds": 0.0007211669872049242,
+          "retrieved_sources": [],
+          "status": "needs_history",
+          "draft_text": "",
+          "packet_sha256": "1e5e81737982a525971a6216a335e0979a05f59def975417fb3e19ed5ce59e0b",
+          "citations": [],
+          "review_notes": [
+            "Add relevant factual history before generation."
+          ]
+        }
+      ],
+      "abstention_reasons": {},
+      "reply_quality_scored": false,
+      "semantic_entailment_automated": false,
+      "sending_performed": false,
+      "limitation": "Generated text and literal citation checks require human review. Provider rejection/abstention is retained, not hidden. Timing includes model loading and local infrastructure. Synthetic examples do not establish owner-style imitation or real-user preference."
+    }
+  }
+}
