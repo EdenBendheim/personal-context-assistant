@@ -2,6 +2,12 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
+**November 16 prompt study** — The experimental v5 prompt asks the model to
+check each requested action. In a masked assistant review of six held-out
+synthetic cases, v5 produced seven supported, complete replies in 18 attempts
+versus three for v4. Invalid JSON, unsupported claims and independent
+human ratings remain open. [Prompt study and replay](experiments/REPLY-PROMPTS-2026-11-16.md)
+
 **November 15 reply quality audit** — The review CLI masks decoder labels,
 records separate judgments for factual support and task completion, and retains
 rejected and skipped attempts in the score. In an assistant audit of 27 archived

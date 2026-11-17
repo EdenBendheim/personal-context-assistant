@@ -1,5 +1,24 @@
 # Development log
 
+## November 16, 2026
+
+- Added the v5 task prompt and a two-stage comparison CLI that freezes inputs,
+  criteria, model settings and prompt text. Reports retain prepared packet
+  hashes for rejected attempts.
+- Ran 50 local requests across both splits with identical packets and
+  retrieval settings. The development comparison found two supported,
+  complete replies under v5 versus zero under v4. The held-out result was
+  seven out of 18 versus three. The masked evaluation used one assistant
+  reviewer. V5 still had two invalid JSON responses and three drafts rated
+  unsupported. [Study and individual ratings](experiments/REPLY-PROMPTS-2026-11-16.md)
+- Verified the matched packets, installed model blobs, shutdown and exact
+  score replay. All 170 tests passed on Python 3.11 and 3.14. Retrieval,
+  scripted drafting, source labels, demos, JavaScript and whitespace checks
+  passed.
+- Interview explanation — “I compared two prompts on identical evidence and
+  measured both factual support and task completion. On a fixed synthetic
+  holdout, the revised prompt passed seven of 18 attempts, versus three.”
+
 ## November 15, 2026
 
 - Added a rubric and local export and scoring commands. Reviewers see anonymous

@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "packet_sha256": "1894ce68fa438353348bafa9f358333f7b65b50bf82cf81a7b347d2e1463925d",
+  "reviewer_kind": "assistant",
+  "prior_exposure": false,
+  "ratings": {
+    "reply-001": {
+      "support": "unsupported",
+      "completed": [
+        "thanks",
+        "room"
+      ],
+      "note": "Rehearsal-3 gives the corrected room. The reply thanks the recipient and adds a commitment to use it."
+    },
+    "reply-002": {
+      "support": "unsupported",
+      "completed": [
+        "thanks",
+        "room"
+      ],
+      "note": "Rehearsal-3 supports 7B. The reply adds the owner’s commitment to use it."
+    },
+    "reply-003": {
+      "support": "unsupported",
+      "completed": [
+        "thanks",
+        "room"
+      ],
+      "note": "Rehearsal-3 gives the room correction. “Confirmed” adds a level of assurance."
+    },
+    "reply-004": {
+      "support": "unsupported",
+      "completed": [
+        "thanks",
+        "room"
+      ],
+      "note": "Rehearsal-3 tells the owner which room to use. The reply adds confirmation beyond the correction."
+    },
+    "reply-005": {
+      "support": "unsupported",
+      "completed": [
+        "format"
+      ],
+      "note": "Printing-1 gives the PDF and bleed requirement. The reply assumes a format was provided and suggests it is adequate. It omits the approval question."
+    },
+    "reply-006": {
+      "support": "supported",
+      "completed": [
+        "format",
+        "approver"
+      ],
+      "note": "Printing-1 supports the PDF and bleed requirement. The draft asks who approves the proof."
+    },
+    "reply-007": {
+      "support": "supported",
+      "completed": [
+        "approver"
+      ],
+      "note": "The reply asks who approves the proof and states no format requirement."
+    },
+    "reply-008": {
+      "support": "supported",
+      "completed": [
+        "format",
+        "approver"
+      ],
+      "note": "Printing-1 supplies the full requirement. The reply asks for the approver."
+    },
+    "reply-009": {
+      "support": "supported",
+      "completed": [
+        "approver"
+      ],
+      "note": "Printing-1 supports the bleed measurement. The reply asks for the approver and leaves out PDF."
+    },
+    "reply-010": {
+      "support": "supported",
+      "completed": [
+        "approver"
+      ],
+      "note": "The reply asks who approves and requests a check. It omits the PDF and bleed details."
+    },
+    "reply-011": {
+      "support": "unsupported",
+      "completed": [
+        "outbound",
+        "return"
+      ],
+      "note": "Shipment-1 says the contact sent the labels. The reply reverses the sender and asks about the return label."
+    },
+    "reply-012": {
+      "support": "supported",
+      "completed": [
+        "outbound",
+        "return"
+      ],
+      "note": "Shipment-1 records the contact’s two outbound labels. The reply asks whether a return label is included."
+    },
+    "reply-013": {
+      "support": "supported",
+      "completed": [
+        "outbound",
+        "return"
+      ],
+      "note": "Shipment-1 supports the count, label type and sender. The return label is asked about."
+    },
+    "reply-014": {
+      "support": "supported",
+      "completed": [
+        "return"
+      ],
+      "note": "The question leaves the existence of a return label open. The reply does not identify the two outbound labels."
+    },
+    "reply-015": {
+      "support": "unsupported",
+      "completed": [
+        "care",
+        "home",
+        "availability"
+      ],
+      "note": "Plant-1 supports the threshold. The reply asks when the contact will be home and leaves availability open, but promises a later update."
+    },
+    "reply-016": {
+      "support": "supported",
+      "completed": [
+        "home",
+        "availability"
+      ],
+      "note": "The reply asks for care instructions and the contact’s schedule. It keeps availability open and omits the known watering condition."
+    },
+    "reply-017": {
+      "support": "unsupported",
+      "completed": [
+        "care"
+      ],
+      "note": "Plant-1 supports the watering condition. The draft adds a visit commitment and asks about availability to check the plant."
+    },
+    "reply-018": {
+      "support": "supported",
+      "completed": [
+        "care",
+        "home",
+        "availability"
+      ],
+      "note": "Plant-1 supports the watering condition. The reply asks when the contact will be home and leaves the owner’s availability open."
+    },
+    "reply-019": {
+      "support": "unsupported",
+      "completed": [
+        "care",
+        "home"
+      ],
+      "note": "Plant-1 supports the care instruction. The reply asks when the contact will be home and claims the owner can drop by anytime."
+    },
+    "reply-020": {
+      "support": "supported",
+      "completed": [
+        "limit",
+        "link"
+      ],
+      "note": "Photos-1 supplies the restriction. The reply asks for the private album link."
+    },
+    "reply-021": {
+      "support": "supported",
+      "completed": [
+        "limit",
+        "link"
+      ],
+      "note": "Photos-1 limits sharing to the private album. The reply requests its link."
+    },
+    "reply-022": {
+      "support": "supported",
+      "completed": [
+        "limit",
+        "link"
+      ],
+      "note": "Photos-1 supports leaving the public folder empty and using only the private album. The question asks whether its link is ready."
+    },
+    "reply-023": {
+      "support": "supported",
+      "completed": [
+        "limit",
+        "link"
+      ],
+      "note": "Photos-1 supports the restriction. The reply asks for the link."
+    },
+    "reply-024": {
+      "support": "supported",
+      "completed": [
+        "ask",
+        "location"
+      ],
+      "note": "The draft asks for a location and leaves it unspecified, which fits the available evidence."
+    }
+  }
+}

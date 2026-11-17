@@ -1,0 +1,339 @@
+{
+  "version": 1,
+  "split": "evaluation",
+  "packet_sha256": "1894ce68fa438353348bafa9f358333f7b65b50bf82cf81a7b347d2e1463925d",
+  "study_sha256": "7e73d7e2c3cf48a8effaec798676fc5dc629a0a2e684ce503dfb4daaa4d580d4",
+  "reviewer_kind": "assistant",
+  "prior_exposure": false,
+  "distinct_wordings_rated": 24,
+  "conditions": {
+    "grounded-draft-v4": {
+      "attempts": 18,
+      "needs_review": 11,
+      "provider_abstained": 0,
+      "rejected": 5,
+      "needs_history": 2,
+      "supported": 4,
+      "unsupported": 7,
+      "uncertain": 0,
+      "task_complete": 8,
+      "supported_and_complete": 3
+    },
+    "grounded-draft-v5": {
+      "attempts": 18,
+      "needs_review": 14,
+      "provider_abstained": 0,
+      "rejected": 2,
+      "needs_history": 2,
+      "supported": 11,
+      "unsupported": 3,
+      "uncertain": 0,
+      "task_complete": 9,
+      "supported_and_complete": 7
+    }
+  },
+  "attempts": [
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "rehearsal",
+      "mode": "generic",
+      "status": "rejected",
+      "candidate_id": null
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "rehearsal",
+      "mode": "context",
+      "status": "needs_review",
+      "candidate_id": "reply-002",
+      "support": "unsupported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "rehearsal",
+      "mode": "personalized",
+      "status": "needs_review",
+      "candidate_id": "reply-001",
+      "support": "unsupported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "printing",
+      "mode": "generic",
+      "status": "needs_review",
+      "candidate_id": "reply-010",
+      "support": "supported",
+      "complete": false
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "printing",
+      "mode": "context",
+      "status": "needs_review",
+      "candidate_id": "reply-005",
+      "support": "unsupported",
+      "complete": false
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "printing",
+      "mode": "personalized",
+      "status": "needs_review",
+      "candidate_id": "reply-008",
+      "support": "supported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "shipment",
+      "mode": "generic",
+      "status": "rejected",
+      "candidate_id": null
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "shipment",
+      "mode": "context",
+      "status": "needs_review",
+      "candidate_id": "reply-011",
+      "support": "unsupported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "shipment",
+      "mode": "personalized",
+      "status": "needs_review",
+      "candidate_id": "reply-011",
+      "support": "unsupported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "plant",
+      "mode": "generic",
+      "status": "rejected",
+      "candidate_id": null
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "plant",
+      "mode": "context",
+      "status": "needs_review",
+      "candidate_id": "reply-015",
+      "support": "unsupported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "plant",
+      "mode": "personalized",
+      "status": "needs_review",
+      "candidate_id": "reply-019",
+      "support": "unsupported",
+      "complete": false
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "photos",
+      "mode": "generic",
+      "status": "rejected",
+      "candidate_id": null
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "photos",
+      "mode": "context",
+      "status": "needs_review",
+      "candidate_id": "reply-020",
+      "support": "supported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "photos",
+      "mode": "personalized",
+      "status": "needs_review",
+      "candidate_id": "reply-022",
+      "support": "supported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "donation",
+      "mode": "generic",
+      "status": "rejected",
+      "candidate_id": null
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "donation",
+      "mode": "context",
+      "status": "needs_history",
+      "candidate_id": null
+    },
+    {
+      "condition": "grounded-draft-v4",
+      "case_id": "donation",
+      "mode": "personalized",
+      "status": "needs_history",
+      "candidate_id": null
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "rehearsal",
+      "mode": "generic",
+      "status": "rejected",
+      "candidate_id": null
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "rehearsal",
+      "mode": "context",
+      "status": "needs_review",
+      "candidate_id": "reply-003",
+      "support": "unsupported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "rehearsal",
+      "mode": "personalized",
+      "status": "needs_review",
+      "candidate_id": "reply-004",
+      "support": "unsupported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "printing",
+      "mode": "generic",
+      "status": "needs_review",
+      "candidate_id": "reply-007",
+      "support": "supported",
+      "complete": false
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "printing",
+      "mode": "context",
+      "status": "needs_review",
+      "candidate_id": "reply-006",
+      "support": "supported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "printing",
+      "mode": "personalized",
+      "status": "needs_review",
+      "candidate_id": "reply-009",
+      "support": "supported",
+      "complete": false
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "shipment",
+      "mode": "generic",
+      "status": "needs_review",
+      "candidate_id": "reply-014",
+      "support": "supported",
+      "complete": false
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "shipment",
+      "mode": "context",
+      "status": "needs_review",
+      "candidate_id": "reply-012",
+      "support": "supported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "shipment",
+      "mode": "personalized",
+      "status": "needs_review",
+      "candidate_id": "reply-013",
+      "support": "supported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "plant",
+      "mode": "generic",
+      "status": "needs_review",
+      "candidate_id": "reply-016",
+      "support": "supported",
+      "complete": false
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "plant",
+      "mode": "context",
+      "status": "needs_review",
+      "candidate_id": "reply-017",
+      "support": "unsupported",
+      "complete": false
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "plant",
+      "mode": "personalized",
+      "status": "needs_review",
+      "candidate_id": "reply-018",
+      "support": "supported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "photos",
+      "mode": "generic",
+      "status": "rejected",
+      "candidate_id": null
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "photos",
+      "mode": "context",
+      "status": "needs_review",
+      "candidate_id": "reply-023",
+      "support": "supported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "photos",
+      "mode": "personalized",
+      "status": "needs_review",
+      "candidate_id": "reply-021",
+      "support": "supported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "donation",
+      "mode": "generic",
+      "status": "needs_review",
+      "candidate_id": "reply-024",
+      "support": "supported",
+      "complete": true
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "donation",
+      "mode": "context",
+      "status": "needs_history",
+      "candidate_id": null
+    },
+    {
+      "condition": "grounded-draft-v5",
+      "case_id": "donation",
+      "mode": "personalized",
+      "status": "needs_history",
+      "candidate_id": null
+    }
+  ]
+}
