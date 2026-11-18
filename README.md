@@ -463,7 +463,11 @@ send. Existing feedback is migrated with `not_rated`, preserving its history.
 
 Both `personal_context.draft_cli` and `personal_context.review_server` accept
 `--local-model MODEL --confirm-local-only`, plus optional `--model-endpoint`,
-`--model-timeout`, `--model-max-tokens` and `--model-seed`. Keep the usual
+`--model-timeout`, `--model-max-tokens` and `--model-seed`. To try the measured
+v5 configuration, also pass `--draft-prompt grounded-draft-v5 --response-format
+prompt_only`. This is experimental; the default remains v4/union-schema. Both
+formats use strict response validation and human support review. Saved provenance
+records the exact choice. Keep the usual
 DB/owner/contact/topic/cutoff arguments. Without a model, the default remains the
 extractive baseline. Model-only flags without a model are rejected. No service
 is started, model installed, or cloud setting changed by these commands.

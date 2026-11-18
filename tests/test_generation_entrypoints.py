@@ -58,7 +58,8 @@ class GenerationEntrypointTests(unittest.TestCase):
         output=io.StringIO()
         with patch.object(sys,'argv',base),contextlib.redirect_stdout(output):main()
         self.assertEqual('ExtractiveProvider',json.loads(output.getvalue())['provider'])
-        for options in (['--confirm-local-only'],['--local-model','fixture'],['--model-timeout','2']):
+        for options in (['--confirm-local-only'],['--local-model','fixture'],['--model-timeout','2'],
+                ['--draft-prompt','grounded-draft-v5'],['--response-format','prompt_only']):
             with patch.object(sys,'argv',base+options),contextlib.redirect_stderr(io.StringIO()),self.assertRaises(SystemExit):main()
         output=io.StringIO()
         with patch.object(sys,'argv',base+['--local-model','fixture','--confirm-local-only']),\
@@ -68,6 +69,28 @@ class GenerationEntrypointTests(unittest.TestCase):
                 patch('personal_context.local_model.OllamaProvider.generate',side_effect=LocalModelError('Unavailable')),\
                 contextlib.redirect_stderr(io.StringIO()),contextlib.redirect_stdout(io.StringIO()) as out,self.assertRaises(SystemExit):main()
         self.assertEqual('',out.getvalue())
+
+    def test_experimental_cli_configuration_is_saved_and_server_launch_is_fixed(self):
+        import argparse
+        from personal_context.model_options import add_model_options, configured_provider
+        options = ['--local-model','fixture','--confirm-local-only',
+                   '--draft-prompt','grounded-draft-v5','--response-format','prompt_only']
+        args = ['draft','--db',str(self.db),'--owner',OWNER,'--contact',CONTACT,
+                '--before','2026-09-04T00:00:00Z','--query','demo'] + options
+        with patch.object(sys,'argv',args), contextlib.redirect_stdout(io.StringIO()) as output, \
+                patch('personal_context.local_model.OllamaProvider.generate',return_value=proposal()):
+            main()
+        provenance = json.loads(output.getvalue())['generation_provenance']
+        self.assertEqual('grounded-draft-v5', provenance['prompt_version'])
+        self.assertEqual('prompt_only', provenance['response_format'])
+        parser = argparse.ArgumentParser()
+        add_model_options(parser)
+        self.server.provider = configured_provider(parser.parse_args(options))
+        config = self.call('/api/config')[1]['configuration']
+        self.assertEqual(provenance, config)
+        for name, value in (('draft_prompt','grounded-draft-v4'),('response_format','union_schema')):
+            self.assertEqual(400, self.call('/api/reviews',dict(contact=CONTACT,
+                before='2026-09-04T00:00:00Z',query='demo',**{name:value}))[0])
 
     def test_reply_task_round_trips_cli_http_and_saved_review_with_support_gate(self):
         task = dict(current_message='Could you confirm the demo topic?', intent='Thank them and ask about the agenda.')

@@ -2,6 +2,11 @@
 
 ## November 17, 2026
 
+- Exposed the experimental configuration through both drafting entry points.
+  Model-only options require explicit inference opt-in. HTTP clients cannot
+  change the provider, prompt or decoder selected at server launch. All five
+  entry-point tests passed, including saved CLI and server metadata.
+
 - Added validated opt-in prompt and response-format settings to the local
   provider. Requests and saved provenance identify the selected configuration.
   Existing callers retain v4 with union-schema decoding. V5/prompt-only still
