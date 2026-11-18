@@ -1,5 +1,14 @@
 # Development log
 
+## November 17, 2026
+
+- Added validated opt-in prompt and response-format settings to the local
+  provider. Requests and saved provenance identify the selected configuration.
+  Existing callers retain v4 with union-schema decoding. V5/prompt-only still
+  uses the same strict proposal validator and mandatory support review.
+- Verification: all eight loopback adapter tests passed, including exact request
+  settings, saved metadata, mixed-output rejection and unknown options.
+
 ## November 16, 2026
 
 - Added the v5 task prompt and a two-stage comparison CLI that freezes inputs,

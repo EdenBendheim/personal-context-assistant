@@ -7,7 +7,7 @@ import math
 import re
 from urllib.parse import urlsplit
 
-from .generation_format import PROMPT_VERSION,SCHEMA,parse_proposal,prompt_messages
+from .generation_format import PROMPTS,PROMPT_VERSION,SCHEMA,parse_proposal,prompt_messages
 
 
 class LocalModelError(ValueError): pass
@@ -22,6 +22,8 @@ class LocalModelConfig:
     seed: int = 29
     local_only_confirmed: bool = False
     expected_digest: str | None = None
+    prompt_version: str = PROMPT_VERSION
+    response_format: str = 'union_schema'
 
     def __post_init__(self):
         if (not isinstance(self.model,str) or not re.fullmatch(r'[A-Za-z0-9_./:-]{1,100}',self.model)
@@ -42,6 +44,10 @@ class LocalModelConfig:
         if self.expected_digest is not None and (not isinstance(self.expected_digest, str)
                 or re.fullmatch('[0-9a-f]{64}', self.expected_digest) is None):
             raise ValueError('Expected model digest must be a lowercase SHA-256')
+        if not isinstance(self.prompt_version, str) or self.prompt_version not in PROMPTS:
+            raise ValueError('Unknown drafting prompt version')
+        if self.response_format not in ('union_schema', 'prompt_only'):
+            raise ValueError('Unknown drafting response format')
 
 
 class OllamaProvider:
@@ -52,14 +58,16 @@ class OllamaProvider:
         self.identity = ModelIdentityGuard(config, 'completion')
 
     def describe(self):
-        result = dict(backend='ollama_chat',prompt_version=PROMPT_VERSION,settings=asdict(self.config),
+        result = dict(backend='ollama_chat',prompt_version=self.config.prompt_version,
+            response_format=self.config.response_format,settings=asdict(self.config),
             identity_note='Requested model/settings, not a served-weight attestation or semantic validation')
         if self.config.expected_digest is not None:
             result['model_identity'] = self.identity.capture()
         return result
 
     def generate(self,packet):
-        return parse_proposal(self._chat(prompt_messages(packet), schema=SCHEMA))
+        schema = SCHEMA if self.config.response_format == 'union_schema' else None
+        return parse_proposal(self._chat(prompt_messages(packet, version=self.config.prompt_version), schema=schema))
 
     def _chat(self, messages, *, schema):
         # Conservatively bound prompt bytes, not an estimated tokenizer count.

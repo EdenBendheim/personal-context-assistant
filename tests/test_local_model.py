@@ -1,4 +1,5 @@
 from http.server import BaseHTTPRequestHandler,HTTPServer
+from dataclasses import replace
 import json
 from threading import Thread
 import unittest
@@ -58,6 +59,29 @@ class LocalModelTests(unittest.TestCase):
         self.assertEqual(SCHEMA, constrained_request.pop('format'))
         self.assertEqual(constrained_request, unconstrained_request)
         self.assertEqual(messages, unconstrained_request['messages'])
+
+    def test_selected_prompt_and_format_reach_network_and_saved_provenance(self):
+        config = replace(self.config, prompt_version='grounded-draft-v5', response_format='prompt_only')
+        result = generate(self.engine, self.request, OllamaProvider(config))
+        body = self.requests[0][1]
+        self.assertNotIn('format', body)
+        self.assertEqual('grounded-draft-v5', json.loads(body['messages'][1]['content'])['prompt_version'])
+        self.assertIn('First identify every requested action', body['messages'][0]['content'])
+        metadata = result['generation_provenance']
+        self.assertEqual(config.prompt_version, metadata['prompt_version'])
+        self.assertEqual(config.response_format, metadata['response_format'])
+        self.assertTrue(result['support_review_required'])
+        self.payload['message']['content'] = json.dumps(wire() | {'abstain_reason': 'Mixed output'})
+        with self.assertRaises(ValueError):
+            generate(self.engine, self.request, OllamaProvider(config))
+
+    def test_unknown_prompt_and_format_fail_before_network_and_legacy_defaults_remain(self):
+        for changes in (dict(prompt_version='future'), dict(prompt_version=[]), dict(response_format='json')):
+            with self.subTest(changes=changes), self.assertRaises(ValueError):
+                replace(self.config, **changes)
+        self.assertEqual([], self.requests)
+        self.assertEqual('grounded-draft-v4', self.config.prompt_version)
+        self.assertEqual('union_schema', self.config.response_format)
 
     def test_status_redirect_invalid_truncated_tool_and_oversized_responses_fail_closed(self):
         for status in (302,404,500):
