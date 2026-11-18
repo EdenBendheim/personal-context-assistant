@@ -105,3 +105,20 @@ class ReviewFormTests(unittest.TestCase):
             with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                 main(['score', *base, '--output', str(score)])
             self.assertFalse(score.exists())
+
+    def test_cli_compares_completed_reviewers_on_the_same_packet(self):
+        with tempfile.TemporaryDirectory() as directory:
+            paths = [Path(directory)/name for name in ('left.json', 'right.json')]
+            for path in paths:
+                path.write_text(json.dumps(fixtures.ReplyQualityTests.ratings(self.packet, self.key)))
+            output = Path(directory)/'agreement.json'
+            args = ['compare', str(FIXTURE/'manifest.json'),
+                    str(ROOT/'experiments/reply-union-2026-11-13/results.json'),
+                    str(FIXTURE/'criteria.json'), '--seed', '17', '--ratings', str(paths[0]),
+                    '--second-ratings', str(paths[1]), '--output', str(output)]
+            with contextlib.redirect_stdout(io.StringIO()):
+                main(args)
+            result = json.loads(output.read_text())
+            self.assertEqual(6, result['candidates'])
+            self.assertEqual(1, result['support_agreement']['fraction'])
+            self.assertTrue(result['identical_rating_files'])

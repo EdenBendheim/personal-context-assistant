@@ -615,3 +615,11 @@ Use `reply_quality_cli progress` with the same arguments as `score` to validate
 an unfinished download. It lists pending drafts and missing reviewer fields
 without computing quality scores. A blank factual-support choice or note stays
 pending. An unchecked action is a judgment of incompleteness, not missing data.
+
+Compare two completed reviews with `reply_quality_cli compare`, the same fixed
+inputs and seed, `--ratings FIRST.json --second-ratings SECOND.json --output
+NEW_PATH`. It reports factual-support agreement, action-checklist agreement,
+and individual disagreements once per distinct wording. Repeated attempts do
+not multiply the reviewer sample. Reviewer type, prior exposure and identical
+files are reported. Agreement alone does not establish correctness or reviewer
+independence. Human ratings remain to be collected.

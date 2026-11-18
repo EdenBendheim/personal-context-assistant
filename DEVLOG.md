@@ -2,6 +2,12 @@
 
 ## November 17, 2026
 
+- Added matched reviewer comparisons for factual support and requested actions.
+  Reports retain each disagreement, reviewer exposure and identical-file flags.
+  Counts use distinct wordings rather than repeated generation attempts. All
+  17 reply tests passed, including CLI replay, incomplete ratings and empty
+  candidate sets. No independent human ratings have been collected.
+
 - Added resume-from-JSON to the rating form. It validates the packet identity,
   reviewer fields, candidate IDs, support choices, action IDs and note limits
   before replacing current work. Edits made during file reading are preserved.

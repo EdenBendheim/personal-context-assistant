@@ -152,6 +152,28 @@ class ReplyQualityTests(unittest.TestCase):
             with self.subTest(change=change), self.assertRaises(ValueError):
                 review_progress(packet, key, altered)
 
+    def test_reviewer_comparison_counts_wordings_once_and_exposes_specific_disagreements(self):
+        from personal_context.reply_quality import compare_reviews
+        packet, key = self.prepare()
+        left = self.ratings(packet, key)
+        right = deepcopy(left)
+        right.update(reviewer_kind='human', prior_exposure=False)
+        candidate_id = packet['cases'][0]['candidates'][0]['id']
+        right['ratings'][candidate_id].update(support='unsupported', completed=[], note='Does not fulfill this goal.')
+        result = compare_reviews(packet, key, left, right)
+        self.assertEqual(6, result['candidates'])
+        self.assertEqual(dict(agree=5,total=6,fraction=5/6), result['support_agreement'])
+        self.assertEqual(5, result['checklist_agreement']['agree'])
+        self.assertEqual(1, result['support_confusion']['supported']['unsupported'])
+        self.assertEqual(candidate_id, result['disagreements'][0]['candidate_id'])
+        self.assertFalse(result['identical_rating_files'])
+        same = compare_reviews(packet, key, left, deepcopy(left))
+        self.assertTrue(same['identical_rating_files'])
+        self.assertEqual([], same['disagreements'])
+        right['ratings'][candidate_id]['support'] = None
+        with self.assertRaises(ValueError):
+            compare_reviews(packet, key, left, right)
+
     def test_held_out_packet_keeps_no_history_attempts_and_excludes_later_sources(self):
         from personal_context.generation import GeneratedProposal
         from personal_context.live_generation import study
@@ -176,3 +198,7 @@ class ReplyQualityTests(unittest.TestCase):
         counts = scored['conditions']['study']
         self.assertEqual((18, 2, 16, 0), (counts['attempts'], counts['needs_history'],
             counts['provider_abstained'], counts['supported_and_complete']))
+        from personal_context.reply_quality import compare_reviews
+        agreement = compare_reviews(packet, key, self.ratings(packet, key), self.ratings(packet, key))
+        self.assertEqual(0, agreement['candidates'])
+        self.assertIsNone(agreement['support_agreement']['fraction'])

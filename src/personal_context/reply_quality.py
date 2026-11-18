@@ -210,3 +210,39 @@ def summarize_reviews(packet, key, ratings):
                 study_sha256=key['study_sha256'], reviewer_kind=reviewer_kind, prior_exposure=prior_exposure,
                 distinct_wordings_rated=len(candidates), conditions={name: dict(tally) for name, tally in counts.items()},
                 attempts=unblinded)
+
+
+def compare_reviews(packet, key, left, right):
+    """Compare completed judgments once per distinct wording, not per attempt."""
+    # Apply the same complete-file requirements as scoring, including key coverage.
+    summarize_reviews(packet, key, left)
+    summarize_reviews(packet, key, right)
+    candidates = validate_review_key(packet, key)
+    confusion = {label: dict.fromkeys(SUPPORT_RATINGS, 0) for label in SUPPORT_RATINGS}
+    support_same = checklist_same = actions_same = action_total = 0
+    differences = []
+    for candidate_id, case in candidates.items():
+        a, b = left['ratings'][candidate_id], right['ratings'][candidate_id]
+        a_actions, b_actions = set(a['completed']), set(b['completed'])
+        support_same += a['support'] == b['support']
+        checklist_same += a_actions == b_actions
+        confusion[a['support']][b['support']] += 1
+        for action in case['criteria']:
+            action_total += 1
+            actions_same += (action in a_actions) == (action in b_actions)
+        if a['support'] != b['support'] or a_actions != b_actions:
+            differences.append(dict(candidate_id=candidate_id, case_id=case['case_id'],
+                left=dict(support=a['support'], completed=sorted(a_actions), note=a['note']),
+                right=dict(support=b['support'], completed=sorted(b_actions), note=b['note'])))
+    def agreement(count, total):
+        return dict(agree=count, total=total, fraction=count/total if total else None)
+    return dict(version=1, packet_sha256=digest(packet), study_sha256=key['study_sha256'],
+        unit='distinct candidate wording', candidates=len(candidates),
+        reviewers={name: dict(kind=value['reviewer_kind'], prior_exposure=value['prior_exposure'])
+                   for name, value in (('left', left), ('right', right))},
+        identical_rating_files=digest(left) == digest(right),
+        support_agreement=agreement(support_same, len(candidates)),
+        checklist_agreement=agreement(checklist_same, len(candidates)),
+        action_agreement=agreement(actions_same, action_total), support_confusion=confusion,
+        disagreements=differences,
+        limitation='Agreement does not establish factual correctness or independent review.')
