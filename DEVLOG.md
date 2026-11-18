@@ -2,6 +2,11 @@
 
 ## November 17, 2026
 
+- Hardened rating denominators against edited coordinator keys. Scoring now
+  requires a complete case/mode grid in every condition, unique candidate IDs,
+  valid statuses and candidate coverage. Seven review tests passed, including
+  missing, duplicated and unmapped attempts.
+
 - Exposed the experimental configuration through both drafting entry points.
   Model-only options require explicit inference opt-in. HTTP clients cannot
   change the provider, prompt or decoder selected at server launch. All five

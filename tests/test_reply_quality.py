@@ -102,6 +102,34 @@ class ReplyQualityTests(unittest.TestCase):
                 candidate['id']: dict(support='supported', completed=list(case['criteria']), note='Test rating.')
                 for case in packet['cases'] for candidate in case['candidates']})
 
+    def test_scoring_refuses_key_edits_that_change_attempt_denominators(self):
+        from personal_context.reply_quality import summarize_reviews
+        packet, key = self.prepare()
+        ratings = self.ratings(packet, key)
+        for change in ('missing', 'duplicate', 'unknown_mode', 'unknown_status', 'unmapped', 'extra_condition'):
+            altered = deepcopy(key)
+            row = next(item for item in altered['attempts'] if item['status'] == 'needs_review')
+            if change == 'missing':
+                altered['attempts'].pop()
+            elif change == 'duplicate':
+                altered['attempts'].append(altered['attempts'][0].copy())
+            elif change == 'unknown_mode':
+                row['mode'] = 'extra'
+            elif change == 'unknown_status':
+                row['status'] = 'success'
+            elif change == 'unmapped':
+                row['candidate_id'] = None
+            else:
+                altered['attempts'].append(altered['attempts'][0] | {'condition': 'extra'})
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                summarize_reviews(packet, altered, ratings)
+        duplicate = deepcopy(packet)
+        duplicate['cases'][1]['candidates'].append(duplicate['cases'][0]['candidates'][0])
+        from personal_context.frozen_retrieval import digest
+        with self.assertRaisesRegex(ValueError, 'candidate IDs must be unique'):
+            summarize_reviews(duplicate, key | {'packet_sha256': digest(duplicate)},
+                              ratings | {'packet_sha256': digest(duplicate)})
+
     def test_held_out_packet_keeps_no_history_attempts_and_excludes_later_sources(self):
         from personal_context.generation import GeneratedProposal
         from personal_context.live_generation import study

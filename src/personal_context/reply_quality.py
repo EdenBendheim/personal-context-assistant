@@ -93,6 +93,51 @@ def prepare_reviews(inputs, study, criteria, *, seed):
 SUPPORT_RATINGS = ('supported', 'unsupported', 'uncertain')
 
 
+def validate_review_key(packet, key):
+    """Check complete attempt coverage before computing any denominators."""
+    if (type(packet.get('version')) is not int or packet['version'] != 1
+            or packet.get('split') not in ('development', 'evaluation')
+            or not isinstance(packet.get('cases'), list) or not packet['cases']):
+        raise ValueError('Invalid reviewer packet')
+    cases, candidates = {}, {}
+    for case in packet['cases']:
+        case_id = case['case_id']
+        if not isinstance(case_id, str) or not case_id or case_id in cases:
+            raise ValueError('Reviewer case IDs must be unique')
+        cases[case_id] = case
+        if not isinstance(case.get('criteria'), dict) or not case['criteria']:
+            raise ValueError('Each reviewer case needs task criteria')
+        for candidate in case['candidates']:
+            candidate_id = candidate['id']
+            if not isinstance(candidate_id, str) or not candidate_id or candidate_id in candidates:
+                raise ValueError('Reviewer candidate IDs must be unique')
+            candidates[candidate_id] = case
+    if key.get('packet_sha256') != digest(packet) or not isinstance(key.get('attempts'), list):
+        raise ValueError('Coordinator key must match the exact reviewer packet')
+    expected = {(case_id, mode) for case_id in cases for mode in MODES}
+    seen, used = {}, set()
+    for row in key['attempts']:
+        condition, pair = row['condition'], (row['case_id'], row['mode'])
+        if not isinstance(condition, str) or not condition or pair not in expected:
+            raise ValueError('Invalid coordinator condition, case or mode')
+        pairs = seen.setdefault(condition, set())
+        if pair in pairs or row['status'] not in ATTEMPT_STATUSES:
+            raise ValueError('Duplicate attempt or invalid coordinator status')
+        pairs.add(pair)
+        candidate_id = row['candidate_id']
+        if row['status'] == 'needs_review':
+            if candidate_id not in candidates or candidates[candidate_id]['case_id'] != row['case_id']:
+                raise ValueError('Candidate key does not match the original case')
+            used.add(candidate_id)
+        elif candidate_id is not None:
+            raise ValueError('Only drafts reaching review may have a candidate ID')
+    if not 1 <= len(seen) <= 8 or any(pairs != expected for pairs in seen.values()):
+        raise ValueError('Coordinator key must include every case and mode once per condition')
+    if used != candidates.keys():
+        raise ValueError('Coordinator key must account for every candidate')
+    return candidates
+
+
 def summarize_reviews(packet, key, ratings):
     """Join completed ratings to the coordinator's original attempt key."""
     fingerprint = digest(packet)
@@ -104,7 +149,7 @@ def summarize_reviews(packet, key, ratings):
     if reviewer_kind not in ('human', 'assistant') or type(prior_exposure) is not bool:
         raise ValueError('Record reviewer kind and prior exposure')
 
-    candidates = {candidate['id']: case for case in packet['cases'] for candidate in case['candidates']}
+    candidates = validate_review_key(packet, key)
     entries = ratings.get('ratings')
     if not isinstance(entries, dict) or entries.keys() != candidates.keys():
         raise ValueError('Rate every distinct candidate exactly once')
