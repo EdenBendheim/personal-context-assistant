@@ -2,46 +2,29 @@
 
 ## November 17, 2026
 
-- Added matched reviewer comparisons for factual support and requested actions.
-  Reports retain each disagreement, reviewer exposure and identical-file flags.
-  Counts use distinct wordings rather than repeated generation attempts. All
-  17 reply tests passed, including CLI replay, incomplete ratings and empty
-  candidate sets. No independent human ratings have been collected.
-
-- Added resume-from-JSON to the rating form. It validates the packet identity,
-  reviewer fields, candidate IDs, support choices, action IDs and note limits
-  before replacing current work. Edits made during file reading are preserved.
-  Three Node state tests and five form/CLI tests passed; CI now checks the
-  JavaScript state contract and syntax. Browser visual QA remains blocked.
-
-- Added validated progress reports for unfinished independent ratings. Missing
-  reviewer details and unrated drafts remain explicit. Partial files cannot
-  produce quality scores. All 15 reply-related tests passed, including partial
-  CLI output, incomplete-score refusal and malformed rating rejection.
-
-- Added a self-contained masked review form with shared history, factual-support
-  judgments, action checklists, notes and local JSON downloads. The coordinator
-  key stays outside the form. Four focused tests passed for exact data, label
-  masking, script-escape injection, size limits and exclusive file creation.
-  JavaScript syntax passed. Visual preview was blocked by the browser tool
-  policy for local file URLs and remains unverified.
-
-- Hardened rating denominators against edited coordinator keys. Scoring now
-  requires a complete case/mode grid in every condition, unique candidate IDs,
-  valid statuses and candidate coverage. Seven review tests passed, including
-  missing, duplicated and unmapped attempts.
-
-- Exposed the experimental configuration through both drafting entry points.
-  Model-only options require explicit inference opt-in. HTTP clients cannot
-  change the provider, prompt or decoder selected at server launch. All five
-  entry-point tests passed, including saved CLI and server metadata.
-
-- Added validated opt-in prompt and response-format settings to the local
-  provider. Requests and saved provenance identify the selected configuration.
-  Existing callers retain v4 with union-schema decoding. V5/prompt-only still
-  uses the same strict proposal validator and mandatory support review.
-- Verification: all eight loopback adapter tests passed, including exact request
-  settings, saved metadata, mixed-output rejection and unknown options.
+- Added explicit v4/v5 prompt and union-schema/prompt-only choices to the local
+  provider, CLI and review server. Defaults remain unchanged. Saved provenance
+  records the choice; requests cannot override the server's launch settings.
+- Hardened scoring against incomplete or duplicated coordinator attempt keys.
+  Added an offline masked review form, validated rating-file restoration,
+  unfinished-review progress reports and matched reviewer comparisons. Counts
+  use distinct wordings for agreement and retain all attempts for quality.
+- Ran two actual cloud-disabled Qwen2.5 7B calls through the CLI and API. Both
+  returned the same draft and packet hash. Saved review reopening passed, and
+  usable feedback without a support judgment was refused. Verified model
+  metadata/files and stopped temporary services. A smoke-helper reporting
+  error was recovered from the saved review without more model calls.
+- All 182 tests passed on Python 3.11 and 3.14, plus three Node state tests,
+  20 retrieval cases, 13 scripted drafting cases, fixed source annotations,
+  demos, JavaScript syntax and whitespace checks. Archived scores replayed
+  exactly. A local form covers 24 distinct held-out replies, all pending.
+- Human ratings and browser visual/download checks remain open. Browser preview
+  was blocked by the tool policy for local-file URLs. No private conversations,
+  paid services or model artifacts were published.
+- Interview explanation — “I made a measured prompt available in the product
+  and built a separate workflow for someone else to judge its replies against
+  their evidence. Unfinished reviews cannot silently become quality scores.”
+  [Walkthrough and observed results](experiments/REVIEW-WORKFLOW-2026-11-17.md)
 
 ## November 16, 2026
 

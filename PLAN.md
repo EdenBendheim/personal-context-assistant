@@ -51,6 +51,8 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 - [x] Export masked synthetic review packets and score factual support and task completion against explicit criteria.
 - [x] Rate archived development replies and freeze the first six new evaluation cases.
 - [x] Run and rate a fixed prompt comparison on the six held-out synthetic cases.
+- [x] Expose the measured prompt through explicit product settings and export resumable masked review forms.
+- [ ] Collect independent human ratings and inspect disagreements before further prompt changes.
 - [ ] Approximately 50 held-out reply situations, subject to suitable data availability.
 - [ ] Blind style/preference comparison with generic drafting, factual support, edits, latency/cost.
 - [x] Report initial real-model failure examples and uncertainty, not only successful screenshots; expand with the larger reply study.
@@ -113,3 +115,12 @@ feedback; a real browser reached 30 draft revisions/ratings without losing unsav
 fields. Legacy full-history APIs remain. Large-history embedding indexing,
 external-export/backup tracking, automatic memory extraction and real-user
 evaluation remain pending. No sending integration is planned.
+
+November 17: v5/prompt-only is available as an opt-in configuration in both
+entry points. Two real local requests produced identical CLI/API drafts; the
+saved review still required a support judgment. A resumable offline form,
+completion checks and matched reviewer comparison are ready. All 24 held-out
+wordings remain pending human review. Browser visual/download QA is blocked by
+the tool's local-file policy. Next, collect those ratings and inspect specific
+disagreements. Keep the evaluated six cases closed to prompt tuning.
+[Workflow and verification](experiments/REVIEW-WORKFLOW-2026-11-17.md)

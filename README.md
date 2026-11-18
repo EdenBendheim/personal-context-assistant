@@ -2,6 +2,13 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
+**November 17 review workflow** — Try v5 through the draft CLI or review server,
+and collect independent ratings in a local HTML form. Reviews can be resumed,
+checked for completion and compared for specific disagreements. Two real local
+requests verified the entry points and saved-review gate. Human ratings and
+browser visual QA remain pending.
+[Walkthrough, observed draft and limitations](experiments/REVIEW-WORKFLOW-2026-11-17.md)
+
 **November 16 prompt study** — The experimental v5 prompt asks the model to
 check each requested action. In a masked assistant review of six held-out
 synthetic cases, v5 produced seven supported, complete replies in 18 attempts

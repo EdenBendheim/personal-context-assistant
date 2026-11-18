@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "kind": "synthetic CLI and review API smoke check",
+  "calls_expected": 2,
+  "cloud_disabled_environment": true,
+  "model_identity": {
+    "version": 1,
+    "model": "qwen2.5:7b",
+    "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "size_bytes": 4683087332,
+    "runtime_version": "0.40.13",
+    "capabilities": [
+      "completion",
+      "tools"
+    ],
+    "details": {
+      "format": "gguf",
+      "family": "qwen2",
+      "parameter_size": "7.6B",
+      "quantization_level": "Q4_K_M"
+    },
+    "show_sha256": "bef4e60dde0f24b602417c53fa0d9ef4d7d90f482917c6006bce9e8a383bfaf1",
+    "local_only_confirmed": true,
+    "limitation": "Daemon-reported model identity; this does not inspect its environment, authenticate its producer or measure quality",
+    "file_verification": {
+      "manifest_sha256": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+      "manifest_file_sha256": "156bcbf71df68f7a6581fb4ab306ed921b8114d82b6eaeab5c0442785ea9b4c3",
+      "digest_binding": "retained_registry_manifest",
+      "verified_blobs": [
+        {
+          "digest": "sha256:2f15b3218f0552c60647ce60ada83632d2c09755b16259b13e3e4458e9ae419d",
+          "size_bytes": 487
+        },
+        {
+          "digest": "sha256:2bada8a7450677000f678be90653b85d364de7db25eb5ea54136ada5f3933730",
+          "size_bytes": 4683073952
+        },
+        {
+          "digest": "sha256:66b9ea09bd5b7099cbb4fc820f31b575c0366fa439b08245566692c6784e281e",
+          "size_bytes": 68
+        },
+        {
+          "digest": "sha256:eb4402837c7829a690fa845de4d7f3fd842c2adee476d5341da8a46ea9255175",
+          "size_bytes": 1482
+        },
+        {
+          "digest": "sha256:832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e",
+          "size_bytes": 11343
+        },
+        {
+          "digest": "sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+          "size_bytes": 858
+        }
+      ],
+      "total_blob_bytes": 4683088190,
+      "paths_omitted": true,
+      "limitation": "Verified local file bytes, not a signed producer or served-weight attestation"
+    }
+  },
+  "cli_returncode": 0,
+  "cli": {
+    "status": "needs_review",
+    "draft_text": "I see the correction has been made to use JSONL instead of CSV.\n\nCould you please provide the second file?",
+    "packet_sha256": "263f26ff27744da4803395be32577050dfb56bf5ef7eef76f2ca3fca9ad323ec",
+    "support_review_required": true
+  },
+  "sending_available": false,
+  "api_status": 200,
+  "temporary_daemon_stopped": true,
+  "actual_model_calls": 2,
+  "cloud_disabled_log_confirmed": true,
+  "api": {
+    "status": "needs_review",
+    "draft_text": "I see the correction has been made to use JSONL instead of CSV.\n\nCould you please provide the second file?",
+    "support_review_required": true,
+    "usable_without_support_http": 400,
+    "stored_and_reopened": true,
+    "packet_sha256": "263f26ff27744da4803395be32577050dfb56bf5ef7eef76f2ca3fca9ad323ec"
+  },
+  "receipt_recovery": "Smoke helper initially read status at the wrong response level after generation. Reopened the saved review and repeated the support gate check without additional model calls."
+}
