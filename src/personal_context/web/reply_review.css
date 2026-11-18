@@ -1,0 +1,17 @@
+:root {color-scheme:light; font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:#16344d; background:#eef3f9}
+* {box-sizing:border-box} body {margin:0} header,main {max-width:1180px;margin:auto;padding:1.4rem 2rem}
+header {padding-bottom:0} h1 {font-size:2rem;line-height:1.15;margin:.5rem 0} h2 {font-size:1.35rem;margin:0 0 .8rem} h3 {font-size:1.05rem}
+p {max-width:75ch} button,select,textarea {font:inherit} button {cursor:pointer;border:1px solid #086b73;border-radius:4px;background:#086b73;color:white;padding:.5rem .9rem}
+button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible {outline:3px solid #b24c36;outline-offset:3px}
+select,textarea {display:block;width:100%;background:white;border:1px solid #aabdd0;border-radius:4px;padding:.5rem;color:inherit}
+label {display:block;margin:.7rem 0} .fields {display:grid;grid-template-columns:1fr 2fr;gap:1.2rem}
+.reviewer {background:white;padding:1.3rem;border-left:5px solid #086b73}.reviewer p {font-size:.9rem}
+nav {display:flex;flex-wrap:wrap;gap:.5rem;margin:1.3rem 0} nav button {background:transparent;color:#16344d;border-color:#aabdd0}
+nav button[aria-current="true"] {background:#16344d;color:white;border-color:#16344d}
+.columns {display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.4rem;align-items:start}
+.source,.candidate {background:white;padding:1.2rem;margin-bottom:1rem;border:1px solid #aabdd0;border-radius:4px}
+.history {margin:1rem 0;border-top:1px solid #aabdd0;padding-top:.6rem}.metadata {font-size:.8rem;overflow-wrap:anywhere;color:#415c73}
+.wording {white-space:pre-wrap;overflow-wrap:anywhere}.candidate>blockquote {margin:0 0 1rem;padding:1rem;background:#eef3f9;border-left:3px solid #086b73}
+fieldset {border:0;padding:0;margin:1rem 0} legend {font-weight:600} .check {display:flex;align-items:baseline;gap:.5rem} .check input {flex:none}
+textarea {min-height:6rem} #notice {overflow-wrap:anywhere} .empty {padding:1rem;background:white}
+@media(max-width:750px) {header,main {padding:1rem}.fields,.columns {grid-template-columns:1fr}h1 {font-size:1.65rem}}

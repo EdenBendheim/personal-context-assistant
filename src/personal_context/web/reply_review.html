@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="__POLICY__">
+<title>Reply quality review</title>
+<style>__STYLE__</style>
+</head>
+<body>
+<header><h1>Does this reply hold up?</h1>
+<p>Check the draft against the source history and the reply goal. Judge every statement, including greetings and questions.</p></header>
+<main>
+<section class="reviewer"><h2>Your review</h2>
+<div class="fields"><label>Reviewer type<select id="reviewer-kind"><option value="">Choose…</option><option value="human">Human</option><option value="assistant">Assistant</option></select></label>
+<label>Have you seen the model labels or these outputs before?<select id="prior-exposure"><option value="">Choose…</option><option value="false">No</option><option value="true">Yes</option></select></label></div>
+<p>Work stays in this tab. Download your ratings before closing it. Model labels are withheld from this form.</p>
+<p id="progress" role="status" aria-live="polite"></p>
+<button id="download" type="button">Download ratings</button>
+<p id="notice" role="status" aria-live="polite"></p></section>
+<nav aria-label="Review cases" id="cases"></nav>
+<section id="workspace" aria-label="Current review case"></section>
+</main>
+<script type="application/json" id="review-data">__DATA__</script>
+<script>__SCRIPT__</script>
+</body>
+</html>

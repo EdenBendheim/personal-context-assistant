@@ -2,6 +2,13 @@
 
 ## November 17, 2026
 
+- Added a self-contained masked review form with shared history, factual-support
+  judgments, action checklists, notes and local JSON downloads. The coordinator
+  key stays outside the form. Four focused tests passed for exact data, label
+  masking, script-escape injection, size limits and exclusive file creation.
+  JavaScript syntax passed. Visual preview was blocked by the browser tool
+  policy for local file URLs and remains unverified.
+
 - Hardened rating denominators against edited coordinator keys. Scoring now
   requires a complete case/mode grid in every condition, unique candidate IDs,
   valid statuses and candidate coverage. Seven review tests passed, including

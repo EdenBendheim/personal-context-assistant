@@ -6,17 +6,18 @@ from pathlib import Path
 
 from .live_generation import load_study
 from .reply_quality import prepare_reviews, summarize_reviews
+from .reply_review_form import rating_template, render_review_form
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=('export', 'score'))
+    parser.add_argument('action', choices=('export', 'score', 'form'))
     parser.add_argument('manifest', type=Path)
     parser.add_argument('study', type=Path)
     parser.add_argument('criteria', type=Path)
     parser.add_argument('--seed', type=int, required=True, help='Use the same coordinator seed for export and score')
     parser.add_argument('--ratings', type=Path, help='Completed rating template for score')
-    parser.add_argument('--output', type=Path, required=True, help='New JSON output file')
+    parser.add_argument('--output', type=Path, required=True, help='New output file (HTML for form, JSON otherwise)')
     args = parser.parse_args(argv)
     try:
         if (args.action == 'score') != (args.ratings is not None):
@@ -26,14 +27,14 @@ def main(argv=None):
         criteria = json.loads(args.criteria.read_text())
         packet, key = prepare_reviews(inputs, study, criteria, seed=args.seed)
         if args.action == 'export':
-            result = dict(packet=packet, rating_template=dict(
-                version=1, packet_sha256=key['packet_sha256'], reviewer_kind=None, prior_exposure=None,
-                ratings={candidate['id']: dict(support=None, completed=[], note='')
-                         for case in packet['cases'] for candidate in case['candidates']}))
+            result = dict(packet=packet, rating_template=rating_template(packet))
+        elif args.action == 'form':
+            result = None
         else:
             ratings = json.loads(args.ratings.read_text())
             result = summarize_reviews(packet, key, ratings)
-        payload = json.dumps(result, indent=2, allow_nan=False, ensure_ascii=False) + '\n'
+        payload = (render_review_form(packet, key) if args.action == 'form' else
+                   json.dumps(result, indent=2, allow_nan=False, ensure_ascii=False) + '\n')
         args.output.parent.mkdir(parents=True, exist_ok=True)
         with args.output.open('x', encoding='utf-8') as handle:
             handle.write(payload)

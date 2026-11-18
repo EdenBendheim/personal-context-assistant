@@ -583,3 +583,27 @@ blocked shared sources and contacts with orphaned saved copies. A real browser
 check verified preview counts, typed-identifier gating and clearing on contact
 switch; no personal data was used or removed. This does not demonstrate model
 quality or guaranteed physical erasure.
+
+### Independent reply review form
+
+Export an anonymous local HTML form from a fixed synthetic study. For example,
+run the following command and open the resulting file locally.
+
+```sh
+PYTHONPATH=src python3 -m personal_context.reply_quality_cli form \
+  examples/reply_intent_development/manifest.json \
+  experiments/reply-union-2026-11-13/results.json \
+  examples/reply_intent_development/criteria.json \
+  --seed 17 --output runs/review.html
+```
+
+The form shows eligible history, requested actions and anonymous candidate
+wording. Choose factual support, check the completed actions and explain each
+judgment. Record reviewer type and prior exposure. Download the ratings JSON
+before closing the tab. Downloads can contain unfinished ratings; the scorer
+requires every draft and reviewer field. Use the same inputs and seed with
+`reply_quality_cli score --ratings PATH --output NEW_PATH`.
+
+The HTML contains synthetic conversation text but no coordinator key, model
+labels, external scripts or network calls. Keep real conversation exports and
+ratings private. The form has no automatic persistence or sending integration.
