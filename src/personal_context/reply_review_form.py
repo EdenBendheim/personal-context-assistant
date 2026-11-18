@@ -18,7 +18,7 @@ def rating_template(packet):
 def render_review_form(packet, key):
     validate_review_key(packet, key)
     assets = Path(__file__).with_name('web')
-    script = (assets/'reply_review.js').read_text()
+    script = (assets/'reply_rating_state.js').read_text() + '\n' + (assets/'reply_review.js').read_text()
     style = (assets/'reply_review.css').read_text()
     encoded = json.dumps(dict(packet=packet, rating_template=rating_template(packet)),
                          ensure_ascii=True, allow_nan=False).replace('<', '\\u003c').replace('>', '\\u003e')

@@ -606,7 +606,10 @@ requires every draft and reviewer field. Use the same inputs and seed with
 
 The HTML contains synthetic conversation text but no coordinator key, model
 labels, external scripts or network calls. Keep real conversation exports and
-ratings private. The form has no automatic persistence or sending integration.
+ratings private. Use “Resume saved ratings” to reopen a downloaded file for this exact packet.
+Invalid or mismatched files leave current work intact. Imports replace the
+ratings in the tab after validation. The form has no automatic persistence or
+sending integration.
 
 Use `reply_quality_cli progress` with the same arguments as `score` to validate
 an unfinished download. It lists pending drafts and missing reviewer fields

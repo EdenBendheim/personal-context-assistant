@@ -2,6 +2,12 @@
 
 ## November 17, 2026
 
+- Added resume-from-JSON to the rating form. It validates the packet identity,
+  reviewer fields, candidate IDs, support choices, action IDs and note limits
+  before replacing current work. Edits made during file reading are preserved.
+  Three Node state tests and five form/CLI tests passed; CI now checks the
+  JavaScript state contract and syntax. Browser visual QA remains blocked.
+
 - Added validated progress reports for unfinished independent ratings. Missing
   reviewer details and unrated drafts remain explicit. Partial files cannot
   produce quality scores. All 15 reply-related tests passed, including partial

@@ -2,7 +2,7 @@
 const data = JSON.parse(document.getElementById("review-data").textContent);
 const packet = data.packet, ratings = data.rating_template;
 const $ = id => document.getElementById(id);
-let dirty = false;
+let dirty = false, currentIndex = 0, editRevision = 0;
 function add(parent, tag, text, className) {
   const el = document.createElement(tag);
   el.textContent = text;
@@ -15,8 +15,9 @@ function progress() {
   const entries = Object.values(ratings.ratings), count = entries.filter(complete).length;
   $("progress").textContent = `${count} of ${entries.length} drafts rated. ${entries.length-count} pending.`;
 }
-function changed() { dirty = true; progress(); $("notice").textContent = "Changes are in this tab. Download to save them."; }
+function changed() { editRevision += 1; dirty = true; progress(); $("notice").textContent = "Changes are in this tab. Download to save them."; }
 function show(index) {
+  currentIndex = index;
   document.querySelectorAll("nav button").forEach((el, i) => el.setAttribute("aria-current", String(i === index)));
   const item = packet.cases[index], workspace = $("workspace");
   workspace.replaceChildren();
@@ -62,6 +63,21 @@ packet.cases.forEach((item, index) => {
 });
 $("reviewer-kind").addEventListener("change", event => { ratings.reviewer_kind = event.target.value || null; changed(); });
 $("prior-exposure").addEventListener("change", event => { ratings.prior_exposure = event.target.value === "" ? null : event.target.value === "true"; changed(); });
+$("restore").addEventListener("change", async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+  const importRevision = editRevision;
+  try {
+    if (file.size > 1_000_000) throw new Error("Choose a ratings JSON file smaller than 1 MB.");
+    const imported = ReplyRatingState.restore(packet, ratings, JSON.parse(await file.text()));
+    if (editRevision !== importRevision) throw new Error("Ratings changed while reading the file. Choose it again to replace current work.");
+    Object.assign(ratings, imported);
+    $("reviewer-kind").value = ratings.reviewer_kind || "";
+    $("prior-exposure").value = ratings.prior_exposure === null ? "" : String(ratings.prior_exposure);
+    show(currentIndex); changed(); $("notice").textContent = "Restored saved ratings. Download again after editing.";
+  } catch (error) { $("notice").textContent = error.message; }
+  finally { event.target.value = ""; }
+});
 $("download").addEventListener("click", () => {
   const blob = new Blob([JSON.stringify(ratings, null, 2)+"\n"], {type:"application/json"});
   const url = URL.createObjectURL(blob), anchor = document.createElement("a");

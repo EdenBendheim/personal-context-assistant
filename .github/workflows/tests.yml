@@ -18,6 +18,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: python -m unittest discover -s tests -v
+      - name: Local rating form state and JavaScript syntax
+        run: |
+          node --test tests/reply_rating_state.test.cjs
+          node --check src/personal_context/web/reply_review.js
+          node --check src/personal_context/web/app.js
       - name: Fixed synthetic retrieval benchmark
         run: python -m personal_context.evaluation examples/benchmark/manifest.json --split all
       - name: Scripted generation contract regression (not model quality)
