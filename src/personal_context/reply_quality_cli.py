@@ -5,13 +5,13 @@ import json
 from pathlib import Path
 
 from .live_generation import load_study
-from .reply_quality import prepare_reviews, summarize_reviews
+from .reply_quality import prepare_reviews, review_progress, summarize_reviews
 from .reply_review_form import rating_template, render_review_form
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=('export', 'score', 'form'))
+    parser.add_argument('action', choices=('export', 'score', 'form', 'progress'))
     parser.add_argument('manifest', type=Path)
     parser.add_argument('study', type=Path)
     parser.add_argument('criteria', type=Path)
@@ -20,8 +20,8 @@ def main(argv=None):
     parser.add_argument('--output', type=Path, required=True, help='New output file (HTML for form, JSON otherwise)')
     args = parser.parse_args(argv)
     try:
-        if (args.action == 'score') != (args.ratings is not None):
-            raise ValueError('Provide --ratings for score only')
+        if (args.action in ('score', 'progress')) != (args.ratings is not None):
+            raise ValueError('Provide --ratings for score or progress only')
         inputs = load_study(args.manifest)
         study = json.loads(args.study.read_text())
         criteria = json.loads(args.criteria.read_text())
@@ -32,7 +32,7 @@ def main(argv=None):
             result = None
         else:
             ratings = json.loads(args.ratings.read_text())
-            result = summarize_reviews(packet, key, ratings)
+            result = (review_progress if args.action == 'progress' else summarize_reviews)(packet, key, ratings)
         payload = (render_review_form(packet, key) if args.action == 'form' else
                    json.dumps(result, indent=2, allow_nan=False, ensure_ascii=False) + '\n')
         args.output.parent.mkdir(parents=True, exist_ok=True)

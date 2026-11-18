@@ -2,6 +2,11 @@
 
 ## November 17, 2026
 
+- Added validated progress reports for unfinished independent ratings. Missing
+  reviewer details and unrated drafts remain explicit. Partial files cannot
+  produce quality scores. All 15 reply-related tests passed, including partial
+  CLI output, incomplete-score refusal and malformed rating rejection.
+
 - Added a self-contained masked review form with shared history, factual-support
   judgments, action checklists, notes and local JSON downloads. The coordinator
   key stays outside the form. Four focused tests passed for exact data, label

@@ -91,3 +91,17 @@ class ReviewFormTests(unittest.TestCase):
             with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                 main(args)
             self.assertEqual(original, output.read_bytes())
+
+    def test_cli_reports_pending_work_but_will_not_score_it(self):
+        with tempfile.TemporaryDirectory() as directory:
+            rating_path, output = Path(directory)/'ratings.json', Path(directory)/'progress.json'
+            rating_path.write_text(json.dumps(rating_template(self.packet)))
+            base = [str(FIXTURE/'manifest.json'), str(ROOT/'experiments/reply-union-2026-11-13/results.json'),
+                    str(FIXTURE/'criteria.json'), '--seed', '17', '--ratings', str(rating_path)]
+            with contextlib.redirect_stdout(io.StringIO()):
+                main(['progress', *base, '--output', str(output)])
+            self.assertEqual(0, json.loads(output.read_text())['rated'])
+            score = Path(directory)/'score.json'
+            with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+                main(['score', *base, '--output', str(score)])
+            self.assertFalse(score.exists())

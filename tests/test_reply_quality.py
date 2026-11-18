@@ -130,6 +130,28 @@ class ReplyQualityTests(unittest.TestCase):
             summarize_reviews(duplicate, key | {'packet_sha256': digest(duplicate)},
                               ratings | {'packet_sha256': digest(duplicate)})
 
+    def test_partial_progress_preserves_pending_judgments_and_never_reports_quality(self):
+        from personal_context.reply_quality import review_progress, summarize_reviews
+        from personal_context.reply_review_form import rating_template
+        packet, key = self.prepare()
+        ratings = rating_template(packet)
+        progress = review_progress(packet, key, ratings)
+        self.assertEqual((6, 0, False), (progress['total'], progress['rated'], progress['ready_to_score']))
+        self.assertEqual(['reviewer_kind', 'prior_exposure'], progress['missing_reviewer_fields'])
+        self.assertNotIn('conditions', progress)
+        candidate_id = next(iter(ratings['ratings']))
+        ratings['ratings'][candidate_id] = dict(support='uncertain', completed=[], note='Need more context.')
+        self.assertEqual(1, review_progress(packet, key, ratings)['rated'])
+        with self.assertRaises(ValueError):
+            summarize_reviews(packet, key, ratings)
+        ratings = self.ratings(packet, key)
+        self.assertTrue(review_progress(packet, key, ratings)['ready_to_score'])
+        for change in (dict(support='yes'), dict(note='x'*1001), dict(completed=['unknown'])):
+            altered = deepcopy(ratings)
+            altered['ratings'][candidate_id].update(change)
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                review_progress(packet, key, altered)
+
     def test_held_out_packet_keeps_no_history_attempts_and_excludes_later_sources(self):
         from personal_context.generation import GeneratedProposal
         from personal_context.live_generation import study

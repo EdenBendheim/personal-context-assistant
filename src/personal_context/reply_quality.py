@@ -138,33 +138,52 @@ def validate_review_key(packet, key):
     return candidates
 
 
-def summarize_reviews(packet, key, ratings):
-    """Join completed ratings to the coordinator's original attempt key."""
+def _read_reviews(packet, key, ratings, *, partial):
     fingerprint = digest(packet)
     if (key['packet_sha256'] != fingerprint or ratings.get('packet_sha256') != fingerprint
             or type(ratings.get('version')) is not int or ratings['version'] != 1):
         raise ValueError('Ratings must match the exact reviewer packet')
-    reviewer_kind = ratings.get('reviewer_kind')
-    prior_exposure = ratings.get('prior_exposure')
-    if reviewer_kind not in ('human', 'assistant') or type(prior_exposure) is not bool:
+    reviewer_kind, prior_exposure = ratings.get('reviewer_kind'), ratings.get('prior_exposure')
+    if ((reviewer_kind not in ('human', 'assistant') and not (partial and reviewer_kind is None))
+            or (type(prior_exposure) is not bool and not (partial and prior_exposure is None))):
         raise ValueError('Record reviewer kind and prior exposure')
-
     candidates = validate_review_key(packet, key)
     entries = ratings.get('ratings')
     if not isinstance(entries, dict) or entries.keys() != candidates.keys():
         raise ValueError('Rate every distinct candidate exactly once')
-
     judgments = {}
     for candidate_id, case in candidates.items():
         rating = entries[candidate_id]
+        if not isinstance(rating, dict) or set(rating) != {'support', 'completed', 'note'}:
+            raise ValueError(f'Invalid rating for {candidate_id}')
         support, completed, note = (rating[field] for field in ('support', 'completed', 'note'))
-        if (support not in SUPPORT_RATINGS or not isinstance(completed, list)
+        if ((support not in SUPPORT_RATINGS and not (partial and support is None))
+                or not isinstance(completed, list)
                 or any(not isinstance(item, str) or item not in case['criteria'] for item in completed)
                 or len(completed) != len(set(completed))
-                or not isinstance(note, str) or not 1 <= len(note.strip()) <= 1000):
+                or not isinstance(note, str) or len(note) > 1000
+                or (not partial and not note.strip())):
             raise ValueError(f'Invalid rating for {candidate_id}')
-        judgments[candidate_id] = dict(support=support, complete=len(completed) == len(case['criteria']))
+        if support is not None and note.strip():
+            judgments[candidate_id] = dict(support=support, complete=len(completed) == len(case['criteria']))
+    return candidates, judgments
 
+
+def review_progress(packet, key, ratings):
+    """Validate unfinished ratings without reporting them as quality scores."""
+    candidates, judgments = _read_reviews(packet, key, ratings, partial=True)
+    missing = [field for field in ('reviewer_kind', 'prior_exposure') if ratings.get(field) is None]
+    pending = [candidate_id for candidate_id in candidates if candidate_id not in judgments]
+    return dict(version=1, packet_sha256=digest(packet), total=len(candidates),
+                rated=len(judgments), pending=pending, missing_reviewer_fields=missing,
+                ready_to_score=not pending and not missing)
+
+
+def summarize_reviews(packet, key, ratings):
+    """Join completed ratings to the coordinator's original attempt key."""
+    candidates, judgments = _read_reviews(packet, key, ratings, partial=False)
+    fingerprint = digest(packet)
+    reviewer_kind, prior_exposure = ratings['reviewer_kind'], ratings['prior_exposure']
     counts, unblinded = {}, []
     for attempt in key['attempts']:
         tally = counts.setdefault(attempt['condition'], Counter(

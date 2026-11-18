@@ -607,3 +607,8 @@ requires every draft and reviewer field. Use the same inputs and seed with
 The HTML contains synthetic conversation text but no coordinator key, model
 labels, external scripts or network calls. Keep real conversation exports and
 ratings private. The form has no automatic persistence or sending integration.
+
+Use `reply_quality_cli progress` with the same arguments as `score` to validate
+an unfinished download. It lists pending drafts and missing reviewer fields
+without computing quality scores. A blank factual-support choice or note stays
+pending. An unchecked action is a judgment of incompleteness, not missing data.
