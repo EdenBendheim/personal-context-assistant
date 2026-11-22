@@ -3,6 +3,7 @@ import io
 import json
 from pathlib import Path
 import tempfile
+import sqlite3
 import unittest
 from unittest.mock import patch
 
@@ -57,6 +58,40 @@ class PreviewTests(unittest.TestCase):
             ], plan.report["errors"])
             self.assertFalse(plan.report["ready"])
             self.assertFalse(db.exists())
+
+    def test_preview_uses_indexed_keys_in_one_snapshot_while_a_wal_writer_adds_a_match(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            db = root/"history.sqlite"
+            store = Store(str(db))
+            self.addCleanup(store.close)
+            store.connection.execute("PRAGMA journal_mode = WAL")
+            existing = Message.from_dict(record(body="Stored synthetic message"))
+            pending = Message.from_dict(record("2", body="New synthetic content"))
+            store.ingest([existing])
+            queries = []
+            connect = sqlite3.connect
+
+            def open_reader(*args, **kwargs):
+                connection = connect(*args, **kwargs)
+                connection.set_trace_callback(queries.append)
+                return connection
+
+            def records():
+                from personal_context.messages import ImportRecord
+                yield ImportRecord(1, message=existing)
+                store.ingest([pending])
+                yield ImportRecord(2, message=pending)
+
+            with patch("personal_context.imports._records", return_value=records()), \
+                    patch("personal_context.imports.sqlite3.connect", side_effect=open_reader):
+                plan = plan_import(root/"unused.jsonl", db=db)
+            self.assertEqual(["2"], [message.id for message in plan.messages])
+            self.assertEqual(1, plan.report["duplicates"])
+            lookups = [sql for sql in queries if "FROM messages" in sql]
+            self.assertTrue(all(" WHERE " in sql or "LIMIT 0" in sql for sql in lookups))
+            self.assertTrue(any("WHERE source =" in sql for sql in lookups))
+            self.assertTrue(any("WHERE fingerprint =" in sql for sql in lookups))
 
     def test_cli_preview_creates_no_database_or_directory(self):
         with tempfile.TemporaryDirectory() as folder:
