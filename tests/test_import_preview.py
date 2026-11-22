@@ -37,6 +37,27 @@ class PreviewTests(unittest.TestCase):
             self.assertFalse(report["ready"])
             self.assertEqual(db.read_bytes(), original)
 
+    def test_jsonl_preview_isolates_bad_utf8_lone_surrogates_and_duplicate_fields(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path, db = Path(folder)/"fixture.jsonl", Path(folder)/"absent.sqlite"
+            valid = json.dumps(record("first", body="Synthetic café 🗓️")).encode()
+            undecodable = b'{"body":"PRIVATE_BAD_BYTES\xff"}'
+            duplicate = b'{"PRIVATE_KEY":1,"PRIVATE_KEY":2}'
+            escaped_surrogate = json.dumps(record("surrogate", body="\ud800")).encode()
+            trailing = json.dumps(record("last", body="Later valid content")).encode()
+            path.write_bytes(b'\xef\xbb\xbf' + b'\r\n'.join(
+                [valid, undecodable, b'', duplicate, escaped_surrogate, trailing]))
+            plan = plan_import(path, db=db)
+            self.assertEqual(["first", "last"], [item.id for item in plan.messages])
+            self.assertEqual(1, plan.report["skipped"])
+            self.assertEqual([
+                {"record": 2, "reason": "Invalid UTF-8"},
+                {"record": 4, "reason": "Duplicate JSON field"},
+                {"record": 5, "reason": "Invalid fields, empty body, or timestamp"},
+            ], plan.report["errors"])
+            self.assertFalse(plan.report["ready"])
+            self.assertFalse(db.exists())
+
     def test_cli_preview_creates_no_database_or_directory(self):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "fixture.jsonl"

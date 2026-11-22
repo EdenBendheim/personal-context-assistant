@@ -45,6 +45,9 @@ class Message:
         fields = {name: raw[name] for name in cls.__dataclass_fields__}
         if any(not isinstance(value, str) for value in fields.values()):
             raise ValueError("All message fields must be strings")
+        # JSON escapes can decode to lone surrogates that SQLite cannot encode.
+        for value in fields.values():
+            value.encode("utf-8")
         fields = {name: value.strip() for name, value in fields.items()}
         fields["timestamp"] = utc_timestamp(fields["timestamp"])
         fields["author"] = fields["author"].casefold()
@@ -75,20 +78,43 @@ def _normalize(number: int, raw: dict) -> ImportRecord:
         return ImportRecord(number, message=Message.from_dict(raw))
     except KeyError as exc:
         return ImportRecord(number, error=f"Missing required field {exc}")
-    except (ValueError, TypeError):
+    except (ValueError, TypeError, OverflowError):
         # Reports never include raw message bodies or invalid field values.
         return ImportRecord(number, error="Invalid fields, empty body, or timestamp")
 
 
+class _DuplicateJSONField(ValueError):
+    pass
+
+
+def _unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise _DuplicateJSONField
+        result[key] = value
+    return result
+
+
 def scan_jsonl(path: str | Path) -> Iterator[ImportRecord]:
-    with Path(path).open(encoding="utf-8-sig") as stream:
+    # Preserve physical line numbering (including CRLF/CR inputs) and isolate
+    # decode failures to a single line instead of losing a whole read buffer.
+    with Path(path).open(encoding="utf-8-sig", errors="surrogateescape") as stream:
         for number, line in enumerate(stream, 1):
+            try:
+                line.encode("utf-8")
+            except UnicodeEncodeError:
+                yield ImportRecord(number, error="Invalid UTF-8")
+                continue
             if not line.strip():
                 yield ImportRecord(number, skipped="Blank line")
                 continue
             try:
-                raw = json.loads(line)
-            except ValueError:
+                raw = json.loads(line, object_pairs_hook=_unique_object)
+            except _DuplicateJSONField:
+                yield ImportRecord(number, error="Duplicate JSON field")
+                continue
+            except (ValueError, RecursionError):
                 yield ImportRecord(number, error="Malformed JSON")
                 continue
             if not isinstance(raw, dict):
