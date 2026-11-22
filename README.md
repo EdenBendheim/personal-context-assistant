@@ -2,6 +2,12 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
+**November 21 import preview** — JSONL inspection reports invalid UTF-8 and
+duplicate JSON fields at their own record numbers. Preview checks only
+export-relevant IDs and fingerprints. Pass the preview digest to guarded
+apply to commit the reviewed plan after a transactional recheck.
+[Preview and apply commands](#preview-before-importing)
+
 **November 17 review workflow** — Try v5 through the draft CLI or review server,
 and collect independent ratings in a local HTML form. Reviews can be resumed,
 checked for completion and compared for specific disagreements. Two real local
@@ -216,9 +222,40 @@ Reimporting the fixture inserts zero additional messages. The October message is
 
 ## Preview before importing
 
-`import --preview` does not create the database or its parent directory. An existing SQLite database is opened read-only to check provider IDs and normalized fingerprints. Reports expose counts and record-level reasons, not message bodies. JSONL/CSV record numbers are physical lines; MBOX numbers identify mail items (one mail can produce multiple directed messages).
+Preview leaves a missing database and parent directory absent. For an
+existing database it uses one read-only snapshot and indexed lookups for
+provider IDs and normalized fingerprints encountered in the export. Reports
+contain counts, record numbers and generic reasons. JSONL and CSV use
+physical line numbers. MBOX counts mail items, which can produce multiple
+directed messages.
 
-If any record is invalid or a provider/source message ID has different normalized content, both preview and regular import exit with status 2 and regular import inserts nothing. `conflicts` counts these changed-ID records separately from true `duplicates` and malformed `invalid` records; `valid` counts all structurally valid records, including duplicates and conflicts. Error entries report record numbers and reasons without message text or IDs. Duplicate content aliases are also checked for ID consistency within the same file. Conflicts are rechecked under the import writer transaction, so a conflicting message arriving after preview cannot be silently skipped or leave partial inserts. `would_insert` shows valid nonduplicate candidates, not a partial import that will be applied. Unsupported HTML-only MBOX items, blank JSONL lines, and empty outbound Discord messages are counted as skipped. A successful regular import reports its actual `inserted` count. Counts reflect an inspection snapshot; concurrent changes can affect the number finally inserted. This version materializes candidate messages in memory, so very large exports need a later streaming/staging implementation.
+Malformed JSONL lines are reported individually, including invalid UTF-8,
+duplicate JSON fields and malformed Unicode strings. A malformed record or
+changed provider ID blocks the import. `valid` includes structurally valid
+duplicate and conflicting records. `would_insert` counts unique candidates,
+even in a blocked plan. Blank JSONL lines, HTML-only MBOX mail and empty
+outbound Discord messages are skipped. Ordinary import reports the actual
+`inserted` count, which can differ from the preview after concurrent changes.
+
+For a guarded import, preview first, inspect the counts, then copy its
+`preview_sha256` into the second command. Run with the same database path,
+format and import options.
+
+```sh
+python3 -m personal_context.cli --db data/demo.sqlite import examples/synthetic.jsonl --preview
+python3 -m personal_context.cli --db data/demo.sqlite import examples/synthetic.jsonl --expect-preview SHA256
+```
+
+The digest covers the resolved database path, normalized input records and
+their insert, duplicate or skip decisions. A blocked preview returns a null
+digest. Guarded apply checks for a match before creating a missing database
+and checks again under the write lock. A mismatch, including a conflict on a
+previously duplicate alias, leaves the messages as they were. Unrelated
+database changes and formatting changes that preserve the normalized records
+can keep a preview valid. A successful guarded import that inserted messages
+requires a fresh preview before reimport. Keep previews local. The command
+still materializes parsed records in memory and is intended for bounded
+exports.
 
 ## Import contract
 

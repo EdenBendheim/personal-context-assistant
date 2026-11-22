@@ -9,6 +9,8 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 - [x] Contact-specific lexical retrieval and outbound style examples with timestamp cutoffs.
 - [x] Keep lexical search/style CLI lookups read-only and refuse missing stores without creating files.
 - [x] Add importer error summaries and an explicit preview before committing an import.
+- [x] Bind optional guarded apply to a preview digest checked inside the write transaction.
+- [ ] Stage large exports in bounded batches with complete validation before commit.
 - [x] Distinguish conflicting provider IDs from true duplicates and recheck conflicts atomically at apply time.
 - [x] Add conversation-level development/evaluation manifests and a fixed synthetic reply-context retrieval benchmark.
 - [x] Define contact-scoped, source-aware memory with immutable correction/withdrawal history.
@@ -124,3 +126,10 @@ wordings remain pending human review. Browser visual/download QA is blocked by
 the tool's local-file policy. Next, collect those ratings and inspect specific
 disagreements. Keep the evaluated six cases closed to prompt tuning.
 [Workflow and verification](experiments/REVIEW-WORKFLOW-2026-11-17.md)
+
+
+November 21: read-only preview uses targeted duplicate lookups and reports
+invalid UTF-8, duplicate JSON fields and invalid Unicode by JSONL line. CLI
+guarded apply rechecks the reviewed digest under the writer lock, including
+records that were duplicates at preview time. Large-export staging and review
+UI ingestion are still open. Independent human reply ratings remain pending.

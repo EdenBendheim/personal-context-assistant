@@ -8,7 +8,7 @@ import unittest
 from unittest.mock import patch
 
 from personal_context.cli import main
-from personal_context.imports import plan_import
+from personal_context.imports import apply_previewed_import, plan_import
 from personal_context.messages import Message
 from personal_context.store import Store
 
@@ -92,6 +92,68 @@ class PreviewTests(unittest.TestCase):
             self.assertTrue(all(" WHERE " in sql or "LIMIT 0" in sql for sql in lookups))
             self.assertTrue(any("WHERE source =" in sql for sql in lookups))
             self.assertTrue(any("WHERE fingerprint =" in sql for sql in lookups))
+
+    def test_guarded_cli_apply_rejects_stale_input_and_wrong_database_without_creation(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            path = root/"fixture.jsonl"
+            db = root/"target"/"messages.sqlite"
+            path.write_text(json.dumps(record(body="Earlier synthetic wording")))
+            preview = io.StringIO()
+            args = ["personal-context", "--db", str(db), "import", str(path)]
+            with patch("sys.argv", args+["--preview"]), contextlib.redirect_stdout(preview):
+                main()
+            digest = json.loads(preview.getvalue())["preview_sha256"]
+            self.assertRegex(digest, r"^[0-9a-f]{64}$")
+            other = root/"other"/"messages.sqlite"
+            with self.assertRaisesRegex(ValueError, "preview is stale"):
+                apply_previewed_import(path, db=other, expected_preview=digest)
+            self.assertFalse(other.parent.exists())
+            path.write_text(json.dumps(record(body="Different synthetic wording")))
+            stderr = io.StringIO()
+            with patch("sys.argv", args+["--expect-preview", digest]), contextlib.redirect_stderr(stderr):
+                with self.assertRaises(SystemExit) as failure:
+                    main()
+            self.assertEqual(2, failure.exception.code)
+            self.assertIn("run preview again", stderr.getvalue())
+            self.assertNotIn("synthetic wording", stderr.getvalue())
+            self.assertFalse(db.parent.exists())
+
+            path.write_text(json.dumps(record(body="Earlier synthetic wording")))
+            applied = io.StringIO()
+            with patch("sys.argv", args+["--expect-preview", digest]), contextlib.redirect_stdout(applied):
+                main()
+            report = json.loads(applied.getvalue())
+            self.assertEqual((1, digest), (report["inserted"], report["preview_sha256"]))
+            with self.assertRaisesRegex(ValueError, "preview is stale"):
+                apply_previewed_import(path, db=db, expected_preview=digest)
+
+    def test_guarded_apply_rejects_concurrent_conflict_on_previously_duplicate_alias(self):
+        from personal_context import imports
+
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            path, db = root/"fixture.jsonl", root/"existing.sqlite"
+            store = Store(str(db))
+            self.addCleanup(store.close)
+            store.ingest([Message.from_dict(record())])
+            path.write_text("\n".join(map(json.dumps, [
+                record("new", body="Synthetic candidate"), record("alias"),
+            ])))
+            plan = plan_import(path, db=db)
+            self.assertEqual((1, 1), (plan.report["duplicates"], plan.report["would_insert"]))
+            original = imports._inspect_path
+
+            def concurrent_writer(*args):
+                snapshot = original(*args)
+                store.ingest([Message.from_dict(record("alias", body="Concurrent conflict"))])
+                return snapshot
+
+            with patch.object(imports, "_inspect_path", side_effect=concurrent_writer):
+                with self.assertRaisesRegex(ValueError, "preview is stale"):
+                    apply_previewed_import(path, db=db, expected_preview=plan.report["preview_sha256"])
+            rows = store.connection.execute("SELECT id FROM messages ORDER BY id")
+            self.assertEqual(["1", "alias"], [row[0] for row in rows])
 
     def test_cli_preview_creates_no_database_or_directory(self):
         with tempfile.TemporaryDirectory() as folder:

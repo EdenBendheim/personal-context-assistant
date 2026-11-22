@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import sqlite3
 
-from .imports import plan_import
+from .imports import apply_previewed_import, plan_import
 from .store import Store
 
 
@@ -17,7 +17,9 @@ def main():
     importer.add_argument("--owner")
     importer.add_argument("--contact")
     importer.add_argument("--thread")
-    importer.add_argument("--preview", action="store_true", help="Report validation and duplicates without database writes")
+    mode = importer.add_mutually_exclusive_group()
+    mode.add_argument("--preview", action="store_true", help="Report validation and duplicates without database writes")
+    mode.add_argument("--expect-preview", metavar="SHA256", help="Apply only if the reviewed import plan still matches")
     for name in ("search", "style"):
         sub = commands.add_parser(name)
         sub.add_argument("--owner", required=True)
@@ -28,6 +30,16 @@ def main():
             sub.add_argument("query")
     args = parser.parse_args()
     if args.command == "import":
+        if args.expect_preview is not None:
+            try:
+                result = apply_previewed_import(args.path, db=args.db, expected_preview=args.expect_preview,
+                    format=args.format, owner=args.owner, contact=args.contact, thread=args.thread)
+            except ValueError as exc:
+                parser.exit(2, f"Import failed: {exc}\n")
+            except (OSError, sqlite3.Error):
+                parser.exit(2, "Local import failed; no messages were inserted\n")
+            print(json.dumps(result, indent=2))
+            return
         try:
             plan = plan_import(args.path, db=args.db, format=args.format,
                                owner=args.owner, contact=args.contact, thread=args.thread)

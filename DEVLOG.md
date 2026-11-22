@@ -1,5 +1,26 @@
 # Development log
 
+## November 21, 2026
+
+- JSONL preview now isolates malformed UTF-8, duplicate keys and invalid
+  Unicode by record. It continues inspecting later records. Added tests for
+  BOM, CRLF and valid Unicode around malformed records.
+- Preview checks source IDs and normalized fingerprints via indexed queries
+  in one read-only transaction. A WAL regression test confirms a writer can
+  add a matching message without shifting the reader's snapshot.
+- Added optional `--expect-preview` on the import CLI. Changed inputs,
+  different destinations and concurrent alias conflicts fail before any
+  message inserts. The synthetic end-to-end check previewed and inserted
+  five messages, rejected the stale digest, then found all five duplicates
+  in a new preview. The import still materializes parsed records, and the
+  browser workspace does not offer ingestion yet.
+- All 186 Python tests, three JavaScript tests, retrieval and scripted
+  generation benchmarks, source annotation checks, demos and whitespace
+  checks passed.
+- Interview explanation — “I added a review-before-write import. The preview
+  explains what will be stored, and the writer verifies those same decisions
+  inside the transaction.”
+
 ## November 17, 2026
 
 - Added explicit v4/v5 prompt and union-schema/prompt-only choices to the local
