@@ -225,7 +225,8 @@ Reimporting the fixture inserts zero additional messages. The October message is
 Preview leaves a missing database and parent directory absent. For an
 existing database it uses one read-only snapshot and indexed lookups for
 provider IDs and normalized fingerprints encountered in the export. Reports
-contain counts, record numbers and generic reasons. JSONL and CSV use
+contain exact counts and the first 100 record numbers and generic reasons.
+`errors_omitted` reports additional errors. JSONL and CSV use
 physical line numbers. MBOX counts mail items, which can produce multiple
 directed messages.
 

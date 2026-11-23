@@ -12,6 +12,9 @@ from .messages import Message, scan_discord_csv, scan_jsonl, scan_mbox
 from .store import Store
 
 
+MAX_REPORTED_ERRORS = 100
+
+
 @dataclass
 class ImportPlan:
     messages: list[Message]
@@ -41,10 +44,15 @@ def _inspect(records, connection, format, db):
     report = dict(format=format, valid=0, invalid=0, skipped=0, duplicates=0, conflicts=0,
                   would_insert=0, errors=[])
     messages = []
+
+    def add_error(number, reason):
+        if len(report["errors"]) < MAX_REPORTED_ERRORS:
+            report["errors"].append(dict(record=number, reason=reason))
+
     for record in records:
         if record.error:
             report["invalid"] += 1
-            report["errors"].append(dict(record=record.number, reason=record.error))
+            add_error(record.number, record.error)
             continue
         if record.skipped:
             report["skipped"] += 1
@@ -61,8 +69,7 @@ def _inspect(records, connection, format, db):
             previous = row[0] if row is not None else None
         if previous is not None and previous != fingerprint:
             report["conflicts"] += 1
-            report["errors"].append(dict(record=record.number,
-                reason="Message identifier conflicts with different normalized content"))
+            add_error(record.number, "Message identifier conflicts with different normalized content")
             continue
         # Reserve aliases even when content deduplicates to an existing record.
         ids[key] = fingerprint
@@ -77,6 +84,7 @@ def _inspect(records, connection, format, db):
         else:
             messages.append(message)
             remember(record.number, key, fingerprint, "insert")
+    report["errors_omitted"] = report["invalid"] + report["conflicts"] - len(report["errors"])
     report["would_insert"] = len(messages)
     report["ready"] = report["invalid"] == 0 and report["conflicts"] == 0
     report["preview_sha256"] = snapshot.hexdigest() if report["ready"] else None

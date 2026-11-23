@@ -155,6 +155,25 @@ class PreviewTests(unittest.TestCase):
             rows = store.connection.execute("SELECT id FROM messages ORDER BY id")
             self.assertEqual(["1", "alias"], [row[0] for row in rows])
 
+    def test_error_sample_is_bounded_but_late_conflict_and_counts_are_retained(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path, db = root/"fixture.jsonl", root/"existing.sqlite"
+            store = Store(str(db))
+            try:
+                store.ingest([Message.from_dict(record())])
+            finally:
+                store.close()
+            path.write_text("[]\n"*103 + json.dumps(record(body="Changed synthetic content")))
+            report = plan_import(path, db=db).report
+            self.assertEqual(103, report["invalid"])
+            self.assertEqual(1, report["conflicts"])
+            self.assertEqual(100, len(report["errors"]))
+            self.assertEqual(list(range(1, 101)), [row["record"] for row in report["errors"]])
+            self.assertEqual(4, report["errors_omitted"])
+            self.assertFalse(report["ready"])
+            self.assertIsNone(report["preview_sha256"])
+
     def test_cli_preview_creates_no_database_or_directory(self):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "fixture.jsonl"
