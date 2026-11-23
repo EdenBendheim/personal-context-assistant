@@ -1,5 +1,27 @@
 # Development log
 
+## November 22, 2026
+
+- Capped import error details at 100 while keeping exact malformed-record and
+  conflict counts. A late conflict still blocks apply.
+- Staged normalized records once and moved alias keys and candidate positions
+  into the same private scratch database. Preview and both CLI apply modes
+  share the disk-backed planner. Writes replay the staged records under the
+  destination write lock and stream unique candidates in one transaction.
+- Tested snapshot consistency, scratch cleanup on scan failure, source changes
+  between checks and rollback when SQLite rejects a later candidate.
+- On 20,000 synthetic JSONL records, the previous and staged previews had
+  identical digests. Peak preview memory fell from 48.9 to 28.7 MiB on this
+  machine, and observed preview time rose from 0.42 to 0.75 seconds. Guarded
+  apply inserted all 20,000 and rejected the stale digest on reuse.
+- All 190 Python tests, three JavaScript tests, synthetic retrieval and
+  generation benchmarks, source checks, and memory and draft demos passed.
+- Scratch disk grows with input, and the MBOX reader retains its mail index.
+  Browser ingestion and independent reply ratings are still open.
+- Interview explanation — “I moved large-export planning to a temporary
+  database, then streamed the validated rows into one transaction. A failed
+  validation or write still leaves the destination messages unchanged.”
+
 ## November 21, 2026
 
 - JSONL preview now isolates malformed UTF-8, duplicate keys and invalid

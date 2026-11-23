@@ -11,6 +11,10 @@ from typing import Iterable
 from .messages import Message, utc_timestamp
 
 
+_INSERT = """INSERT INTO messages
+    VALUES (:id, :source, :thread, :author, :recipient, :timestamp, :body, :fingerprint)"""
+
+
 def tokens(text: str) -> set[str]:
     return set(re.findall(r"\b\w+\b", text.casefold()))
 
@@ -61,11 +65,16 @@ class Store:
             if previous is not None and previous != fields["fingerprint"]:
                 raise ValueError("Message identifier conflicts with different normalized content; no messages imported")
             seen[key] = fields["fingerprint"]
-            result = self.connection.execute("""INSERT INTO messages
-                VALUES (:id, :source, :thread, :author, :recipient, :timestamp, :body, :fingerprint)
-                ON CONFLICT DO NOTHING""", fields)
+            result = self.connection.execute(_INSERT + " ON CONFLICT DO NOTHING", fields)
             inserted += result.rowcount
         return inserted
+
+    def _insert_planned(self, messages: Iterable[Message]) -> int:
+        """Stream verified unique candidates without retaining IDs in memory."""
+        if not self.connection.in_transaction:
+            raise ValueError("Message insertion requires an active transaction")
+        fields = (asdict(message) | {"fingerprint": message.fingerprint} for message in messages)
+        return self.connection.executemany(_INSERT, fields).rowcount
 
     def _eligible(self, *, owner: str, contact: str, before: str, style_only: bool) -> list[dict]:
         owner, contact = owner.casefold(), contact.casefold()

@@ -72,20 +72,26 @@ class PreviewTests(unittest.TestCase):
             queries = []
             connect = sqlite3.connect
 
+            class ObservedReader(sqlite3.Connection):
+                def execute(self, sql, parameters=()):
+                    query = super().execute(sql, parameters)
+                    if parameters == ("gmail", "1"):
+                        store.ingest([pending])
+                    return query
+
             def open_reader(*args, **kwargs):
-                connection = connect(*args, **kwargs)
+                if not kwargs.get("uri"):
+                    return connect(*args, **kwargs)
+                connection = connect(*args, **kwargs, factory=ObservedReader)
                 connection.set_trace_callback(queries.append)
                 return connection
 
-            def records():
-                from personal_context.messages import ImportRecord
-                yield ImportRecord(1, message=existing)
-                store.ingest([pending])
-                yield ImportRecord(2, message=pending)
-
-            with patch("personal_context.imports._records", return_value=records()), \
-                    patch("personal_context.imports.sqlite3.connect", side_effect=open_reader):
-                plan = plan_import(root/"unused.jsonl", db=db)
+            path = root/"fixture.jsonl"
+            path.write_text("\n".join(map(json.dumps, [
+                record(body="Stored synthetic message"), record("2", body="New synthetic content"),
+            ])))
+            with patch("personal_context.imports.sqlite3.connect", side_effect=open_reader):
+                plan = plan_import(path, db=db)
             self.assertEqual(["2"], [message.id for message in plan.messages])
             self.assertEqual(1, plan.report["duplicates"])
             lookups = [sql for sql in queries if "FROM messages" in sql]
@@ -195,6 +201,31 @@ class PreviewTests(unittest.TestCase):
             with contextlib.closing(Store(str(db), readonly=True)) as store:
                 self.assertEqual("Reviewed synthetic content",
                                  store.connection.execute("SELECT body FROM messages").fetchone()[0])
+
+    def test_streamed_insert_rolls_back_when_sqlite_aborts_after_the_first_candidate(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            db, path = root/"history.sqlite", root/"fixture.jsonl"
+            with contextlib.closing(Store(str(db))) as store:
+                store.ingest([Message.from_dict(record())])
+                store.connection.execute("""
+                    CREATE TRIGGER reject_fixture BEFORE INSERT ON messages
+                    WHEN NEW.id = 'reject'
+                    BEGIN SELECT RAISE(ABORT, 'PRIVATE_FIXTURE_ERROR'); END;
+                """)
+            path.write_text("\n".join(map(json.dumps, [
+                record("new", body="First synthetic candidate"),
+                record("reject", body="Second synthetic candidate"),
+            ])))
+            args = ["personal-context", "--db", str(db), "import", str(path)]
+            errors = io.StringIO()
+            with patch("sys.argv", args), contextlib.redirect_stderr(errors):
+                with self.assertRaises(SystemExit) as failure:
+                    main()
+            self.assertEqual(2, failure.exception.code)
+            self.assertNotIn("PRIVATE_FIXTURE_ERROR", errors.getvalue())
+            with contextlib.closing(Store(str(db), readonly=True)) as store:
+                self.assertEqual(["1"], [row[0] for row in store.connection.execute("SELECT id FROM messages")])
 
     def test_cli_preview_creates_no_database_or_directory(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -312,7 +343,7 @@ class PreviewTests(unittest.TestCase):
             first.connection.rollback()
             output, errors = io.StringIO(), io.StringIO()
             with patch("sys.argv", ["personal-context", "--db", str(db), "import", str(path)]), \
-                    patch("personal_context.cli.plan_import", return_value=plan):
+                    patch("personal_context.imports._inspect_path", return_value=plan.report):
                 with contextlib.redirect_stdout(output), contextlib.redirect_stderr(errors), self.assertRaises(SystemExit) as error:
                     main()
             self.assertEqual(2, error.exception.code)

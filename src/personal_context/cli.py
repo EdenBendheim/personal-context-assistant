@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import sqlite3
 
-from .imports import apply_previewed_import, plan_import
+from .imports import apply_import, preview_import
 from .store import Store
 
 
@@ -30,35 +30,17 @@ def main():
             sub.add_argument("query")
     args = parser.parse_args()
     if args.command == "import":
-        if args.expect_preview is not None:
-            try:
-                result = apply_previewed_import(args.path, db=args.db, expected_preview=args.expect_preview,
-                    format=args.format, owner=args.owner, contact=args.contact, thread=args.thread)
-            except ValueError as exc:
-                parser.exit(2, f"Import failed: {exc}\n")
-            except (OSError, sqlite3.Error):
-                parser.exit(2, "Local import failed; no messages were inserted\n")
-            print(json.dumps(result, indent=2))
-            return
+        options = dict(db=args.db, format=args.format, owner=args.owner,
+                       contact=args.contact, thread=args.thread)
         try:
-            plan = plan_import(args.path, db=args.db, format=args.format,
-                               owner=args.owner, contact=args.contact, thread=args.thread)
-        except (OSError, ValueError, sqlite3.Error) as exc:
-            parser.exit(2, f"Import inspection failed: {exc}\n")
-        result = plan.report | {"preview": args.preview, "inserted": 0}
-        if plan.report["ready"] and not args.preview:
-            Path(args.db).parent.mkdir(parents=True, exist_ok=True)
-            store = Store(args.db)
-            try:
-                result["inserted"] = store.ingest(plan.messages)
-            except ValueError as exc:
-                parser.exit(2, f"Import failed: {exc}\n")
-            except sqlite3.Error:
-                parser.exit(2, "Local database import failed; no messages were inserted\n")
-            finally:
-                store.close()
+            result = (preview_import(args.path, **options) if args.preview else
+                      apply_import(args.path, expected_preview=args.expect_preview, **options))
+        except ValueError as exc:
+            parser.exit(2, f"Import failed: {exc}\n")
+        except (OSError, sqlite3.Error):
+            parser.exit(2, "Unable to inspect or import the local export; no messages were inserted\n")
         print(json.dumps(result, indent=2))
-        if not plan.report["ready"]:
+        if not result["ready"]:
             parser.exit(2)
         return
     store = None

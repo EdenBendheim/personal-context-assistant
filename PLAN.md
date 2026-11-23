@@ -10,7 +10,7 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 - [x] Keep lexical search/style CLI lookups read-only and refuse missing stores without creating files.
 - [x] Add importer error summaries and an explicit preview before committing an import.
 - [x] Bind optional guarded apply to a preview digest checked inside the write transaction.
-- [ ] Stage large exports in bounded batches with complete validation before commit.
+- [x] Stage CLI export records and duplicate keys on local disk, inspect every record and stream candidates into one transaction.
 - [x] Distinguish conflicting provider IDs from true duplicates and recheck conflicts atomically at apply time.
 - [x] Add conversation-level development/evaluation manifests and a fixed synthetic reply-context retrieval benchmark.
 - [x] Define contact-scoped, source-aware memory with immutable correction/withdrawal history.
@@ -133,3 +133,12 @@ invalid UTF-8, duplicate JSON fields and invalid Unicode by JSONL line. CLI
 guarded apply rechecks the reviewed digest under the writer lock, including
 records that were duplicates at preview time. Large-export staging and review
 UI ingestion are still open. Independent human reply ratings remain pending.
+
+
+November 22: CLI preview and both apply modes now keep parsed records and
+deduplication state in a disposable local SQLite stage. The prior preview
+digest reproduced exactly on 20,000 synthetic JSONL messages. Guarded apply
+inserted the reviewed rows and rejected a stale retry. The first 100 errors
+remain actionable while the totals count the whole file. Temporary disk use,
+single-record size, the MBOX index and the materializing Python planning API
+still limit memory and storage behavior. Browser ingestion remains open.

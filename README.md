@@ -2,6 +2,12 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
+**November 22 staged imports** — CLI preview and apply stage normalized
+records and duplicate decisions in a disposable local SQLite database.
+A 20,000-message synthetic smoke run reproduced the previous preview digest,
+imported all messages under a guard and rejected reuse of the stale digest.
+[Import behavior and limits](#preview-before-importing)
+
 **November 21 import preview** — JSONL inspection reports invalid UTF-8 and
 duplicate JSON fields at their own record numbers. Preview checks only
 export-relevant IDs and fingerprints. Pass the preview digest to guarded
@@ -254,10 +260,21 @@ and checks again under the write lock. A mismatch, including a conflict on a
 previously duplicate alias, leaves the messages as they were. Unrelated
 database changes and formatting changes that preserve the normalized records
 can keep a preview valid. A successful guarded import that inserted messages
-requires a fresh preview before reimport. Guarded apply stages normalized
-records in a disposable local database and reuses those records for both
-checks. Keep previews local. Candidate rows and deduplication keys still
-accumulate in memory.
+requires a fresh preview before reimport.
+
+CLI preview and both apply modes stage the parsed rows, duplicate keys and
+candidate positions in a disposable SQLite database in a private temporary
+directory. The application parses the source once per command and streams
+verified candidates into one destination transaction. Scratch space grows
+with the export and is removed when the command exits normally or handles an
+error. Parsing still requires space for individual records and the MBOX
+reader retains its mail index. The Python `plan_import` convenience API still
+returns a list of candidates. Keep exports and previews local.
+
+In a single local smoke run with 20,000 synthetic JSONL messages, preview
+peak process memory was 28.7 MiB, compared with 48.9 MiB at the November 21
+revision. Preview took 0.75 seconds versus 0.42 seconds in that run. These
+figures describe this fixture and machine.
 
 ## Import contract
 
