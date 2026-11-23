@@ -174,6 +174,28 @@ class PreviewTests(unittest.TestCase):
             self.assertFalse(report["ready"])
             self.assertIsNone(report["preview_sha256"])
 
+    def test_guarded_apply_replays_staged_records_if_the_export_changes_during_preflight(self):
+        from personal_context import imports
+
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            path, db = root/"fixture.jsonl", root/"new.sqlite"
+            path.write_text(json.dumps(record(body="Reviewed synthetic content")))
+            digest = plan_import(path, db=db).report["preview_sha256"]
+            original = imports._inspect_path
+
+            def edit_source(*args):
+                plan = original(*args)
+                path.write_text(json.dumps(record(body="Changed between checks")))
+                return plan
+
+            with patch.object(imports, "_inspect_path", side_effect=edit_source):
+                applied = apply_previewed_import(path, db=db, expected_preview=digest)
+            self.assertEqual(1, applied["inserted"])
+            with contextlib.closing(Store(str(db), readonly=True)) as store:
+                self.assertEqual("Reviewed synthetic content",
+                                 store.connection.execute("SELECT body FROM messages").fetchone()[0])
+
     def test_cli_preview_creates_no_database_or_directory(self):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "fixture.jsonl"

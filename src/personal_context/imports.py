@@ -8,6 +8,7 @@ import json
 import re
 import sqlite3
 
+from .import_staging import stage_records
 from .messages import Message, scan_discord_csv, scan_jsonl, scan_mbox
 from .store import Store
 
@@ -116,23 +117,20 @@ def apply_previewed_import(path: str | Path, *, db: str | Path, expected_preview
     if not isinstance(expected_preview, str) or re.fullmatch(r"[0-9a-f]{64}", expected_preview) is None:
         raise ValueError("Expected preview must be a lowercase SHA-256 digest")
     destination = Path(db).resolve()
-    # Parse once. The second check evaluates these same records against the
-    # writer's snapshot. Insertion uses the checked records, even if the file changes.
-    records = tuple(_records(path, format, owner, contact, thread))
-
     def require_match(plan):
         if plan.report["preview_sha256"] != expected_preview:
             raise ValueError("Import preview is stale or blocked; run preview again")
 
-    # Reject a mismatch before creating any missing database or directory.
-    require_match(_inspect_path(records, destination, format))
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    with closing(Store(str(destination), create=not destination.exists())) as store:
-        with store.connection:
-            store.connection.execute("BEGIN IMMEDIATE")
-            plan = _inspect(records, store.connection, format, destination)
-            require_match(plan)
-            inserted = store._insert_messages(plan.messages)
-            if inserted != plan.report["would_insert"]:
-                raise ValueError("Database differed from the checked import plan; no messages imported")
+    # Parse once into local scratch storage before acquiring the destination lock.
+    with stage_records(_records(path, format, owner, contact, thread)) as staged:
+        require_match(_inspect_path(staged.records(), destination, format))
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        with closing(Store(str(destination), create=not destination.exists())) as store:
+            with store.connection:
+                store.connection.execute("BEGIN IMMEDIATE")
+                plan = _inspect(staged.records(), store.connection, format, destination)
+                require_match(plan)
+                inserted = store._insert_messages(plan.messages)
+                if inserted != plan.report["would_insert"]:
+                    raise ValueError("Database differed from the checked import plan; no messages imported")
     return plan.report | {"preview": False, "inserted": inserted}

@@ -254,9 +254,10 @@ and checks again under the write lock. A mismatch, including a conflict on a
 previously duplicate alias, leaves the messages as they were. Unrelated
 database changes and formatting changes that preserve the normalized records
 can keep a preview valid. A successful guarded import that inserted messages
-requires a fresh preview before reimport. Keep previews local. The command
-still materializes parsed records in memory and is intended for bounded
-exports.
+requires a fresh preview before reimport. Guarded apply stages normalized
+records in a disposable local database and reuses those records for both
+checks. Keep previews local. Candidate rows and deduplication keys still
+accumulate in memory.
 
 ## Import contract
 
