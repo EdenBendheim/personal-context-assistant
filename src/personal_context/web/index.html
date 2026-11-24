@@ -15,6 +15,21 @@
   </header>
   <main>
     <p id="notice" role="status" aria-live="polite">Loading contacts…</p>
+    <details id="import-panel" class="card">
+      <summary>Import messages</summary>
+      <div class="import-content">
+        <p class="muted" id="import-limit">Choose a normalized JSONL export for this owner.</p>
+        <label>Message export<input id="import-file" type="file" accept=".jsonl,.ndjson" aria-describedby="import-limit" disabled></label>
+        <div class="import-actions">
+          <button type="button" id="import-preview" disabled>Preview import</button>
+          <button type="button" id="import-apply" class="secondary" disabled>Import reviewed messages</button>
+        </div>
+        <p id="import-status" role="status" aria-live="polite"></p>
+        <p id="import-counts" class="muted" hidden></p>
+        <ul id="import-errors" hidden></ul>
+        <p id="import-omitted" class="muted" hidden></p>
+      </div>
+    </details>
     <form id="create-form" class="card">
       <div class="grid"><label>Contact<select id="contact" required></select></label>
         <label>Reply topic<input id="topic" required maxlength="1000" placeholder="e.g. Thursday demo"></label>

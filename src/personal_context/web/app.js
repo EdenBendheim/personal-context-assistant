@@ -7,6 +7,8 @@ let memoryItems = [];
 let memoryItem = null;
 let memoryBaseline = "";
 let privacyPlan = null;
+let importPlan = null;
+let importMaxBytes = 0;
 let reviewCursor = null;
 let memoryCursor = null;
 let memoryHistoryCursor = null;
@@ -34,6 +36,10 @@ function controls() {
   $("memory-kind").disabled = busy || Boolean(memoryItem);
   $("memory-save").disabled = busy || Boolean(memoryItem && memoryItem.status === "revoked") || (!memoryItem && (!review || !review.context_current));
   $("memory-withdraw").disabled = busy || !memoryItem || memoryItem.status === "revoked";
+  const file = $("import-file").files[0];
+  $("import-file").disabled = busy || !importMaxBytes;
+  $("import-preview").disabled = busy || !file || !file.size || file.size > importMaxBytes;
+  $("import-apply").disabled = busy || !importPlan || importPlan.file !== file;
   $("privacy-preview").disabled = busy || !$("contact").value;
   $("privacy-remove").disabled = busy || !privacyPlan || !privacyPlan.can_apply ||
     privacyPlan.contact !== $("contact").value || $("privacy-contact").value !== privacyPlan.contact;
@@ -44,14 +50,23 @@ async function perform(action) {
   try { await action(); } catch (error) { notice(error.message, true); }
   finally { busy = false; controls(); }
 }
-async function api(path, payload) {
-  if (payload !== undefined) resetPrivacy();
-  const response = await fetch(path, { method: payload === undefined ? "GET" : "POST",
-    headers: { Authorization: `Bearer ${globalThis.reviewToken}`, "Content-Type": "application/json" },
-    body: payload === undefined ? undefined : JSON.stringify(payload), cache: "no-store" });
+async function request(path, options) {
+  const response = await fetch(path, { ...options,
+    headers: { ...options.headers, Authorization: `Bearer ${globalThis.reviewToken}` }, cache: "no-store" });
   const result = await response.json();
   if (!response.ok) throw new Error(result.error || "Local review request failed");
   return result;
+}
+async function api(path, payload) {
+  if (payload !== undefined) resetPrivacy();
+  return request(path, { method: payload === undefined ? "GET" : "POST",
+    headers: { "Content-Type": "application/json" },
+    body: payload === undefined ? undefined : JSON.stringify(payload) });
+}
+function uploadImport(operation, file, digest) {
+  const headers = { "Content-Type": "application/x-ndjson" };
+  if (digest) headers["X-Import-Preview"] = digest;
+  return request(`/api/import/${operation}`, { method: "POST", headers, body: file });
 }
 function addText(parent, tag, text, className) {
   const node = document.createElement(tag);
@@ -95,6 +110,10 @@ function renderSegments(result) {
   }
   $("generation-provenance").textContent = JSON.stringify(result.original.generation_provenance || {}, null, 2);
 }
+function renderReviewState() {
+  const state = review.context_current ? "context unchanged" : "context changed — rebuild before marking usable";
+  $("review-state").textContent = `Saved revision ${review.revision} · ${state}`;
+}
 function render(result) {
   review = result;
   $("workspace").hidden = false;
@@ -103,7 +122,7 @@ function render(result) {
   $("topic").value = request.query; $("cutoff").value = request.before; $("mode").value = request.mode;
   $('current-message').value = request.current_message || ''; $('reply-intent').value = request.intent || '';
   $("draft").value = result.text; $("original").textContent = result.original.draft_text;
-  $("review-state").textContent = `Saved revision ${result.revision} · ${result.context_current ? "context unchanged" : "context changed — rebuild before marking usable"}`;
+  renderReviewState();
   $("review-notes").replaceChildren();
   result.original.review_notes.forEach(text => addText($("review-notes"), "li", text));
   renderSegments(result);
@@ -411,13 +430,103 @@ $("privacy-remove").addEventListener("click", () => {
     window.location.reload();
   });
 });
+async function refreshContacts() {
+  const result = await api("/api/contacts");
+  const picker = $("contact");
+  const previous = picker.value;
+  picker.replaceChildren();
+  for (const item of result.contacts) {
+    addText(picker, "option", item.contact).value = item.contact;
+  }
+  if (result.contacts.some(item => item.contact === previous)) picker.value = previous;
+  selectedContact = picker.value;
+}
+function importStatus(text, error = false) {
+  $("import-status").textContent = text;
+  $("import-status").dataset.error = String(error);
+}
+function renderImportReport(report) {
+  const counts = $("import-counts"), errors = $("import-errors"), omitted = $("import-omitted");
+  counts.hidden = !report;
+  errors.replaceChildren();
+  errors.hidden = !report?.errors.length;
+  omitted.hidden = !report?.errors_omitted;
+  if (!report) return;
+  counts.textContent = `${report.would_insert} new · ${report.duplicates} duplicates · ${report.invalid} invalid · ${report.conflicts} conflicts · ${report.skipped} skipped`;
+  for (const error of report.errors) addText(errors, "li", `Line ${error.record}: ${error.reason}`);
+  omitted.textContent = `${report.errors_omitted} additional errors omitted.`;
+}
+$("import-file").addEventListener("change", () => {
+  importPlan = null;
+  renderImportReport(null);
+  const file = $("import-file").files[0];
+  if (!file) importStatus("");
+  else if (!file.size || file.size > importMaxBytes) {
+    importStatus(`Choose a file between 1 and ${importMaxBytes.toLocaleString()} bytes.`, true);
+  } else importStatus("Preview this file to see which messages can be added.");
+  controls();
+});
+$("import-preview").addEventListener("click", () => perform(async () => {
+  const file = $("import-file").files[0];
+  importPlan = null;
+  renderImportReport(null);
+  importStatus("Checking the selected file…");
+  try {
+    const report = await uploadImport("preview", file);
+    renderImportReport(report);
+    if (!report.ready) {
+      importStatus("Fix the listed errors and preview the corrected file.", true);
+    } else if (report.would_insert === 0) {
+      importStatus("This file has no new messages.");
+    } else {
+      importPlan = { file, digest: report.preview_sha256 };
+      importStatus("Preview ready. Review the counts before importing.");
+    }
+  } catch (error) {
+    importStatus(error.message, true);
+  }
+}));
+$("import-apply").addEventListener("click", () => perform(async () => {
+  const plan = importPlan;
+  importPlan = null;
+  renderImportReport(null);
+  importStatus("Importing the reviewed messages…");
+  let result;
+  try {
+    resetPrivacy();
+    result = await uploadImport("apply", plan.file, plan.digest);
+  } catch (error) {
+    importStatus(`${error.message} Preview the file to check its current state.`, true);
+    return;
+  }
+  $("import-file").value = "";
+  const detail = `Imported ${result.inserted} message${result.inserted === 1 ? "" : "s"}.`;
+  importStatus(detail);
+  try {
+    await refreshContacts();
+    if (review) {
+      const current = await api(`/api/reviews/${encodeURIComponent(review.review_id)}/current`);
+      review.context_current = current.context_current;
+      renderReviewState();
+      await refreshMetrics();
+    } else {
+      await refreshContact();
+    }
+    if (selectedContact && !review) {
+      notice("Choose a topic or open a saved review.");
+    }
+  } catch (error) {
+    importStatus(`${detail} Workspace refresh failed. Reload when you’re ready to see the new messages.`, true);
+  }
+}));
 $("cutoff").value = new Date().toISOString();
 perform(async () => {
   const config = await api("/api/config");
   $("provider-state").textContent = `${config.drafting === "generative" ? "Local generative provider (human support review required)" : "Extractive baseline"} · review only · drafts stay in your local database`;
-  const result = await api("/api/contacts");
-  result.contacts.forEach(item => { const option = addText($("contact"), "option", item.contact); option.value = item.contact; });
-  selectedContact = $("contact").value;
+  importMaxBytes = config.import_max_bytes;
+  $("import-limit").textContent = `Choose a normalized JSONL export for this owner, up to ${importMaxBytes.toLocaleString()} bytes.`;
+  await refreshContacts();
+  $("import-panel").open = !selectedContact;
   await refreshContact();
-  notice(result.contacts.length ? "Choose a topic or open a saved review." : "No conversations for this owner. Import messages first.");
+  notice(selectedContact ? "Choose a topic or open a saved review." : "Add messages to start a review.");
 });

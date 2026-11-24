@@ -37,3 +37,12 @@ legend { font-size: 13px; font-weight: 600; }
 @media (max-width: 760px) { .workspace, .grid { grid-template-columns: 1fr; } header, main { padding: 20px; } .card { padding: 18px; } .saved { align-items: stretch; flex-direction: column; gap: 0; } }
 
 .danger { background: #9b3028; }
+
+#import-panel { margin-top: 0; }
+#import-panel summary { font-size: 16px; }
+.import-content { max-width: 680px; margin-top: 12px; }
+.import-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.import-actions button { margin: 0; }
+#import-status:empty { margin: 0; }
+#import-status[data-error="true"] { color: #a23424; }
+#import-errors { max-height: 14rem; overflow: auto; padding-left: 24px; }
