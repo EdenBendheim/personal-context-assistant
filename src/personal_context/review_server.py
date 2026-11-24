@@ -10,6 +10,8 @@ import sys
 from urllib.parse import parse_qs, urlsplit
 
 from .drafts import DraftRequest
+from .imports import (MAX_REVIEW_IMPORT_BYTES, StaleImportPreview, apply_review_import,
+                      preview_review_import)
 from .local_model import LocalModelError
 from .model_options import add_model_options,configured_provider
 from .memory import nonempty
@@ -82,21 +84,40 @@ class Handler(BaseHTTPRequestHandler):
             return False
         return True
 
-    def body(self):
+    def read_body(self, content_type, max_bytes):
         if self.headers.get("Transfer-Encoding") is not None:
             raise ValueError("Transfer encoding is unsupported")
-        if self.headers.get("Content-Type", "").split(";")[0] != "application/json":
-            raise ValueError("Use application/json")
+        if self.headers.get("Content-Type", "").split(";")[0].strip().lower() != content_type:
+            raise ValueError(f"Use {content_type}")
+        lengths = self.headers.get_all("Content-Length", [])
+        if len(lengths) != 1 or not lengths[0].isascii() or not lengths[0].isdecimal():
+            raise ValueError("A valid Content-Length is required")
+        length = int(lengths[0])
+        if not 0 < length <= max_bytes:
+            raise ValueError(f"Request body must be between 1 and {max_bytes:,} bytes")
+        payload = self.rfile.read(length)
+        if len(payload) != length:
+            raise ValueError("Request body is incomplete")
+        return payload
+
+    def body(self):
+        payload = self.read_body("application/json", 131_072)
         try:
-            length = int(self.headers.get("Content-Length", ""))
-        except ValueError:
-            raise ValueError("A valid Content-Length is required") from None
-        if not 0 < length <= 131_072:
-            raise ValueError("Request body must be between 1 and 131,072 bytes")
-        try:
-            return json.loads(self.rfile.read(length))
+            return json.loads(payload)
         except (ValueError, UnicodeError):
             raise ValueError("Request body must be valid UTF-8 JSON") from None
+
+    def import_upload(self, operation):
+        if self.headers.get("Content-Encoding") is not None:
+            raise ValueError("Compressed uploads are unsupported")
+        payload = self.read_body("application/x-ndjson", MAX_REVIEW_IMPORT_BYTES)
+        db, owner = self.server.db, self.server.owner
+        if operation == "preview":
+            return preview_review_import(payload, db=db, owner=owner)
+        digests = self.headers.get_all("X-Import-Preview", [])
+        if len(digests) != 1:
+            raise ValueError("Exactly one X-Import-Preview digest is required")
+        return apply_review_import(payload, db=db, owner=owner, expected_preview=digests[0])
 
     def dispatch(self, method):
         assets = {"/":"index.html", "/app.js":"app.js", "/app.css":"app.css"}
@@ -119,16 +140,23 @@ class Handler(BaseHTTPRequestHandler):
             query = {key:values[0] for key,values in query.items()}
             if not self.server.db.is_file():
                 raise ValueError("Local database no longer exists")
+            path = parsed.path.strip("/").split("/")
+            if path[:2] == ["api", "import"]:
+                if method == "POST" and path[2:] in (["preview"], ["apply"]):
+                    fields(query, ())
+                    self.reply(200, self.import_upload(path[2]))
+                else:
+                    self.reply(404, {"error": "Unknown route"})
+                return
             store = Store(str(self.server.db))
             reviews = Reviews(store)
             owner = self.server.owner
-            path = parsed.path.strip("/").split("/")
             if method == "GET" and path == ["api", "config"]:
                 fields(query, ())
                 result = dict(drafting="generative" if self.server.provider is not None else "extractive",
                     provider=type(self.server.provider).__name__ if self.server.provider is not None else "ExtractiveProvider",
                     configuration=self.server.provider.describe() if hasattr(self.server.provider,"describe") else {},
-                    sending_available=False)
+                    sending_available=False, import_max_bytes=MAX_REVIEW_IMPORT_BYTES)
             elif method == "GET" and path == ["api", "contacts"]:
                 fields(query, ())
                 rows = store.connection.execute("""WITH raw AS (
@@ -243,6 +271,10 @@ class Handler(BaseHTTPRequestHandler):
             self.reply(200, result)
         except LocalModelError as exc:
             self.reply(503, {"error": str(exc)})
+        except StaleImportPreview as exc:
+            self.reply(409, {"error": str(exc)})
+        except TimeoutError:
+            self.reply(408, {"error": "Request body timed out"})
         except (ValueError, TypeError) as exc:
             message = str(exc) if isinstance(exc, ValueError) else "Invalid request field type"
             self.reply(409 if message.startswith(("Stale", "Context changed")) else 400, {"error": message})
