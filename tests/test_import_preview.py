@@ -150,8 +150,8 @@ class PreviewTests(unittest.TestCase):
             self.assertEqual((1, 1), (plan.report["duplicates"], plan.report["would_insert"]))
             original = imports._inspect_path
 
-            def concurrent_writer(*args):
-                snapshot = original(*args)
+            def concurrent_writer(*args, **kwargs):
+                snapshot = original(*args, **kwargs)
                 store.ingest([Message.from_dict(record("alias", body="Concurrent conflict"))])
                 return snapshot
 
@@ -190,8 +190,8 @@ class PreviewTests(unittest.TestCase):
             digest = plan_import(path, db=db).report["preview_sha256"]
             original = imports._inspect_path
 
-            def edit_source(*args):
-                plan = original(*args)
+            def edit_source(*args, **kwargs):
+                plan = original(*args, **kwargs)
                 path.write_text(json.dumps(record(body="Changed between checks")))
                 return plan
 

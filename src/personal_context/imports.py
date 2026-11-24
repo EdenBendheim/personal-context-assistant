@@ -20,6 +20,10 @@ MAX_REVIEW_IMPORT_BYTES = 1_048_576
 ID_CONFLICT = "Message identifier conflicts with different normalized content"
 
 
+class StaleImportPreview(ValueError):
+    """The requested preview no longer matches the checked import."""
+
+
 @dataclass
 class ImportPlan:
     messages: list[Message]
@@ -107,17 +111,17 @@ def _inspect_path(staged, db, format, *, scope_owner=None):
 
 
 @contextmanager
-def _planned(path, db, format, owner, contact, thread):
+def _planned(records, db, format, *, scope_owner=None):
     destination = Path(db).resolve()
-    with stage_records(_records(path, format, owner, contact, thread)) as staged:
-        yield destination, staged, _inspect_path(staged, destination, format)
+    with stage_records(records) as staged:
+        yield destination, staged, _inspect_path(staged, destination, format, scope_owner=scope_owner)
 
 
 def plan_import(path: str | Path, *, db: str | Path, format: str = "jsonl",
                 owner: str | None = None, contact: str | None = None,
                 thread: str | None = None) -> ImportPlan:
     """Return both inspection counts and a materialized list of candidate messages."""
-    with _planned(path, db, format, owner, contact, thread) as (_, staged, report):
+    with _planned(_records(path, format, owner, contact, thread), db, format) as (_, staged, report):
         return ImportPlan(list(staged.messages()), report)
 
 
@@ -125,7 +129,7 @@ def preview_import(path: str | Path, *, db: str | Path, format: str = "jsonl",
                    owner: str | None = None, contact: str | None = None,
                    thread: str | None = None) -> dict:
     """Return inspection counts without materializing candidate messages."""
-    with _planned(path, db, format, owner, contact, thread) as (_, _, report):
+    with _planned(_records(path, format, owner, contact, thread), db, format) as (_, _, report):
         return report | {"preview": True, "inserted": 0}
 
 
@@ -144,34 +148,48 @@ def _review_records(payload, owner):
 def preview_review_import(payload: bytes, *, db: str | Path, owner: str) -> dict:
     """Inspect a bounded JSONL upload in the launch owner's scope."""
     scope_owner = nonempty(owner, "Owner").casefold()
-    destination = Path(db).resolve()
-    with stage_records(_review_records(payload, scope_owner)) as staged:
-        report = _inspect_path(staged, destination, "jsonl", scope_owner=scope_owner)
-    return report | {"preview": True, "inserted": 0}
+    records = _review_records(payload, scope_owner)
+    with _planned(records, db, "jsonl", scope_owner=scope_owner) as (_, _, report):
+        return report | {"preview": True, "inserted": 0}
 
 
 def apply_import(path: str | Path, *, db: str | Path, expected_preview: str | None = None,
                  format: str = "jsonl", owner: str | None = None, contact: str | None = None,
                  thread: str | None = None) -> dict:
     """Insert staged candidates atomically, optionally binding them to a preview."""
-    if expected_preview is not None and (
+    return _apply_records(_records(path, format, owner, contact, thread), db, format, expected_preview)
+
+
+def apply_review_import(payload: bytes, *, db: str | Path, owner: str, expected_preview: str) -> dict:
+    """Apply a checked JSONL upload to the existing review database."""
+    scope_owner = nonempty(owner, "Owner").casefold()
+    records = _review_records(payload, scope_owner)
+    return _apply_records(records, db, "jsonl", expected_preview, scope_owner=scope_owner)
+
+
+def _apply_records(records, db, format, expected_preview, *, scope_owner=None):
+    if (scope_owner is not None or expected_preview is not None) and (
             not isinstance(expected_preview, str) or re.fullmatch(r"[0-9a-f]{64}", expected_preview) is None):
         raise ValueError("Expected preview must be a lowercase SHA-256 digest")
 
     def require_match(report):
         if expected_preview is not None and report["preview_sha256"] != expected_preview:
-            raise ValueError("Import preview is stale or blocked; run preview again")
+            raise StaleImportPreview("Import preview is stale or blocked; run preview again")
 
-    with _planned(path, db, format, owner, contact, thread) as (destination, staged, report):
+    with _planned(records, db, format, scope_owner=scope_owner) as (destination, staged, report):
         require_match(report)
         if not report["ready"]:
             return report | {"preview": False, "inserted": 0}
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        with closing(Store(str(destination), create=not destination.exists())) as store:
+        if scope_owner is None:
+            destination.parent.mkdir(parents=True, exist_ok=True)
+        elif not destination.is_file():
+            raise ValueError("Local database no longer exists")
+        create = scope_owner is None and not destination.exists()
+        with closing(Store(str(destination), create=create)) as store:
             with store.connection:
                 store.connection.execute("BEGIN IMMEDIATE")
                 # Replan from the same parsed records in the writer snapshot.
-                report = _inspect(staged, store.connection, format, destination)
+                report = _inspect(staged, store.connection, format, destination, scope_owner=scope_owner)
                 require_match(report)
                 if not report["ready"]:
                     raise ValueError(ID_CONFLICT + "; no messages imported")

@@ -1,9 +1,12 @@
+from contextlib import closing
 import json
 from pathlib import Path
 import tempfile
 import unittest
 
-from personal_context.imports import MAX_REVIEW_IMPORT_BYTES, preview_import, preview_review_import
+from personal_context.imports import (MAX_REVIEW_IMPORT_BYTES, StaleImportPreview,
+                                      apply_review_import, preview_import, preview_review_import)
+from personal_context.store import Store
 
 
 OWNER = "owner@example.invalid"
@@ -55,3 +58,34 @@ class ReviewImportTests(unittest.TestCase):
         for payload in (b"", b"x" * (MAX_REVIEW_IMPORT_BYTES + 1)):
             with self.subTest(size=len(payload)), self.assertRaisesRegex(ValueError, "between 1 and"):
                 preview_review_import(payload, db=self.db, owner=OWNER)
+
+    def test_apply_attaches_only_the_reviewed_messages_and_rejects_replay(self):
+        with closing(Store(str(self.db))) as store:
+            payload = message("one")
+            preview = preview_review_import(payload, db=self.db, owner=OWNER)
+            digest = preview["preview_sha256"]
+            for changed, owner in [
+                (payload, CONTACT),
+                (message("one", body="Changed synthetic text"), OWNER),
+                (payload + b"\n" + message("foreign", recipient=CONTACT, author="foreign"), OWNER),
+            ]:
+                with self.subTest(owner=owner), self.assertRaises(StaleImportPreview):
+                    apply_review_import(changed, db=self.db, owner=owner, expected_preview=digest)
+            self.assertEqual(store.connection.execute("SELECT COUNT(*) FROM messages").fetchone()[0], 0)
+            result = apply_review_import(payload, db=self.db, owner=OWNER, expected_preview=digest)
+            self.assertEqual(result["inserted"], 1)
+            self.assertFalse(result["preview"])
+            with self.assertRaises(StaleImportPreview):
+                apply_review_import(payload, db=self.db, owner=OWNER, expected_preview=digest)
+            self.assertEqual(store.connection.execute("SELECT COUNT(*) FROM messages").fetchone()[0], 1)
+
+    def test_apply_requires_a_digest_and_never_recreates_a_missing_database(self):
+        payload = message("one")
+        with self.assertRaisesRegex(ValueError, "lowercase SHA-256"):
+            apply_review_import(payload, db=self.db, owner=OWNER, expected_preview=None)
+        with closing(Store(str(self.db))):
+            digest = preview_review_import(payload, db=self.db, owner=OWNER)["preview_sha256"]
+        self.db.unlink()
+        with self.assertRaisesRegex(ValueError, "no longer exists"):
+            apply_review_import(payload, db=self.db, owner=OWNER, expected_preview=digest)
+        self.assertFalse(self.db.exists())
