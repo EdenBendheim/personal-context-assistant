@@ -4,16 +4,19 @@ from contextlib import closing, contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 import hashlib
+import io
 import json
 import re
 import sqlite3
 
 from .import_staging import stage_records
-from .messages import Message, scan_discord_csv, scan_jsonl, scan_mbox
+from .memory import nonempty
+from .messages import ImportRecord, Message, scan_discord_csv, scan_jsonl, scan_jsonl_lines, scan_mbox
 from .store import Store
 
 
 MAX_REPORTED_ERRORS = 100
+MAX_REVIEW_IMPORT_BYTES = 1_048_576
 ID_CONFLICT = "Message identifier conflicts with different normalized content"
 
 
@@ -35,13 +38,15 @@ def _records(path, format, owner, contact, thread):
     raise ValueError("Unsupported import format")
 
 
-def _inspect(staged, connection, format, db):
+def _inspect(staged, connection, format, db, *, scope_owner=None):
     snapshot = hashlib.sha256()
 
     def remember(*fields):
         snapshot.update(json.dumps(fields, separators=(",", ":")).encode("utf-8") + b"\n")
 
     remember("import-preview-v1", format, str(db))
+    if scope_owner is not None:
+        remember("review-owner-v1", scope_owner)
     staged.reset_plan()
     report = dict(format=format, valid=0, invalid=0, skipped=0, duplicates=0, conflicts=0,
                   would_insert=0, errors=[])
@@ -91,14 +96,14 @@ def _inspect(staged, connection, format, db):
     return report
 
 
-def _inspect_path(staged, db, format):
+def _inspect_path(staged, db, format, *, scope_owner=None):
     if not db.exists():
-        return _inspect(staged, None, format, db)
+        return _inspect(staged, None, format, db, scope_owner=scope_owner)
     with closing(sqlite3.connect(db.as_uri() + "?mode=ro", uri=True)) as connection:
         connection.execute("BEGIN")
         # Fail consistently even for empty exports against an unsupported store.
         connection.execute("SELECT source, id, fingerprint FROM messages LIMIT 0")
-        return _inspect(staged, connection, format, db)
+        return _inspect(staged, connection, format, db, scope_owner=scope_owner)
 
 
 @contextmanager
@@ -122,6 +127,27 @@ def preview_import(path: str | Path, *, db: str | Path, format: str = "jsonl",
     """Return inspection counts without materializing candidate messages."""
     with _planned(path, db, format, owner, contact, thread) as (_, _, report):
         return report | {"preview": True, "inserted": 0}
+
+
+def _review_records(payload, owner):
+    if not isinstance(payload, bytes) or not 0 < len(payload) <= MAX_REVIEW_IMPORT_BYTES:
+        raise ValueError(f"Review import must be between 1 and {MAX_REVIEW_IMPORT_BYTES:,} bytes")
+    with io.StringIO(payload.decode("utf-8-sig", errors="surrogateescape"), newline=None) as stream:
+        for record in scan_jsonl_lines(stream):
+            message = record.message
+            if message is not None and owner not in (message.author, message.recipient):
+                yield ImportRecord(record.number, error="Message does not involve the review owner")
+            else:
+                yield record
+
+
+def preview_review_import(payload: bytes, *, db: str | Path, owner: str) -> dict:
+    """Inspect a bounded JSONL upload in the launch owner's scope."""
+    scope_owner = nonempty(owner, "Owner").casefold()
+    destination = Path(db).resolve()
+    with stage_records(_review_records(payload, scope_owner)) as staged:
+        report = _inspect_path(staged, destination, "jsonl", scope_owner=scope_owner)
+    return report | {"preview": True, "inserted": 0}
 
 
 def apply_import(path: str | Path, *, db: str | Path, expected_preview: str | None = None,

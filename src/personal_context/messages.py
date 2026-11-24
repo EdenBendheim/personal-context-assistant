@@ -9,7 +9,7 @@ import json
 import mailbox
 from pathlib import Path
 import re
-from typing import Iterator
+from typing import Iterable, Iterator
 
 
 def utc_timestamp(value: str) -> str:
@@ -100,27 +100,31 @@ def scan_jsonl(path: str | Path) -> Iterator[ImportRecord]:
     # Preserve physical line numbering (including CRLF/CR inputs) and isolate
     # decode failures to a single line instead of losing a whole read buffer.
     with Path(path).open(encoding="utf-8-sig", errors="surrogateescape") as stream:
-        for number, line in enumerate(stream, 1):
-            try:
-                line.encode("utf-8")
-            except UnicodeEncodeError:
-                yield ImportRecord(number, error="Invalid UTF-8")
-                continue
-            if not line.strip():
-                yield ImportRecord(number, skipped="Blank line")
-                continue
-            try:
-                raw = json.loads(line, object_pairs_hook=_unique_object)
-            except _DuplicateJSONField:
-                yield ImportRecord(number, error="Duplicate JSON field")
-                continue
-            except (ValueError, RecursionError):
-                yield ImportRecord(number, error="Malformed JSON")
-                continue
-            if not isinstance(raw, dict):
-                yield ImportRecord(number, error="Expected a JSON object")
-            else:
-                yield _normalize(number, raw)
+        yield from scan_jsonl_lines(stream)
+
+
+def scan_jsonl_lines(lines: Iterable[str]) -> Iterator[ImportRecord]:
+    for number, line in enumerate(lines, 1):
+        try:
+            line.encode("utf-8")
+        except UnicodeEncodeError:
+            yield ImportRecord(number, error="Invalid UTF-8")
+            continue
+        if not line.strip():
+            yield ImportRecord(number, skipped="Blank line")
+            continue
+        try:
+            raw = json.loads(line, object_pairs_hook=_unique_object)
+        except _DuplicateJSONField:
+            yield ImportRecord(number, error="Duplicate JSON field")
+            continue
+        except (ValueError, RecursionError):
+            yield ImportRecord(number, error="Malformed JSON")
+            continue
+        if not isinstance(raw, dict):
+            yield ImportRecord(number, error="Expected a JSON object")
+        else:
+            yield _normalize(number, raw)
 
 
 def _strict(records: Iterator[ImportRecord]) -> Iterator[Message]:
