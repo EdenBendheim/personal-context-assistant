@@ -2,6 +2,12 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
+**November 23 browser imports** — Start with an empty local database, preview
+a JSONL export and import the reviewed messages. New contacts appear without a
+page reload. The workspace preserves draft edits and checks whether imported
+messages changed the sources for the open review.
+[Try the synthetic walkthrough](#try-a-browser-import)
+
 **November 22 staged imports** — CLI preview and apply stage normalized
 records and duplicate decisions in a disposable local SQLite database.
 A 20,000-message synthetic smoke run reproduced the previous preview digest,
@@ -436,7 +442,7 @@ python3 -m personal_context.review_server --db data/demo.sqlite \
   --owner owner@example.invalid --port 8765
 ```
 
-The server requires an existing imported database, binds only to `127.0.0.1`, and prints its URL and a random per-launch bearer token to the local terminal. Requests use `Authorization: Bearer TOKEN`. Keep that token local. `GET /api/contacts` lists only this owner's conversations. `GET /api/reviews?contact=...`, `GET /api/reviews/ID`, and `GET /api/summary?contact=...` inspect saved work. `POST /api/reviews` takes contact/before/query and optional mode/limit; `/api/reviews/ID/edit` and `/feedback` use the fields described above. The owner is fixed at launch; a request cannot override it. `GET /api/reviews/page?contact=...` provides 25 saved reviews at a time (configurable `limit` from 1 to 100), topic/mode/revision metadata and an optional `next_cursor`. Supply that review ID as `cursor` for the next page. The cursor must belong to this owner/contact. Ordering uses creation time plus review ID, so new reviews do not shift an in-progress page. A removed cursor requires a list reload. The older `/api/reviews` route remains capped at 100 for compatibility.
+The server opens an existing database by default. Pass `--initialize` to create an empty database in an existing directory. The server binds only to `127.0.0.1` and prints its URL and a random per-launch bearer token to the local terminal. Requests use `Authorization: Bearer TOKEN`. Keep that token local. `GET /api/contacts` lists only this owner's conversations. `GET /api/reviews?contact=...`, `GET /api/reviews/ID`, and `GET /api/summary?contact=...` inspect saved work. `POST /api/reviews` takes contact/before/query and optional mode/limit; `/api/reviews/ID/edit` and `/feedback` use the fields described above. The owner is fixed at launch; a request cannot override it. `GET /api/reviews/page?contact=...` provides 25 saved reviews at a time (configurable `limit` from 1 to 100), topic/mode/revision metadata and an optional `next_cursor`. Supply that review ID as `cursor` for the next page. The cursor must belong to this owner/contact. Ordering uses creation time plus review ID, so new reviews do not shift an in-progress page. A removed cursor requires a list reload. The older `/api/reviews` route remains capped at 100 for compatibility.
 
 Responses are uncached. Unexpected Host/Origin headers and unauthenticated API reads/writes are rejected; there is no cross-origin access. JSON bodies are bounded and each request uses its own SQLite connection. Conflicting edits/usable labels return HTTP 409. Traffic paths and message bodies are not logged. This local single-user server is not an internet deployment service. There is no sending endpoint.
 
@@ -450,6 +456,39 @@ Start the server using the command above and open the printed `http://127.0.0.1:
 4. Record a decision plus retrieval/style feedback. Reopen the saved review after a restart to inspect revisions and earlier ratings.
 
 Contact changes and navigation protect unsaved wording. The interface uses text nodes for message content, a restrictive content-security policy, no external assets, and a responsive layout. A changed-context review cannot be marked usable until rebuilt. Citations still describe the original extractive quotes; they do not automatically validate your edited prose. Cited memory can be created, corrected, and withdrawn in the same workspace.
+
+### Try a browser import
+
+From the repository root, start with a fresh temporary database.
+
+```sh
+demo_dir=$(mktemp -d)
+PYTHONPATH=src python3 -m personal_context.review_server \
+  --db "$demo_dir/messages.sqlite" --owner owner@example.invalid --port 0 --initialize
+```
+
+1. Open the printed local URL. In **Import messages**, choose
+   `examples/synthetic.jsonl` and click **Preview import**. The preview shows
+   five new messages.
+2. Click **Import reviewed messages**. The contact picker now lists Alex and Riley.
+3. Select `alex@example.invalid` and enter `Thursday demo` with a cutoff of
+   `2026-09-04T00:00:00Z`. Click **Create review** and inspect the cited
+   September messages. Riley's messages and Alex's October message fall outside
+   this review's contact or cutoff.
+4. Select the same file again and preview it. The report shows five duplicates
+   and leaves the import button disabled.
+
+The browser accepts raw UTF-8 normalized JSONL files up to 1 MiB. Every message
+must involve the launch owner. Invalid lines and conflicting source IDs block
+the file, with up to 100 line diagnostics and an exact count of omitted errors.
+Use the [CLI import commands](#preview-before-importing) for larger files,
+MBOX or Discord CSV.
+
+For local API clients, POST the same JSONL bytes as `application/x-ndjson` to
+`/api/import/preview` and `/api/import/apply`. Both requests require the bearer
+token. Apply also requires the preview's `preview_sha256` in `X-Import-Preview`.
+The server checks the normalized records and duplicate decisions again inside
+the write transaction. HTTP 409 means the client needs a fresh preview.
 
 ### Edit memory in the workspace
 

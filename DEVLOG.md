@@ -1,5 +1,26 @@
 # Development log
 
+## November 23, 2026
+
+- Added browser JSONL preview and guarded apply for the launch owner. Preview
+  reports invalid lines, ID conflicts and duplicates without writing messages.
+  Apply checks the preview again inside the SQLite write transaction.
+- Added optional `--initialize` for a fresh review store and a synthetic
+  import-to-draft walkthrough. An HTTP regression test verifies that the draft
+  cites imported history within the selected contact and cutoff.
+- In Chromium, a malformed file blocked apply, a valid file added five
+  messages and populated contacts, and a follow-on import marked the saved
+  draft stale while its unsaved wording stayed visible. Checked the import
+  panel at a 390-pixel viewport.
+- Local checks passed for 199 Python tests, three JavaScript tests, 20 retrieval
+  cases with zero boundary violations, 13 scripted drafting cases, 12 source
+  annotations, and the synthetic memory and draft demos.
+- Browser uploads are limited to 1 MiB of normalized JSONL. The CLI handles
+  other formats and larger exports. Independent human reply ratings are pending.
+- Interview explanation — “I built a review-before-import workflow. The user
+  sees exactly what would be added, then the database rechecks that plan before
+  committing. The draft stays open and flags changed evidence after an import.”
+
 ## November 22, 2026
 
 - Capped import error details at 100 while keeping exact malformed-record and

@@ -11,6 +11,7 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 - [x] Add importer error summaries and an explicit preview before committing an import.
 - [x] Bind optional guarded apply to a preview digest checked inside the write transaction.
 - [x] Stage CLI export records and duplicate keys on local disk, inspect every record and stream candidates into one transaction.
+- [x] Preview and apply bounded JSONL uploads in the local review workspace.
 - [x] Distinguish conflicting provider IDs from true duplicates and recheck conflicts atomically at apply time.
 - [x] Add conversation-level development/evaluation manifests and a fixed synthetic reply-context retrieval benchmark.
 - [x] Define contact-scoped, source-aware memory with immutable correction/withdrawal history.
@@ -142,3 +143,10 @@ inserted the reviewed rows and rejected a stale retry. The first 100 errors
 remain actionable while the totals count the whole file. Temporary disk use,
 single-record size, the MBOX index and the materializing Python planning API
 still limit memory and storage behavior. Browser ingestion remains open.
+
+November 23: the review workspace can initialize a new local database and
+preview owner-scoped JSONL uploads. A loopback API test follows imported
+messages through cited drafting and verifies that a later relevant import
+marks the saved review stale. Playwright confirmed that unsaved draft wording
+survives that update. Larger files and other formats use the CLI. Independent
+human reply ratings remain open.

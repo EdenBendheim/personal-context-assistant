@@ -73,3 +73,37 @@ class ReviewImportServerTests(unittest.TestCase):
         self.assertEqual((status, result["inserted"]), (200, 1))
         self.assertEqual(self.request(apply, payload, **header)[0], 409)
         self.assertEqual(self.request("/api/contacts")[1]["contacts"][0]["contact"], CONTACT)
+
+    def test_imported_history_produces_a_cited_draft_and_later_import_stales_it(self):
+        export = Path(__file__).resolve().parents[1] / "examples" / "synthetic.jsonl"
+        payload = export.read_bytes()
+        preview_path, apply_path = "/api/import/preview", "/api/import/apply"
+
+        def import_messages(content, count):
+            status, preview = self.request(preview_path, content)
+            self.assertEqual((status, preview["would_insert"]), (200, count))
+            status, result = self.request(apply_path, content, **{"X-Import-Preview": preview["preview_sha256"]})
+            self.assertEqual((status, result["inserted"]), (200, count))
+
+        import_messages(payload, 5)
+        draft_request = {"contact": "alex@example.invalid", "query": "Thursday demo",
+                         "before": "2026-09-04T00:00:00Z", "mode": "context"}
+        status, review = self.request("/api/reviews", json.dumps(draft_request).encode(),
+                                      **{"Content-Type": "application/json"})
+        self.assertEqual(status, 200)
+        path = f"/api/reviews/{review['review_id']}/current"
+        self.assertTrue(review["context_current"])
+        packet = review["original"]["packet"]
+        evidence = [item["text"] for item in packet["evidence"]]
+        self.assertTrue(any("Thursday works" in item for item in evidence))
+        self.assertFalse(any("October" in item or "after class" in item for item in evidence))
+
+        import_messages(message("late", author="alex@example.invalid", recipient=OWNER,
+                                timestamp="2026-09-03T11:00:00Z",
+                                body="Please include Thursday demo and benchmark results."), 1)
+        status, reopened = self.request(path)
+        self.assertEqual(status, 200)
+        self.assertFalse(reopened["context_current"])
+        self.assertEqual(reopened["original"], review["original"])
+        duplicate_status, duplicate = self.request(preview_path, payload)
+        self.assertEqual((duplicate_status, duplicate["would_insert"], duplicate["duplicates"]), (200, 0, 5))
