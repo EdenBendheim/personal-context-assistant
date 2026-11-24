@@ -8,7 +8,6 @@ import unittest
 
 from personal_context.imports import MAX_REVIEW_IMPORT_BYTES
 from personal_context.review_server import ReviewServer
-from personal_context.store import Store
 
 from test_review_import import CONTACT, OWNER, message
 
@@ -17,8 +16,7 @@ class ReviewImportServerTests(unittest.TestCase):
     def setUp(self):
         folder = self.enterContext(tempfile.TemporaryDirectory())
         self.db = Path(folder) / "review.sqlite"
-        Store(str(self.db)).close()
-        self.server = self.enterContext(ReviewServer(self.db, owner=OWNER))
+        self.server = self.enterContext(ReviewServer(self.db, owner=OWNER, initialize=True))
         thread = Thread(target=self.server.serve_forever, kwargs={"poll_interval": 0.01}, daemon=True)
         thread.start()
         self.addCleanup(thread.join)

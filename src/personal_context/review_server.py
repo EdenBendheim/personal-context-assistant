@@ -1,6 +1,7 @@
 """Loopback-only, owner-scoped HTTP API for local draft review."""
 
 import argparse
+from contextlib import closing
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from pathlib import Path
@@ -28,14 +29,21 @@ def fields(payload, required, optional=()):
 
 
 class ReviewServer(HTTPServer):
-    def __init__(self, db: Path, *, owner: str, port: int = 0, provider=None):
+    def __init__(self, db: Path, *, owner: str, port: int = 0, provider=None, initialize: bool = False):
         self.db = Path(db).resolve()
-        if not self.db.is_file():
-            raise ValueError("Import messages into an existing database first")
+        if not self.db.is_file() and not initialize:
+            raise ValueError("Import messages first or start with --initialize")
         self.owner = nonempty(owner, "Owner").casefold()
         self.provider = provider
         self.token = secrets.token_urlsafe(32)
         super().__init__(("127.0.0.1", port), Handler)
+        try:
+            if initialize and not self.db.is_file():
+                with closing(Store(str(self.db))):
+                    pass
+        except BaseException:
+            self.server_close()
+            raise
         self.url = f"http://127.0.0.1:{self.server_port}"
 
 
@@ -298,12 +306,14 @@ def main():
     parser = argparse.ArgumentParser(description="Serve a private local draft review interface")
     parser.add_argument("--db", type=Path, required=True)
     parser.add_argument("--owner", required=True)
+    parser.add_argument("--initialize", action="store_true", help="Create an empty database if needed")
     parser.add_argument("--port", type=int, default=8765, help="Loopback port; 0 chooses an available port")
     add_model_options(parser)
     args = parser.parse_args()
     try:
-        server = ReviewServer(args.db, owner=args.owner, port=args.port, provider=configured_provider(args))
-    except (ValueError, OSError, OverflowError) as exc:
+        server = ReviewServer(args.db, owner=args.owner, port=args.port, provider=configured_provider(args),
+                              initialize=args.initialize)
+    except (ValueError, OSError, OverflowError, sqlite3.Error) as exc:
         parser.error(str(exc))
     print(f"Open local review: {server.url}\nAPI bearer token: {server.token}", file=sys.stderr, flush=True)
     try:

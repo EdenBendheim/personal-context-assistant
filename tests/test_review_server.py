@@ -103,6 +103,17 @@ class ServerTests(unittest.TestCase):
             ReviewServer(missing, owner=OWNER)
         self.assertFalse(missing.exists())
 
+    def test_initialize_preserves_existing_data_and_does_not_create_on_failed_launch(self):
+        original = self.db.read_bytes()
+        with ReviewServer(self.db, owner=OWNER, initialize=True):
+            self.assertEqual(self.db.read_bytes(), original)
+        absent = self.db.with_name("new.sqlite")
+        with self.assertRaises(ValueError):
+            ReviewServer(absent, owner="", initialize=True)
+        with self.assertRaises(OSError):
+            ReviewServer(absent, owner=OWNER, port=self.server.server_port, initialize=True)
+        self.assertFalse(absent.exists())
+
     def test_saved_review_pages_are_bounded_scoped_and_authenticated(self):
         for i in range(3):
             status, _, _ = self.call("/api/reviews", dict(contact=CONTACT,
