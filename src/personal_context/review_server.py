@@ -92,10 +92,13 @@ class Handler(BaseHTTPRequestHandler):
             return False
         return True
 
+    def media_type(self):
+        return self.headers.get("Content-Type", "").split(";")[0].strip().lower()
+
     def read_body(self, content_type, max_bytes):
         if self.headers.get("Transfer-Encoding") is not None:
             raise ValueError("Transfer encoding is unsupported")
-        if self.headers.get("Content-Type", "").split(";")[0].strip().lower() != content_type:
+        if self.media_type() != content_type:
             raise ValueError(f"Use {content_type}")
         lengths = self.headers.get_all("Content-Length", [])
         if len(lengths) != 1 or not lengths[0].isascii() or not lengths[0].isdecimal():
@@ -118,14 +121,18 @@ class Handler(BaseHTTPRequestHandler):
     def import_upload(self, operation):
         if self.headers.get("Content-Encoding") is not None:
             raise ValueError("Compressed uploads are unsupported")
-        payload = self.read_body("application/x-ndjson", MAX_REVIEW_IMPORT_BYTES)
-        db, owner = self.server.db, self.server.owner
+        content_type = self.media_type()
+        format = {"application/x-ndjson": "jsonl", "application/mbox": "mbox"}.get(content_type)
+        if format is None:
+            raise ValueError("Use application/x-ndjson or application/mbox")
+        payload = self.read_body(content_type, MAX_REVIEW_IMPORT_BYTES)
+        options = dict(db=self.server.db, owner=self.server.owner, format=format)
         if operation == "preview":
-            return preview_review_import(payload, db=db, owner=owner)
+            return preview_review_import(payload, **options)
         digests = self.headers.get_all("X-Import-Preview", [])
         if len(digests) != 1:
             raise ValueError("Exactly one X-Import-Preview digest is required")
-        return apply_review_import(payload, db=db, owner=owner, expected_preview=digests[0])
+        return apply_review_import(payload, expected_preview=digests[0], **options)
 
     def dispatch(self, method):
         assets = {"/":"index.html", "/app.js":"app.js", "/app.css":"app.css"}

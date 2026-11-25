@@ -9,7 +9,7 @@ import unittest
 from personal_context.imports import MAX_REVIEW_IMPORT_BYTES
 from personal_context.review_server import ReviewServer
 
-from test_review_import import CONTACT, OWNER, message
+from test_review_import import CONTACT, OWNER, mbox_mail, message
 
 
 class ReviewImportServerTests(unittest.TestCase):
@@ -72,6 +72,24 @@ class ReviewImportServerTests(unittest.TestCase):
         status, result = self.request(apply, payload, **header)
         self.assertEqual((status, result["inserted"]), (200, 1))
         self.assertEqual(self.request(apply, payload, **header)[0], 409)
+        self.assertEqual(self.request("/api/contacts")[1]["contacts"][0]["contact"], CONTACT)
+
+    def test_mbox_media_type_selects_scoped_parser_for_preview_and_apply(self):
+        payload = b"".join([
+            mbox_mail("inbound", author=CONTACT, recipients=OWNER),
+            mbox_mail("unrelated", author=CONTACT, recipients="other@example.invalid"),
+        ])
+        preview, apply = "/api/import/preview", "/api/import/apply"
+        headers = {"Content-Type": "application/mbox"}
+        original = self.db.read_bytes()
+        status, result = self.request(preview, payload, **headers)
+        self.assertEqual((status, result["format"], result["would_insert"]), (200, "mbox", 1))
+        self.assertEqual(result["skip_reasons"], {"Message does not involve the review owner": 1})
+        self.assertEqual(self.db.read_bytes(), original)
+        digest = {"X-Import-Preview": result["preview_sha256"]}
+        self.assertEqual(self.request(apply, payload, **digest)[0], 409)
+        status, result = self.request(apply, payload, **headers, **digest)
+        self.assertEqual((status, result["inserted"]), (200, 1))
         self.assertEqual(self.request("/api/contacts")[1]["contacts"][0]["contact"], CONTACT)
 
     def test_imported_history_produces_a_cited_draft_and_later_import_stales_it(self):
