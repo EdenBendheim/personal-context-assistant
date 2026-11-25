@@ -35,6 +35,7 @@ class PreviewTests(unittest.TestCase):
             self.assertEqual((report["valid"], report["duplicates"], report["would_insert"],
                               report["invalid"], report["skipped"], report["conflicts"]), (5, 2, 2, 2, 1, 1))
             self.assertEqual([error["record"] for error in report["errors"]], [2, 7, 8])
+            self.assertEqual(report["skip_reasons"], {"Blank line": 1})
             self.assertFalse(report["ready"])
             self.assertEqual(db.read_bytes(), original)
 

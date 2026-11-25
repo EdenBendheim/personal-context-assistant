@@ -54,7 +54,7 @@ def _inspect(staged, connection, format, db, *, scope_owner=None):
         remember("review-owner-v1", scope_owner)
     staged.reset_plan()
     report = dict(format=format, valid=0, invalid=0, skipped=0, duplicates=0, conflicts=0,
-                  would_insert=0, errors=[])
+                  would_insert=0, errors=[], skip_reasons={})
 
     def add_error(number, reason):
         if len(report["errors"]) < MAX_REPORTED_ERRORS:
@@ -67,6 +67,8 @@ def _inspect(staged, connection, format, db, *, scope_owner=None):
             continue
         if record.skipped:
             report["skipped"] += 1
+            reasons = report["skip_reasons"]
+            reasons[record.skipped] = reasons.get(record.skipped, 0) + 1
             remember(record.number, "skip", record.skipped)
             continue
         message = record.message

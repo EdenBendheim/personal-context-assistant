@@ -102,16 +102,22 @@ class ReviewImportTests(unittest.TestCase):
             mbox_mail("incoming", author=CONTACT, recipients=f"{other}, {OWNER}"),
             mbox_mail("outgoing", author=OWNER, recipients=f"{other}, {CONTACT}"),
             mbox_mail("foreign", author=other, recipients=CONTACT, body="Unrelated synthetic mail"),
+            mbox_mail("html", author=CONTACT, recipients=OWNER, content_type="text/html"),
         ])
         with closing(Store(str(self.db))) as store:
             report = preview_review_import(payload, db=self.db, owner=OWNER, format="mbox")
-            self.assertEqual((report["would_insert"], report["skipped"], report["invalid"]), (3, 2, 0))
+            self.assertEqual((report["would_insert"], report["skipped"], report["invalid"]), (3, 3, 0))
+            self.assertEqual(report["skip_reasons"], {
+                "Message does not involve the review owner": 2,
+                "No supported plain-text body": 1,
+            })
             digest = report["preview_sha256"]
             with self.assertRaises(StaleImportPreview):
                 apply_review_import(payload, db=self.db, owner=OWNER, expected_preview=digest)
             result = apply_review_import(payload, db=self.db, owner=OWNER, format="mbox",
                                          expected_preview=digest)
             self.assertEqual(result["inserted"], 3)
+            self.assertEqual(result["skip_reasons"], report["skip_reasons"])
             stored = store.connection.execute("SELECT author, recipient FROM messages")
             self.assertEqual({(CONTACT, OWNER), (OWNER, CONTACT), (OWNER, other)}, {tuple(row) for row in stored})
 

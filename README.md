@@ -238,7 +238,8 @@ Preview leaves a missing database and parent directory absent. For an
 existing database it uses one read-only snapshot and indexed lookups for
 provider IDs and normalized fingerprints encountered in the export. Reports
 contain exact counts and the first 100 record numbers and generic reasons.
-`errors_omitted` reports additional errors. JSONL and CSV use
+`errors_omitted` reports additional errors. `skip_reasons` gives exact counts
+by reason for skipped records. JSONL and CSV use
 physical line numbers. MBOX counts mail items, which can produce multiple
 directed messages.
 
