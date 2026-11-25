@@ -9,6 +9,12 @@ from personal_context.imports import (MAX_REVIEW_IMPORT_BYTES, StaleImportPrevie
 from personal_context.store import Store
 
 
+def mbox_mail(identifier, *, author, recipients, body="Synthetic mail", content_type="text/plain"):
+    return (f"From nobody Tue Sep 01 10:00:00 2026\n"
+            f"From: {author}\nTo: {recipients}\nDate: Tue, 1 Sep 2026 10:00:00 +0000\n"
+            f"Message-ID: <{identifier}@example.invalid>\nContent-Type: {content_type}\n\n{body}\n\n").encode()
+
+
 OWNER = "owner@example.invalid"
 CONTACT = "contact@example.invalid"
 
@@ -88,4 +94,29 @@ class ReviewImportTests(unittest.TestCase):
         self.db.unlink()
         with self.assertRaisesRegex(ValueError, "no longer exists"):
             apply_review_import(payload, db=self.db, owner=OWNER, expected_preview=digest)
+        self.assertFalse(self.db.exists())
+
+    def test_mbox_scope_skips_foreign_mail_and_filters_inbound_group_recipients(self):
+        other = "other@example.invalid"
+        payload = b"".join([
+            mbox_mail("incoming", author=CONTACT, recipients=f"{other}, {OWNER}"),
+            mbox_mail("outgoing", author=OWNER, recipients=f"{other}, {CONTACT}"),
+            mbox_mail("foreign", author=other, recipients=CONTACT, body="Unrelated synthetic mail"),
+        ])
+        with closing(Store(str(self.db))) as store:
+            report = preview_review_import(payload, db=self.db, owner=OWNER, format="mbox")
+            self.assertEqual((report["would_insert"], report["skipped"], report["invalid"]), (3, 2, 0))
+            digest = report["preview_sha256"]
+            with self.assertRaises(StaleImportPreview):
+                apply_review_import(payload, db=self.db, owner=OWNER, expected_preview=digest)
+            result = apply_review_import(payload, db=self.db, owner=OWNER, format="mbox",
+                                         expected_preview=digest)
+            self.assertEqual(result["inserted"], 3)
+            stored = store.connection.execute("SELECT author, recipient FROM messages")
+            self.assertEqual({(CONTACT, OWNER), (OWNER, CONTACT), (OWNER, other)}, {tuple(row) for row in stored})
+
+    def test_non_mbox_upload_reports_an_error_without_creating_a_database(self):
+        report = preview_review_import(message("one"), db=self.db, owner=OWNER, format="mbox")
+        self.assertFalse(report["ready"])
+        self.assertEqual(report["errors"], [{"record": 1, "reason": "MBOX must start with a From envelope line"}])
         self.assertFalse(self.db.exists())

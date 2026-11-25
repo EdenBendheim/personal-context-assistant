@@ -8,6 +8,7 @@ import io
 import json
 import re
 import sqlite3
+from tempfile import TemporaryDirectory
 
 from .import_staging import stage_records
 from .memory import nonempty
@@ -133,23 +134,41 @@ def preview_import(path: str | Path, *, db: str | Path, format: str = "jsonl",
         return report | {"preview": True, "inserted": 0}
 
 
-def _review_records(payload, owner):
+def _uploaded_records(payload, format):
+    if format == "jsonl":
+        with io.StringIO(payload.decode("utf-8-sig", errors="surrogateescape"), newline=None) as stream:
+            yield from scan_jsonl_lines(stream)
+    elif format == "mbox":
+        if not payload.startswith(b"From "):
+            yield ImportRecord(1, error="MBOX must start with a From envelope line")
+            return
+        # The standard MBOX reader requires a seekable file.
+        with TemporaryDirectory() as scratch:
+            path = Path(scratch) / "upload"
+            path.write_bytes(payload)
+            yield from scan_mbox(path)
+    else:
+        raise ValueError("Unsupported review import format")
+
+
+def _review_records(payload, owner, format):
     if not isinstance(payload, bytes) or not 0 < len(payload) <= MAX_REVIEW_IMPORT_BYTES:
         raise ValueError(f"Review import must be between 1 and {MAX_REVIEW_IMPORT_BYTES:,} bytes")
-    with io.StringIO(payload.decode("utf-8-sig", errors="surrogateescape"), newline=None) as stream:
-        for record in scan_jsonl_lines(stream):
-            message = record.message
-            if message is not None and owner not in (message.author, message.recipient):
-                yield ImportRecord(record.number, error="Message does not involve the review owner")
-            else:
-                yield record
+    for record in _uploaded_records(payload, format):
+        message = record.message
+        if message is None or owner in (message.author, message.recipient):
+            yield record
+        elif format == "mbox":
+            yield ImportRecord(record.number, skipped="Message does not involve the review owner")
+        else:
+            yield ImportRecord(record.number, error="Message does not involve the review owner")
 
 
-def preview_review_import(payload: bytes, *, db: str | Path, owner: str) -> dict:
-    """Inspect a bounded JSONL upload in the launch owner's scope."""
+def preview_review_import(payload: bytes, *, db: str | Path, owner: str, format: str = "jsonl") -> dict:
+    """Inspect a bounded upload in the launch owner's scope."""
     scope_owner = nonempty(owner, "Owner").casefold()
-    records = _review_records(payload, scope_owner)
-    with _planned(records, db, "jsonl", scope_owner=scope_owner) as (_, _, report):
+    records = _review_records(payload, scope_owner, format)
+    with _planned(records, db, format, scope_owner=scope_owner) as (_, _, report):
         return report | {"preview": True, "inserted": 0}
 
 
@@ -160,11 +179,12 @@ def apply_import(path: str | Path, *, db: str | Path, expected_preview: str | No
     return _apply_records(_records(path, format, owner, contact, thread), db, format, expected_preview)
 
 
-def apply_review_import(payload: bytes, *, db: str | Path, owner: str, expected_preview: str) -> dict:
-    """Apply a checked JSONL upload to the existing review database."""
+def apply_review_import(payload: bytes, *, db: str | Path, owner: str, expected_preview: str,
+                        format: str = "jsonl") -> dict:
+    """Apply a checked upload to the existing review database."""
     scope_owner = nonempty(owner, "Owner").casefold()
-    records = _review_records(payload, scope_owner)
-    return _apply_records(records, db, "jsonl", expected_preview, scope_owner=scope_owner)
+    records = _review_records(payload, scope_owner, format)
+    return _apply_records(records, db, format, expected_preview, scope_owner=scope_owner)
 
 
 def _apply_records(records, db, format, expected_preview, *, scope_owner=None):
