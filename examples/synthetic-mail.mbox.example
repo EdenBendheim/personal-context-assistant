@@ -1,0 +1,36 @@
+From owner@example.invalid Tue Sep 01 10:00:00 2026
+From: owner@example.invalid
+To: alex@example.invalid, riley@example.invalid
+Date: Tue, 01 Sep 2026 10:00:00 +0000
+Message-ID: <demo-start@example.invalid>
+Content-Type: text/plain; charset=UTF-8
+
+I can bring the demo Thursday.
+
+From alex@example.invalid Tue Sep 01 10:05:00 2026
+From: alex@example.invalid
+To: guest@example.invalid, owner@example.invalid
+Date: Tue, 01 Sep 2026 10:05:00 +0000
+Message-ID: <demo-reply@example.invalid>
+References: <demo-start@example.invalid>
+Content-Type: text/plain; charset=UTF-8
+
+Thursday works. Can you include the retrieval example?
+
+From guest@example.invalid Tue Sep 01 11:00:00 2026
+From: guest@example.invalid
+To: riley@example.invalid
+Date: Tue, 01 Sep 2026 11:00:00 +0000
+Message-ID: <demo-unrelated@example.invalid>
+Content-Type: text/plain; charset=UTF-8
+
+Synthetic mail between other people.
+
+From riley@example.invalid Tue Sep 01 11:10:00 2026
+From: riley@example.invalid
+To: owner@example.invalid
+Date: Tue, 01 Sep 2026 11:10:00 +0000
+Message-ID: <demo-html@example.invalid>
+Content-Type: text/html; charset=UTF-8
+
+<p>Example HTML-only mail.</p>

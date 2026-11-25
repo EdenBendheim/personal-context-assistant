@@ -1,5 +1,27 @@
 # Development log
 
+## November 24, 2026
+
+- Added a bounded MBOX import to the local review API and browser. Changing
+  formats clears the previous preview. The writer rechecks the selected
+  format and the import plan in one transaction.
+- Excluded attached and encapsulated emails from plain-text bodies. The
+  browser filters From and To addresses before body and date validation for
+  unrelated mail. Previews show separate skip counts for unrelated records
+  and mail without supported plain text.
+- In Chromium, a synthetic MBOX imported three directed messages, skipped
+  three records, populated two contacts and produced a draft citing two
+  messages for the selected contact. A repeat preview reported three
+  duplicates. Checked the import panel at a 390-pixel viewport.
+- All 206 Python tests, three JavaScript tests, 20 synthetic retrieval cases,
+  13 scripted drafting cases, 12 source annotations, synthetic demos and
+  CLI MBOX preview passed.
+- Browser uploads accept up to 1 MiB. HTML conversion and Cc/Bcc ingestion
+  remain outside the importer, and independent human reply ratings are pending.
+- Interview explanation — “I added Gmail export import with a preview that
+  tells the user which messages will become draft context and why others
+  were skipped. The app keeps each draft scoped to one contact.”
+
 ## November 23, 2026
 
 - Added browser JSONL preview and guarded apply for the launch owner. Preview

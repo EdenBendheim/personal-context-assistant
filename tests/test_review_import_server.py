@@ -125,3 +125,29 @@ class ReviewImportServerTests(unittest.TestCase):
         self.assertEqual(reopened["original"], review["original"])
         duplicate_status, duplicate = self.request(preview_path, payload)
         self.assertEqual((duplicate_status, duplicate["would_insert"], duplicate["duplicates"]), (200, 0, 5))
+
+    def test_mbox_demo_produces_cited_review_with_only_owner_history(self):
+        fixture = Path(__file__).resolve().parents[1] / "examples" / "synthetic-mail.mbox.example"
+        payload = fixture.read_bytes()
+        headers = {"Content-Type": "application/mbox"}
+        status, preview = self.request("/api/import/preview", payload, **headers)
+        self.assertEqual((status, preview["would_insert"], preview["skipped"]), (200, 3, 3))
+        status, applied = self.request("/api/import/apply", payload, **headers,
+                                       **{"X-Import-Preview": preview["preview_sha256"]})
+        self.assertEqual((status, applied["inserted"]), (200, 3))
+        _, result = self.request("/api/contacts")
+        self.assertEqual([(item["contact"], item["messages"]) for item in result["contacts"]], [
+            ("alex@example.invalid", 2), ("riley@example.invalid", 1),
+        ])
+
+        draft = dict(contact="alex@example.invalid", before="2026-09-02T00:00:00Z",
+                     query="Thursday demo", mode="context")
+        status, review = self.request("/api/reviews", json.dumps(draft).encode(),
+                                      **{"Content-Type": "application/json"})
+        self.assertEqual(status, 200)
+        self.assertEqual({item["text"] for item in review["original"]["packet"]["evidence"]}, {
+            "I can bring the demo Thursday.", "Thursday works. Can you include the retrieval example?",
+        })
+
+        _, replay = self.request("/api/import/preview", payload, **headers)
+        self.assertEqual((replay["would_insert"], replay["duplicates"], replay["skipped"]), (0, 3, 3))

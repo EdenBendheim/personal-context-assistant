@@ -11,7 +11,7 @@ Started September 29, 2026. Dates below are targets, not completed claims.
 - [x] Add importer error summaries and an explicit preview before committing an import.
 - [x] Bind optional guarded apply to a preview digest checked inside the write transaction.
 - [x] Stage CLI export records and duplicate keys on local disk, inspect every record and stream candidates into one transaction.
-- [x] Preview and apply bounded JSONL uploads in the local review workspace.
+- [x] Preview and apply bounded JSONL and MBOX uploads in the local review workspace.
 - [x] Distinguish conflicting provider IDs from true duplicates and recheck conflicts atomically at apply time.
 - [x] Add conversation-level development/evaluation manifests and a fixed synthetic reply-context retrieval benchmark.
 - [x] Define contact-scoped, source-aware memory with immutable correction/withdrawal history.
@@ -150,3 +150,10 @@ messages through cited drafting and verifies that a later relevant import
 marks the saved review stale. Playwright confirmed that unsaved draft wording
 survives that update. Larger files and other formats use the CLI. Independent
 human reply ratings remain open.
+
+November 24: the browser can import small plain-text Gmail and standard MBOX
+files. Scope checks use the launch owner’s From and To addresses, and previews
+count skipped records by reason. The synthetic demo covers group recipients,
+HTML-only mail, a duplicate preview and a cited draft. Browser uploads are
+still capped at 1 MiB, and larger files and Discord CSV use the CLI.
+Independent human reply ratings remain open.

@@ -2,6 +2,10 @@
 
 A communication assistant that retrieves relevant conversation history and the owner's writing examples for a particular contact. The goal is a reviewable draft that sounds appropriate for the recipient and grounds factual claims in inspectable sources.
 
+**November 24 MBOX imports** — Preview a small Gmail or standard MBOX export
+in the browser, see why records were skipped, and draft from the imported
+conversation. [Try the synthetic MBOX walkthrough](#try-a-browser-mbox-import)
+
 **November 23 browser imports** — Start with an empty local database, preview
 a JSONL export and import the reviewed messages. New contacts appear without a
 page reload. The workspace preserves draft edits and checks whether imported
@@ -287,7 +291,7 @@ figures describe this fixture and machine.
 
 JSONL requires string fields `id`, `source`, `thread`, `author`, `recipient`, `timestamp`, and `body`. Timestamps must carry a timezone. Each record describes one directed message. Participant identifiers are case-folded; use stable account identifiers rather than display names.
 
-MBOX import skips HTML-only mail and attachments. It emits one record per `To` recipient and uses `X-GM-THRID` or the first `References` ID when available. Other mail headers, group-chat membership, rich text, and HTML conversion are outside this first version. Quote cleanup is a heuristic and should be inspected when building an evaluation set.
+MBOX import skips HTML-only mail and excludes attached and encapsulated mail from message bodies. It emits one record per `To` recipient and uses `X-GM-THRID` or the first `References` ID when available. Other mail headers, group-chat membership, rich text, and HTML conversion are outside this first version. Quote cleanup is a heuristic and should be inspected when building an evaluation set.
 
 Discord CSV import expects `ID`, `Timestamp`, and `Contents`, with explicit `--owner`, `--contact`, and `--thread`. The account's export contains its own messages; this importer does not invent missing incoming messages. Naive Discord export timestamps are treated as UTC. Prefer normalized JSONL if your export differs.
 
@@ -479,17 +483,43 @@ PYTHONPATH=src python3 -m personal_context.review_server \
 4. Select the same file again and preview it. The report shows five duplicates
    and leaves the import button disabled.
 
-The browser accepts raw UTF-8 normalized JSONL files up to 1 MiB. Every message
-must involve the launch owner. Invalid lines and conflicting source IDs block
-the file, with up to 100 line diagnostics and an exact count of omitted errors.
-Use the [CLI import commands](#preview-before-importing) for larger files,
-MBOX or Discord CSV.
+### Try a browser MBOX import
 
-For local API clients, POST the same JSONL bytes as `application/x-ndjson` to
-`/api/import/preview` and `/api/import/apply`. Both requests require the bearer
-token. Apply also requires the preview's `preview_sha256` in `X-Import-Preview`.
-The server checks the normalized records and duplicate decisions again inside
-the write transaction. HTTP 409 means the client needs a fresh preview.
+From the repository root, copy the example to a temporary directory and start
+the local review server.
+
+```sh
+demo_dir=$(mktemp -d)
+cp examples/synthetic-mail.mbox.example "$demo_dir/demo.mbox"
+PYTHONPATH=src python3 -m personal_context.review_server \
+  --db "$demo_dir/messages.sqlite" --owner owner@example.invalid --port 0 --initialize
+```
+
+1. Open the local URL and select **Gmail or standard MBOX** under **Import
+   messages**. Choose `demo.mbox` from the temporary directory and preview it.
+   Expect three new directed messages and three skips. Two records fall outside
+   the owner’s conversation history and one has an HTML-only body.
+2. Import the reviewed messages, select `alex@example.invalid`, and create a
+   review for `Thursday demo` with a cutoff of `2026-09-02T00:00:00Z`. The
+   draft cites the two imported messages for Alex.
+3. Preview the same MBOX again to see three duplicates and zero new messages.
+
+Browser imports accept raw normalized JSONL or MBOX files up to 1 MiB. Extract
+an MBOX file from its archive before uploading. The MBOX reader uses `From` and
+`To` to select mail involving the launch owner. An outbound message can add one
+record per `To` recipient. An inbound message adds the owner’s copy. HTML-only
+mail is skipped, and attached or encapsulated mail is excluded from quoted
+bodies. Errors and conflicts block apply. The preview gives up to 100
+diagnostics with line numbers for JSONL and mail item numbers for MBOX.
+Use the [CLI import commands](#preview-before-importing) for larger files and
+Discord CSV. CLI MBOX imports include all `To` recipients.
+
+For local API clients, POST raw bytes to `/api/import/preview` and
+`/api/import/apply` with `application/x-ndjson` or `application/mbox` as the
+content type. Both calls require the bearer token. Apply also requires the
+preview's `preview_sha256` in `X-Import-Preview`. The server rechecks the
+selected format, normalized records, owner and duplicate decisions inside the
+write transaction. HTTP 409 means the client needs a fresh preview.
 
 ### Edit memory in the workspace
 
