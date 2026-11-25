@@ -37,9 +37,11 @@ function controls() {
   $("memory-save").disabled = busy || Boolean(memoryItem && memoryItem.status === "revoked") || (!memoryItem && (!review || !review.context_current));
   $("memory-withdraw").disabled = busy || !memoryItem || memoryItem.status === "revoked";
   const file = $("import-file").files[0];
+  $("import-format").disabled = busy || !importMaxBytes;
   $("import-file").disabled = busy || !importMaxBytes;
   $("import-preview").disabled = busy || !file || !file.size || file.size > importMaxBytes;
-  $("import-apply").disabled = busy || !importPlan || importPlan.file !== file;
+  $("import-apply").disabled = busy || !importPlan || importPlan.file !== file ||
+    importPlan.format !== $("import-format").value;
   $("privacy-preview").disabled = busy || !$("contact").value;
   $("privacy-remove").disabled = busy || !privacyPlan || !privacyPlan.can_apply ||
     privacyPlan.contact !== $("contact").value || $("privacy-contact").value !== privacyPlan.contact;
@@ -63,8 +65,8 @@ async function api(path, payload) {
     headers: { "Content-Type": "application/json" },
     body: payload === undefined ? undefined : JSON.stringify(payload) });
 }
-function uploadImport(operation, file, digest) {
-  const headers = { "Content-Type": "application/x-ndjson" };
+function uploadImport(operation, file, format, digest) {
+  const headers = { "Content-Type": format === "mbox" ? "application/mbox" : "application/x-ndjson" };
   if (digest) headers["X-Import-Preview"] = digest;
   return request(`/api/import/${operation}`, { method: "POST", headers, body: file });
 }
@@ -447,16 +449,30 @@ function importStatus(text, error = false) {
 }
 function renderImportReport(report) {
   const counts = $("import-counts"), errors = $("import-errors"), omitted = $("import-omitted");
+  const skips = $("import-skips");
+  const reasons = Object.entries(report?.skip_reasons || {});
   counts.hidden = !report;
   errors.replaceChildren();
+  skips.replaceChildren();
   errors.hidden = !report?.errors.length;
   omitted.hidden = !report?.errors_omitted;
+  skips.hidden = !reasons.length;
   if (!report) return;
   counts.textContent = `${report.would_insert} new · ${report.duplicates} duplicates · ${report.invalid} invalid · ${report.conflicts} conflicts · ${report.skipped} skipped`;
-  for (const error of report.errors) addText(errors, "li", `Line ${error.record}: ${error.reason}`);
+  const recordLabel = report.format === "mbox" ? "Mail item" : "Line";
+  for (const error of report.errors) addText(errors, "li", `${recordLabel} ${error.record}: ${error.reason}`);
+  for (const [reason, count] of reasons) addText(skips, "li", `${reason} (${count})`);
   omitted.textContent = `${report.errors_omitted} additional errors omitted.`;
 }
-$("import-file").addEventListener("change", () => {
+function updateImportFormat() {
+  const mbox = $("import-format").value === "mbox";
+  $("import-file").accept = mbox ? ".mbox,application/mbox" : ".jsonl,.ndjson";
+  const limit = `Up to ${importMaxBytes.toLocaleString()} bytes.`;
+  $("import-limit").textContent = mbox ?
+    `${limit} Imports plain-text mail involving this owner. Extract the MBOX file from its archive first.` :
+    `${limit} Each JSONL line describes one message involving this owner.`;
+}
+function resetImportPreview() {
   importPlan = null;
   renderImportReport(null);
   const file = $("import-file").files[0];
@@ -465,21 +481,27 @@ $("import-file").addEventListener("change", () => {
     importStatus(`Choose a file between 1 and ${importMaxBytes.toLocaleString()} bytes.`, true);
   } else importStatus("Preview this file to see which messages can be added.");
   controls();
+}
+$("import-format").addEventListener("change", () => {
+  updateImportFormat();
+  resetImportPreview();
 });
+$("import-file").addEventListener("change", resetImportPreview);
 $("import-preview").addEventListener("click", () => perform(async () => {
   const file = $("import-file").files[0];
+  const format = $("import-format").value;
   importPlan = null;
   renderImportReport(null);
   importStatus("Checking the selected file…");
   try {
-    const report = await uploadImport("preview", file);
+    const report = await uploadImport("preview", file, format);
     renderImportReport(report);
     if (!report.ready) {
       importStatus("Fix the listed errors and preview the corrected file.", true);
     } else if (report.would_insert === 0) {
-      importStatus("This file has no new messages.");
+      importStatus("This file has no new messages for this owner.");
     } else {
-      importPlan = { file, digest: report.preview_sha256 };
+      importPlan = { file, format, digest: report.preview_sha256 };
       importStatus("Preview ready. Review the counts before importing.");
     }
   } catch (error) {
@@ -494,7 +516,7 @@ $("import-apply").addEventListener("click", () => perform(async () => {
   let result;
   try {
     resetPrivacy();
-    result = await uploadImport("apply", plan.file, plan.digest);
+    result = await uploadImport("apply", plan.file, plan.format, plan.digest);
   } catch (error) {
     importStatus(`${error.message} Preview the file to check its current state.`, true);
     return;
@@ -524,7 +546,7 @@ perform(async () => {
   const config = await api("/api/config");
   $("provider-state").textContent = `${config.drafting === "generative" ? "Local generative provider (human support review required)" : "Extractive baseline"} · review only · drafts stay in your local database`;
   importMaxBytes = config.import_max_bytes;
-  $("import-limit").textContent = `Choose a normalized JSONL export for this owner, up to ${importMaxBytes.toLocaleString()} bytes.`;
+  updateImportFormat();
   await refreshContacts();
   $("import-panel").open = !selectedContact;
   await refreshContact();

@@ -18,14 +18,23 @@
     <details id="import-panel" class="card">
       <summary>Import messages</summary>
       <div class="import-content">
-        <p class="muted" id="import-limit">Choose a normalized JSONL export for this owner.</p>
-        <label>Message export<input id="import-file" type="file" accept=".jsonl,.ndjson" aria-describedby="import-limit" disabled></label>
+        <div class="grid import-fields">
+          <label>Export format
+            <select id="import-format" aria-describedby="import-limit" disabled>
+              <option value="jsonl">Normalized JSONL</option>
+              <option value="mbox">Gmail or standard MBOX</option>
+            </select>
+          </label>
+          <label>Message export<input id="import-file" type="file" accept=".jsonl,.ndjson" aria-describedby="import-limit" disabled></label>
+        </div>
+        <p class="muted" id="import-limit">Choose an export for this owner.</p>
         <div class="import-actions">
           <button type="button" id="import-preview" disabled>Preview import</button>
           <button type="button" id="import-apply" class="secondary" disabled>Import reviewed messages</button>
         </div>
         <p id="import-status" role="status" aria-live="polite"></p>
         <p id="import-counts" class="muted" hidden></p>
+        <ul id="import-skips" class="muted" hidden></ul>
         <ul id="import-errors" hidden></ul>
         <p id="import-omitted" class="muted" hidden></p>
       </div>

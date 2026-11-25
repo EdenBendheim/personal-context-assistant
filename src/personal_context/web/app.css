@@ -46,3 +46,6 @@ legend { font-size: 13px; font-weight: 600; }
 #import-status:empty { margin: 0; }
 #import-status[data-error="true"] { color: #a23424; }
 #import-errors { max-height: 14rem; overflow: auto; padding-left: 24px; }
+
+.import-fields { align-items: end; }
+#import-skips { margin: 8px 0; padding-left: 24px; }
