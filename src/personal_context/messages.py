@@ -139,23 +139,33 @@ def read_jsonl(path: str | Path) -> Iterator[Message]:
     yield from _strict(scan_jsonl(path))
 
 
+def _plain_text_parts(mail):
+    pending = [mail]
+    while pending:
+        part = pending.pop()
+        if part.get_content_disposition() == "attachment":
+            continue
+        if part.get_content_maintype() == "multipart" and part.is_multipart():
+            pending.extend(reversed(part.get_payload()))
+        elif part.get_content_type() == "text/plain":
+            yield part
+
+
 def scan_mbox(path: str | Path) -> Iterator[ImportRecord]:
     """Read plain-text Gmail/standard MBOX messages; skip HTML-only mail."""
     box = mailbox.mbox(str(path), create=False)
     try:
         for number, mail in enumerate(box, 1):
-            parts = mail.walk() if mail.is_multipart() else [mail]
             text = []
             body_error = False
-            for part in parts:
-                if part.get_content_type() == "text/plain" and part.get_content_disposition() != "attachment":
-                    payload = part.get_payload(decode=True)
-                    if payload:
-                        try:
-                            text.append(payload.decode(part.get_content_charset() or "utf-8", errors="replace"))
-                        except LookupError:
-                            body_error = True
-                            break
+            for part in _plain_text_parts(mail):
+                payload = part.get_payload(decode=True)
+                if payload:
+                    try:
+                        text.append(payload.decode(part.get_content_charset() or "utf-8", errors="replace"))
+                    except LookupError:
+                        body_error = True
+                        break
             if body_error:
                 yield ImportRecord(number, error="Unsupported text character encoding")
                 continue
