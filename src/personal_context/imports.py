@@ -136,7 +136,7 @@ def preview_import(path: str | Path, *, db: str | Path, format: str = "jsonl",
         return report | {"preview": True, "inserted": 0}
 
 
-def _uploaded_records(payload, format):
+def _uploaded_records(payload, format, owner):
     if format == "jsonl":
         with io.StringIO(payload.decode("utf-8-sig", errors="surrogateescape"), newline=None) as stream:
             yield from scan_jsonl_lines(stream)
@@ -148,7 +148,7 @@ def _uploaded_records(payload, format):
         with TemporaryDirectory() as scratch:
             path = Path(scratch) / "upload"
             path.write_bytes(payload)
-            yield from scan_mbox(path)
+            yield from scan_mbox(path, owner=owner)
     else:
         raise ValueError("Unsupported review import format")
 
@@ -156,12 +156,10 @@ def _uploaded_records(payload, format):
 def _review_records(payload, owner, format):
     if not isinstance(payload, bytes) or not 0 < len(payload) <= MAX_REVIEW_IMPORT_BYTES:
         raise ValueError(f"Review import must be between 1 and {MAX_REVIEW_IMPORT_BYTES:,} bytes")
-    for record in _uploaded_records(payload, format):
+    for record in _uploaded_records(payload, format, owner):
         message = record.message
         if message is None or owner in (message.author, message.recipient):
             yield record
-        elif format == "mbox":
-            yield ImportRecord(record.number, skipped="Message does not involve the review owner")
         else:
             yield ImportRecord(record.number, error="Message does not involve the review owner")
 

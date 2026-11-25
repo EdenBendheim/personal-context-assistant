@@ -151,11 +151,36 @@ def _plain_text_parts(mail):
             yield part
 
 
-def scan_mbox(path: str | Path) -> Iterator[ImportRecord]:
-    """Read plain-text Gmail/standard MBOX messages; skip HTML-only mail."""
+def _mail_participants(mail):
+    authors = getaddresses(mail.get_all("From", []))
+    author = authors[0][1] if authors else ""
+    recipients = [address for _, address in getaddresses(mail.get_all("To", []))]
+    if not author or not recipients or not all(recipients):
+        raise ValueError("Missing participants")
+    return author, recipients
+
+
+def scan_mbox(path: str | Path, *, owner: str | None = None) -> Iterator[ImportRecord]:
+    """Read plain-text MBOX mail, optionally selecting the normalized owner first."""
     box = mailbox.mbox(str(path), create=False)
     try:
         for number, mail in enumerate(box, 1):
+            if owner is not None:
+                try:
+                    author, recipients = _mail_participants(mail)
+                except (ValueError, TypeError):
+                    yield ImportRecord(number, error="Missing or invalid From or To header")
+                    continue
+                if author.casefold() != owner:
+                    matching = []
+                    for recipient in recipients:
+                        if recipient.casefold() == owner:
+                            matching.append(recipient)
+                        else:
+                            yield ImportRecord(number, skipped="Message does not involve the review owner")
+                    if not matching:
+                        continue
+                    recipients = matching
             text = []
             body_error = False
             for part in _plain_text_parts(mail):
@@ -173,10 +198,8 @@ def scan_mbox(path: str | Path) -> Iterator[ImportRecord]:
                 yield ImportRecord(number, skipped="No supported plain-text body")
                 continue
             try:
-                author = getaddresses(mail.get_all("From", []))[0][1]
-                recipients = getaddresses(mail.get_all("To", []))
-                if not author or not recipients or any(not address for _, address in recipients):
-                    raise ValueError("Missing participants")
+                if owner is None:
+                    author, recipients = _mail_participants(mail)
                 timestamp = parsedate_to_datetime(mail["Date"]).isoformat()
             except (ValueError, TypeError, IndexError, AttributeError):
                 yield ImportRecord(number, error="Missing or invalid From, To, or Date header")
@@ -186,7 +209,7 @@ def scan_mbox(path: str | Path) -> Iterator[ImportRecord]:
             thread = mail.get("X-GM-THRID") or mail.get("References", "").split()[:1]
             if isinstance(thread, list):
                 thread = thread[0] if thread else message_id
-            for _, recipient in recipients:
+            for recipient in recipients:
                 yield _normalize(number, dict(id=f"{message_id}:{recipient}", source="gmail", thread=thread,
                                              author=author, recipient=recipient, timestamp=timestamp, body=body))
     finally:

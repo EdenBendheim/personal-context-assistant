@@ -126,3 +126,18 @@ class ReviewImportTests(unittest.TestCase):
         self.assertFalse(report["ready"])
         self.assertEqual(report["errors"], [{"record": 1, "reason": "MBOX must start with a From envelope line"}])
         self.assertFalse(self.db.exists())
+
+    def test_mbox_skips_unrelated_mail_before_body_and_date_validation(self):
+        broken = mbox_mail("broken", author=CONTACT, recipients="other@example.invalid",
+                           content_type="text/plain; charset=invalid-charset")
+        payload = broken.replace(b"Date: Tue, 1 Sep 2026 10:00:00 +0000", b"Date: unknown")
+        payload += mbox_mail("valid", author=CONTACT, recipients=OWNER.upper())
+        report = preview_review_import(payload, db=self.db, owner=OWNER, format="mbox")
+        self.assertTrue(report["ready"])
+        self.assertEqual((report["would_insert"], report["skipped"]), (1, 1))
+
+        owned = payload.replace(b"To: other@example.invalid", f"To: {OWNER}".encode())
+        report = preview_review_import(owned, db=self.db, owner=OWNER, format="mbox")
+        self.assertFalse(report["ready"])
+        self.assertEqual(report["errors"], [{"record": 1, "reason": "Unsupported text character encoding"}])
+        self.assertFalse(self.db.exists())
